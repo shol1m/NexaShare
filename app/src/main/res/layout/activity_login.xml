@@ -13,7 +13,6 @@
         android:layout_width="300dp"
         android:layout_height="500dp"
         android:elevation="5dp"
-        android:background=""
         app:cardCornerRadius="20dp"
         android:layout_gravity="center"
         >
@@ -35,7 +34,7 @@
                 <EditText
                     android:id="@+id/phone_login_edt"
                     style="@style/modifiedEditText"
-                    android:inputType="phone"
+                    android:inputType="text"
                     android:maxLines="1"
                     android:hint="Phone Number"/>
             </com.google.android.material.textfield.TextInputLayout>

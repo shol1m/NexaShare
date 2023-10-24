@@ -14,7 +14,6 @@
         android:layout_width="300dp"
         android:layout_height="520dp"
         android:elevation="5dp"
-        android:background=""
         app:cardCornerRadius="20dp"
         android:layout_gravity="center"
         >
@@ -85,6 +84,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button
+                android:id="@+id/register_btn"
                 style="@style/loginButton"
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/signup_text_margin_top"
