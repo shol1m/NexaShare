@@ -31,12 +31,13 @@
                 android:id="@+id/textInputEmail"
                 style="@style/parent"
                 android:layout_marginTop="@dimen/loginViewsMargin">
+
                 <EditText
-                    android:id="@+id/phone_login_edt"
+                    android:id="@+id/email_login_edt"
                     style="@style/modifiedEditText"
-                    android:inputType="text"
-                    android:maxLines="1"
-                    android:hint="Phone Number"/>
+                    android:hint="Email"
+                    android:inputType="textEmailAddress"
+                    android:maxLines="1" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout

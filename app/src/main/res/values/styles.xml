@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-
     <!--designs for login and register-->
     <style name="parent">
         <item name="android:layout_width">match_parent</item>

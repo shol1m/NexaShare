@@ -18,6 +18,7 @@ public class ValidationHelper {
             match =false;
         }
         return match;
+
     }
     public boolean isNullOrEmpty(String string){
         return TextUtils.isEmpty(string);

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".CreateRideFragment">
+
+    <TextView
+        android:id="@+id/textViewTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create a Ride"
+        android:textSize="24sp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="24dp"/>
+
+    <EditText
+        android:id="@+id/editTextDriverName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Driver's Name"
+        android:layout_marginTop="48dp"/>
+
+    <EditText
+        android:id="@+id/editTextSource"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Source"
+        android:layout_below="@id/editTextDriverName"
+        android:layout_marginTop="16dp"/>
+
+    <EditText
+        android:id="@+id/editTextDestination"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Destination"
+        android:layout_below="@id/editTextSource"
+        android:layout_marginTop="16dp"/>
+
+    <TextView
+        android:id="@+id/textViewDateTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date and Time"
+        android:textSize="18sp"
+        android:layout_below="@id/editTextDestination"
+        android:layout_marginTop="32dp"/>
+
+    <EditText
+        android:id="@+id/editTextDateTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Select Date and Time"
+        android:layout_below="@id/textViewDateTime"
+        android:layout_marginTop="16dp"/>
+
+    <Button
+        android:id="@+id/buttonSelectDateTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select"
+        android:layout_below="@id/editTextDateTime"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"/>
+
+    <Button
+        android:id="@+id/buttonCreateRide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create Ride"
+        android:layout_below="@id/buttonSelectDateTime"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="32dp"/>
+</LinearLayout>
