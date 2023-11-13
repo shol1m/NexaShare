@@ -36,7 +36,12 @@
             android:name=".StartActivity"
             android:exported="false"
             android:label="@string/title_activity_start"
-            android:theme="@style/Theme.NexaShare"></activity>
+            android:theme="@style/Theme.NexaShare"/>
+        <activity
+            android:name=".SplashActivity"
+            android:exported="false">
+
+        </activity>
     </application>
 
 </manifest>

@@ -15,11 +15,9 @@ import com.example.nexashare.Adapter.RideAdapter;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class Home extends Fragment {
     private RecyclerView recyclerViewRides;
@@ -42,7 +40,6 @@ public class Home extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override

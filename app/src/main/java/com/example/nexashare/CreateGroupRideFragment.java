@@ -20,10 +20,8 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.nexashare.Helper.FirebaseHelper;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
@@ -34,13 +32,14 @@ import java.util.Locale;
 import java.util.Map;
 
 
-public class CreateRideFragment extends Fragment{
+public class CreateGroupRideFragment extends Fragment {
     private EditText destination, source, phone, carType,seats,dateTime;
     private Button createRideBtn;
     private String formattedDateTime;
     private Date selectedDateTime;
     private FirebaseHelper firebaseHelper;
     private FirebaseFirestore db= FirebaseFirestore.getInstance();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +49,8 @@ public class CreateRideFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view=  inflater.inflate(R.layout.fragment_create_ride, container, false);
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_create_group_ride, container, false);
 
         phone = view.findViewById(R.id.phone_create_edt);
         source = view.findViewById(R.id.source_edt);
@@ -76,8 +76,7 @@ public class CreateRideFragment extends Fragment{
                 String Phone = phone.getText().toString();
                 String CarType = carType.getText().toString();
                 int Seats = Integer.parseInt(seats.getText().toString());
-                String rideType = "Single";
-
+                String rideType = "Group";
 
                 Map<String, Object> rideData = new HashMap<>();
                 rideData.put("rideType", rideType);
@@ -108,10 +107,8 @@ public class CreateRideFragment extends Fragment{
 
             }
         });
-        // Inflate the layout for this fragment
         return view;
     }
-
     private void showDateTimePickerDialog() {
         final Calendar c = Calendar.getInstance();
         int year = c.get(Calendar.YEAR);
@@ -161,5 +158,4 @@ public class CreateRideFragment extends Fragment{
 
         timePickerDialog.show();
     }
-
 }
