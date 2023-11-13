@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "163364637027",
+    "project_id": "nexashare",
+    "storage_bucket": "nexashare.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:163364637027:android:8266897a8afde27eb36b56",
+        "android_client_info": {
+          "package_name": "com.example.nexashare"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5Hnupz2GIU-W5DFw3HoZ0sInKqEWUWr0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
