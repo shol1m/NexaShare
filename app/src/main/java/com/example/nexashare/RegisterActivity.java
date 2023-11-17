@@ -12,6 +12,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.nexashare.Helper.ValidationHelper;
@@ -29,6 +30,8 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import org.w3c.dom.Text;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -41,6 +44,7 @@ import java.util.Objects;
 public class RegisterActivity extends AppCompatActivity {
     EditText name,email,phone,password,confirmPassword;
     Button register;
+    TextView login;
     boolean isAllFieldsChecked = true;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -56,6 +60,7 @@ public class RegisterActivity extends AppCompatActivity {
         password = (EditText) findViewById(R.id.password_reg_edt);
         confirmPassword = (EditText) findViewById(R.id.confirm_password_reg_edt);
         register = (Button)findViewById(R.id.register_btn);
+        login = (TextView) findViewById(R.id.login_txt);
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,6 +117,14 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
 
 
@@ -133,31 +146,10 @@ public class RegisterActivity extends AppCompatActivity {
                                     if(task.isSuccessful()) {
                                         Toast.makeText(RegisterActivity.this, "Registration successfull,check your email for verification", Toast.LENGTH_SHORT).show();
                                         mAuth.getCurrentUser().sendEmailVerification();
-
+                                        FirebaseUser currentUser = mAuth.getCurrentUser();
+                                        String userId = currentUser.getUid();
                                         Log.d(TAG, "create user : Success");
-                                        Map<String, Object> userdetails = new HashMap<>();
-                                        userdetails.put("name", name);
-                                        userdetails.put("phone_number", phone);
-                                        userdetails.put("email", email);
-
-                                        db.collection("users").document()
-                                                .set(userdetails)
-                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                    @Override
-                                                    public void onSuccess(Void aVoid) {
-                                                        Log.d(TAG, "DocumentSnapshot successfully written!");
-                                                    }
-                                                })
-                                                .addOnFailureListener(new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull Exception e) {
-                                                        Log.w(TAG, "Error writing document", e);
-                                                    }
-                                                });
-
-                                        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                                        startActivity(intent);
-
+                                        saveToFirestore(name,phone,email,userId);
                                     }
                                     else{
                                         Log.d(TAG, task.getException().toString());
@@ -166,7 +158,6 @@ public class RegisterActivity extends AppCompatActivity {
                                     }
                                 }
                             });
-
                         }
                         else{
                             if(task.getException() instanceof FirebaseAuthUserCollisionException){
@@ -180,7 +171,36 @@ public class RegisterActivity extends AppCompatActivity {
                         }
                     }
                 });
-        Intent intent = new Intent(RegisterActivity.this,StartActivity.class);
+    }
+
+    private void saveToFirestore(String name, String phone, String email,String userId) {
+        Map<String, Object> userdetails = new HashMap<>();
+        userdetails.put("userId", userId);
+        userdetails.put("name", name);
+        userdetails.put("phone_number", phone);
+        userdetails.put("email", email);
+        userdetails.put("fcmToken", "fcmToken");
+
+        db.collection("users").document(userId)
+                .set(userdetails)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully written!");
+                        Toast.makeText(RegisterActivity.this,"DocumentSnapshot successfully written!",Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error writing document", e);
+                        Toast.makeText(RegisterActivity.this,"Error writing document",Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
         startActivity(intent);
     }
+
+
 }

@@ -1,14 +1,19 @@
 package com.example.nexashare;
 
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
@@ -23,9 +28,18 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class LoginActivity extends AppCompatActivity {
+    public static String SHARED_PREFS = "shared-prefs";
+    public static String USER_ID_KEY = "user_id";
+    public static String NAME_KEY = "name_key";
+    public String userid_key,name_key,userid,name;
+    SharedPreferences sharedPreferences;
     public Button login;
     public EditText email,password;
     public TextView forgotPassword;
@@ -39,6 +53,10 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
+        sharedPreferences = getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
+
+        userid_key=sharedPreferences.getString("USER_ID_KEY",null);
+        name_key=sharedPreferences.getString("NAME_KEY",null);
 
         email = (EditText) findViewById(R.id.email_login_edt);
         password = (EditText) findViewById(R.id.password_login_edt);
@@ -64,7 +82,7 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
 
-                register(emailString,passwordString);
+                login(emailString,passwordString);
 
             }
         });
@@ -74,22 +92,114 @@ public class LoginActivity extends AppCompatActivity {
                 showRecoverPasswordDialog();
             }
         });
-
     }
 
-    public void register(String email,String password){
+//    public void login(String email,String password){
+//
+//        mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(task -> {
+//            if (task.isSuccessful()){
+//                Toast.makeText(LoginActivity.this, "User logged in successfully", Toast.LENGTH_SHORT).show();
+//                startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+//            }else{
+//                Toast.makeText(LoginActivity.this, "Log in Error: ", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//        Intent intent = new Intent(LoginActivity.this,StartActivity.class);
+//        startActivity(intent);
+//    }
 
-
-        mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(task -> {
-            if (task.isSuccessful()){
+    public void login(String email, String password) {
+        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
                 Toast.makeText(LoginActivity.this, "User logged in successfully", Toast.LENGTH_SHORT).show();
+                FirebaseUser currentUser = mAuth.getCurrentUser();
+                userid = currentUser.getUid();
+
+                // Get the FCM token after the user logs in
+                FirebaseMessaging.getInstance().getToken()
+                        .addOnCompleteListener(taskToken -> {
+                            if (taskToken.isSuccessful()) {
+                                String fcmToken = taskToken.getResult();
+                                updateFCMTokenInFirestore(fcmToken);
+                            } else {
+                                // Handle token retrieval error
+                                Exception exception = taskToken.getException();
+                                if (exception != null) {
+                                    // Handle the exception
+                                    Log.e(TAG, "FCM token retrieval failed: " + exception.getMessage());
+                                }
+                            }
+                        });
+
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+// Get the document reference for the user
+                DocumentReference docRef = db.collection("users").document(userid);
+
+// Fetch the name of the current user
+                docRef.get().addOnCompleteListener(tank -> {
+                    if (tank.isSuccessful()) {
+                        DocumentSnapshot document = tank.getResult();
+                        if (document.exists()) {
+                            // DocumentSnapshot exists, retrieve data
+                            name = document.getString("name");
+                            // Use retrieved data (username, age, etc.)
+                            // Example: Log the retrieved data
+                            Toast.makeText(LoginActivity.this,"Your name is "+ name,Toast.LENGTH_SHORT).show();
+                        } else {
+                            // Document does not exist
+                            Log.d("FirestoreData", "No such document");
+                        }
+                    } else {
+                        // Task failed with an exception
+                        Log.d("FirestoreData", "Task failed: " + task.getException());
+                    }
+                });
+
+
+                getUserId(userid);
+
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString(USER_ID_KEY,userid);
+                editor.putString(NAME_KEY,name);
+
+                Log.d(TAG,"Name is" +name);
+                Log.d(TAG,"UserID is " +userid);
+                editor.apply();
+
                 startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-            }else{
-                Toast.makeText(LoginActivity.this, "Log in Error: ", Toast.LENGTH_SHORT).show();
+
+                finish();
+            } else {
+                Toast.makeText(LoginActivity.this, "Log in Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-        Intent intent = new Intent(LoginActivity.this,StartActivity.class);
-        startActivity(intent);
+    }
+
+    private String getUserId(String UserId) {
+
+        return name;
+    }
+
+    // Update FCM token in Firestore associated with the logged-in user
+    private void updateFCMTokenInFirestore(String fcmToken) {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            userid = currentUser.getUid();
+
+            // Update the FCM token in Firestore
+            db.collection("users").document(userid)
+                    .update("fcmToken", fcmToken)
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(LoginActivity.this, "Update Successful: ", Toast.LENGTH_SHORT).show();
+
+                        // FCM token updated successfully
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e(TAG, "Update failed: " + e.getMessage());
+                        // Failed to update FCM token
+                        // Handle the error
+                    });
+        }
     }
 
     ProgressDialog loadingBar;
@@ -156,5 +266,13 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this,"Error Failed",Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(userid_key != null){
+            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+        }
     }
 }

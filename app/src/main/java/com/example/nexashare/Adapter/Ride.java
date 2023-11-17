@@ -16,13 +16,13 @@ public class Ride {
         this.phone_number = phone_number;
     }
 
-    private Timestamp date_and_time;
+    private String date_and_time;
 
-    public Timestamp getDate_and_time() {
+    public String getDate_and_time() {
         return date_and_time;
     }
 
-    public void setDate_and_time(Timestamp date_and_time) {
+    public void setDate_and_time(String date_and_time) {
         this.date_and_time = date_and_time;
     }
 

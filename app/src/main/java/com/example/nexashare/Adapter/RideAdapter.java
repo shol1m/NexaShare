@@ -38,7 +38,7 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.RideViewHolder
         holder.textViewDriverName.setText(ride.getDriverName());
         holder.textViewPickup.setText(ride.getSource());
         holder.textViewDropoff.setText(ride.getDestination());
-        holder.textViewDateTime.setText(ride.getDate_and_time().toString());
+        holder.textViewDateTime.setText(ride.getDate_and_time());
 
         holder.buttonSelectRide.setOnClickListener(v -> {
             if (rideClickListener != null) {

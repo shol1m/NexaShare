@@ -4,6 +4,8 @@ import static androidx.constraintlayout.widget.ConstraintLayoutStates.TAG;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -35,6 +37,10 @@ import java.util.Map;
 
 
 public class CreateRideFragment extends Fragment{
+    public static String SHARED_PREFS = "shared-prefs";
+    public static String USER_ID_KEY = "user_id_key";
+    public static String NAME_KEY = "name_key";
+    String userid,name;
     private EditText destination, source, phone, carType,seats,dateTime;
     private Button createRideBtn;
     private String formattedDateTime;
@@ -51,6 +57,10 @@ public class CreateRideFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view=  inflater.inflate(R.layout.fragment_create_ride, container, false);
+
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
+        userid = sharedPreferences.getString(USER_ID_KEY,null);
+        name = sharedPreferences.getString(NAME_KEY,null);
 
         phone = view.findViewById(R.id.phone_create_edt);
         source = view.findViewById(R.id.source_edt);
@@ -80,6 +90,8 @@ public class CreateRideFragment extends Fragment{
 
 
                 Map<String, Object> rideData = new HashMap<>();
+                rideData.put("userId",userid);
+                rideData.put("name",name);
                 rideData.put("rideType", rideType);
                 rideData.put("source", Source);
                 rideData.put("destination", Destination);
@@ -95,7 +107,11 @@ public class CreateRideFragment extends Fragment{
                             public void onSuccess(Void aVoid) {
                                 Log.d(TAG, "DocumentSnapshot for create rides successfully written!");
                                 Toast.makeText(getContext(),"Ride Created successfully",Toast.LENGTH_SHORT).show();
-
+                                source.setText("");
+                                destination.setText("");
+                                carType.setText("");
+                                dateTime.setText("");
+                                seats.setText("");
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {

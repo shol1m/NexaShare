@@ -9,15 +9,14 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class StartActivity extends AppCompatActivity {
-    public Button register;
-    public TextView login;
+    public Button register,login;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
         register = (Button)findViewById(R.id.get_started_btn);
-        login = (TextView)findViewById(R.id.start_login_txt);
+        login = (Button)findViewById(R.id.start_login_btn);
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
