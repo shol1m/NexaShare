@@ -22,9 +22,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.nexashare.Adapter.MyData;
 import com.example.nexashare.Helper.ValidationHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,8 +39,9 @@ import com.google.firebase.messaging.FirebaseMessaging;
 public class LoginActivity extends AppCompatActivity {
     public static String SHARED_PREFS = "shared-prefs";
     public static String USER_ID_KEY = "user_id";
-    public static String NAME_KEY = "name_key";
+    public static String TOKEN_KEY = "token_key";
     public String userid_key,name_key,userid,name;
+    String fcmToken;
     SharedPreferences sharedPreferences;
     public Button login;
     public EditText email,password;
@@ -56,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
 
         userid_key=sharedPreferences.getString("USER_ID_KEY",null);
-        name_key=sharedPreferences.getString("NAME_KEY",null);
+        name_key=sharedPreferences.getString("TOKEN_KEY",null);
 
         email = (EditText) findViewById(R.id.email_login_edt);
         password = (EditText) findViewById(R.id.password_login_edt);
@@ -83,6 +86,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 login(emailString,passwordString);
+//                sendRideJoinRequestNotification();
 
             }
         });
@@ -119,7 +123,7 @@ public class LoginActivity extends AppCompatActivity {
                 FirebaseMessaging.getInstance().getToken()
                         .addOnCompleteListener(taskToken -> {
                             if (taskToken.isSuccessful()) {
-                                String fcmToken = taskToken.getResult();
+                                fcmToken = taskToken.getResult();
                                 updateFCMTokenInFirestore(fcmToken);
                             } else {
                                 // Handle token retrieval error
@@ -131,6 +135,9 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         });
 
+
+                MyData data = new MyData();
+                data.token=fcmToken;
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
 // Get the document reference for the user
                 DocumentReference docRef = db.collection("users").document(userid);
@@ -144,10 +151,11 @@ public class LoginActivity extends AppCompatActivity {
                             name = document.getString("name");
                             // Use retrieved data (username, age, etc.)
                             // Example: Log the retrieved data
-                            Toast.makeText(LoginActivity.this,"Your name is "+ name,Toast.LENGTH_SHORT).show();
+                            MyData.name = name;
+                            Log.d("FirestoreData", "Received name is " + MyData.name);
                         } else {
                             // Document does not exist
-                            Log.d("FirestoreData", "No such document");
+                            Log.e("FirestoreData", "No such document");
                         }
                     } else {
                         // Task failed with an exception
@@ -160,10 +168,10 @@ public class LoginActivity extends AppCompatActivity {
 
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString(USER_ID_KEY,userid);
-                editor.putString(NAME_KEY,name);
+                editor.putString(TOKEN_KEY,fcmToken);
 
-                Log.d(TAG,"Name is" +name);
-                Log.d(TAG,"UserID is " +userid);
+//                Log.d(TAG,"Name is" +name);
+                Log.d(TAG,"Token is " +fcmToken);
                 editor.apply();
 
                 startActivity(new Intent(LoginActivity.this, HomeActivity.class));
@@ -179,6 +187,11 @@ public class LoginActivity extends AppCompatActivity {
 
         return name;
     }
+//    private void sendRideJoinRequestNotification() {
+//        // Simulate sending a notification by using the FirebaseMessageReceiver logic
+//        FirebaseMessageReceiver receiver = new FirebaseMessageReceiver();
+//        receiver.sendRideJoinRequestNotification("Ride Join Request", "User wants to join the ride.");
+//    }
 
     // Update FCM token in Firestore associated with the logged-in user
     private void updateFCMTokenInFirestore(String fcmToken) {
@@ -191,7 +204,8 @@ public class LoginActivity extends AppCompatActivity {
                     .update("fcmToken", fcmToken)
                     .addOnSuccessListener(aVoid -> {
                         Toast.makeText(LoginActivity.this, "Update Successful: ", Toast.LENGTH_SHORT).show();
-
+                        MyData.token=fcmToken;
+                        MyData.userId=userid;
                         // FCM token updated successfully
                     })
                     .addOnFailureListener(e -> {

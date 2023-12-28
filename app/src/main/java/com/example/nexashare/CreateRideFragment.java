@@ -21,11 +21,13 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.nexashare.Adapter.MyData;
 import com.example.nexashare.Helper.FirebaseHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
@@ -46,6 +48,7 @@ public class CreateRideFragment extends Fragment{
     private String formattedDateTime;
     private Date selectedDateTime;
     private FirebaseHelper firebaseHelper;
+    MyData data=new MyData();
     private FirebaseFirestore db= FirebaseFirestore.getInstance();
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,9 +62,41 @@ public class CreateRideFragment extends Fragment{
         View view=  inflater.inflate(R.layout.fragment_create_ride, container, false);
 
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
-        userid = sharedPreferences.getString(USER_ID_KEY,null);
-        name = sharedPreferences.getString(NAME_KEY,null);
+//        userid = sharedPreferences.getString(USER_ID_KEY,null);
+//        name = sharedPreferences.getString(NAME_KEY,null);
 
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users")
+                .document(MyData.userId)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+                            // Get the value of the field named "fieldName"
+                            Object myName = documentSnapshot.get("name");
+                            if (myName != null) {
+                                // Do something with the retrieved value
+                                name = myName.toString();
+                                Log.d("FIRESTORE_VALUE", "Retrieved value: " + myName.toString());
+                            } else {
+                                Log.d("FIRESTORE_VALUE", "Field 'fieldName' does not exist or is null");
+                            }
+                        } else {
+                            Log.d("FIRESTORE_VALUE", "Document does not exist");
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Handle failures
+                        Log.e("FIRESTORE_VALUE", "Error getting value from Firestore", e);
+                    }
+                });
+
+        Toast.makeText(getContext(),"Token is "+ MyData.token,Toast.LENGTH_SHORT);
+        Toast.makeText(getContext(),"User Id is "+ MyData.userId,Toast.LENGTH_SHORT);
         phone = view.findViewById(R.id.phone_create_edt);
         source = view.findViewById(R.id.source_edt);
         destination = view.findViewById(R.id.destination_edt);
@@ -87,10 +122,12 @@ public class CreateRideFragment extends Fragment{
                 String CarType = carType.getText().toString();
                 int Seats = Integer.parseInt(seats.getText().toString());
                 String rideType = "Single";
+                String userId = MyData.userId;
+                String fcmToken = MyData.token;
 
 
                 Map<String, Object> rideData = new HashMap<>();
-                rideData.put("userId",userid);
+                rideData.put("userId",userId);
                 rideData.put("name",name);
                 rideData.put("rideType", rideType);
                 rideData.put("source", Source);
@@ -99,6 +136,7 @@ public class CreateRideFragment extends Fragment{
                 rideData.put("date_and_time", String.valueOf(selectedDateTime));
                 rideData.put("cartType", CarType);
                 rideData.put("seats", Seats);
+                rideData.put("token", fcmToken);
 
                 db.collection("rides").document()
                         .set(rideData)
@@ -121,7 +159,12 @@ public class CreateRideFragment extends Fragment{
                                 Toast.makeText(getContext(),"Error Creating Rides,check your Internet",Toast.LENGTH_SHORT).show();
                             }
                         });
+                FCMDataNotificationSender fcmDataNotificationSender = new FCMDataNotificationSender();
 
+                String title = "Create";
+                String message = "Ride has been created";
+
+                FCMDataNotificationSender.sendNotification(data.token,title, message);
             }
         });
         // Inflate the layout for this fragment

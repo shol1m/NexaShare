@@ -7,6 +7,8 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="light_grey">#9C9A9A</color>
+    <color name="dark_grey">#494848</color>
 
     <!--colors for modern ui-->
     <color name="whiteTextColor">#fff</color>
@@ -15,4 +17,9 @@
 
     <!--colros for card-->
     <color name="whiteCardColor">#fff</color>
+
+    <color name="primary">#1E063D</color>
+    <color name="secondary">#FF03DAC5</color>
+
+
 </resources>

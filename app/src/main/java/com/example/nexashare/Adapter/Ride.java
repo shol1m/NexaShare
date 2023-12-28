@@ -3,10 +3,38 @@ package com.example.nexashare.Adapter;
 import java.security.Timestamp;
 
 public class Ride {
-    private String driverName;
+    private String name;
     private String source;
     private String destination;
     private String phone_number;
+    private int seats;
+    private String token;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    private String userId;
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public int getSeats() {
+        return seats;
+    }
+
+    public void setSeats(int seats) {
+        this.seats = seats;
+    }
 
     public String getPhone_number() {
         return phone_number;
@@ -36,12 +64,12 @@ public class Ride {
         this.id = id;
     }
 
-    public String getDriverName() {
-        return driverName;
+    public String getName() {
+        return name;
     }
 
-    public void setDriverName(String driverName) {
-        this.driverName = driverName;
+    public void setName(String driverName) {
+        this.name = driverName;
     }
 
     public String getSource() {

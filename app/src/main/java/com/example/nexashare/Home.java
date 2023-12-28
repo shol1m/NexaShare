@@ -1,5 +1,7 @@
 package com.example.nexashare;
 
+import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.example.nexashare.Adapter.Ride;
 import com.example.nexashare.Adapter.RideAdapter;
@@ -21,6 +24,7 @@ import java.util.List;
 
 public class Home extends Fragment {
     private RecyclerView recyclerViewRides;
+    private ImageView notification;
     private RideAdapter rideAdapter;
     private List<Ride> rides;
     private FirebaseFirestore db;
@@ -48,13 +52,22 @@ public class Home extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         recyclerViewRides = view.findViewById(R.id.recyclerViewRides);
+        notification = view.findViewById(R.id.notification);
+
         rides = new ArrayList<>();
         db = FirebaseFirestore.getInstance();
 
+        notification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getContext(), Notifications.class));
+            }
+        });
         rideAdapter = new RideAdapter(rides, new RideAdapter.OnRideClickListener() {
             @Override
             public void onRideClick(Ride ride) {
                 // Handle the ride selection
+
             }
         });
         recyclerViewRides.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
@@ -92,7 +105,6 @@ public class Home extends Fragment {
                                 break;
                         }
                     }
-
                     rideAdapter.notifyDataSetChanged();
                 });
 

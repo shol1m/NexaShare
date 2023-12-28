@@ -8,42 +8,44 @@
     app:cardElevation="4dp"
     app:cardUseCompatPadding="true">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        style="@style/rideItem"
         android:padding="30dp"
         android:orientation="vertical">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/driverNameTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18sp"/>
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/sourceTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"/>
 
-        <TextView
-            android:id="@+id/destinationTxt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"/>
-
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/timeTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18sp"/>
-
-        <Button
-            android:id="@+id/buttonSelectRide"
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/seatsTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Select Ride"/>
+            android:textSize="16sp"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/joinRideBtn"
+            style="@style/loginButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Join Ride"/>
     </LinearLayout>
 </androidx.cardview.widget.CardView>
 

@@ -3,6 +3,7 @@ package com.example.nexashare;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -48,10 +49,13 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
                     .commit();
             return true;
         } else if (itemId == R.id.profile) {
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.flFragment, profileFragment)
-                    .commit();
+//            getSupportFragmentManager()
+//                    .beginTransaction()
+//                    .replace(R.id.flFragment, profileFragment)
+//                    .commit();
+            startActivity(new Intent(HomeActivity.this, Profile.class));
+//            Intent profile = new Intent(HomeActivity.this,Profile.class);
+//            StartActivity(profile);
             return true;
         } else {
             getSupportFragmentManager()
@@ -60,5 +64,6 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
                     .commit();
         }
         return false;
+
     }
 }

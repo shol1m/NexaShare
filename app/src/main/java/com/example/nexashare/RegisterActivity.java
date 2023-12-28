@@ -4,6 +4,7 @@ import static androidx.constraintlayout.widget.ConstraintLayoutStates.TAG;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.helper.widget.MotionEffect;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.w3c.dom.Text;
 
@@ -42,6 +44,7 @@ import java.util.Objects;
 //import com.google.firebase.database.ValueEventListener;
 
 public class RegisterActivity extends AppCompatActivity {
+    String fcmToken;
     EditText name,email,phone,password,confirmPassword;
     Button register;
     TextView login;
@@ -113,9 +116,24 @@ public class RegisterActivity extends AppCompatActivity {
                     return;
                 }
                 register(nameString,emailString,phoneString,passwordString);
+                FirebaseMessaging.getInstance().getToken()
+                        .addOnCompleteListener(taskToken -> {
+                            if (taskToken.isSuccessful()) {
+                                fcmToken = taskToken.getResult();
+                            } else {
+                                // Handle token retrieval error
+                                Exception exception = taskToken.getException();
+                                if (exception != null) {
+                                    // Handle the exception
+                                    Log.e(MotionEffect.TAG, "FCM token retrieval failed: " + exception.getMessage());
+                                }
+                            }
+                        });
 
+//                sendRideJoinRequestNotification();
             }
         });
+
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,6 +148,11 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     }
+//    private void sendRideJoinRequestNotification() {
+//        // Simulate sending a notification by using the FirebaseMessageReceiver logic
+//        FirebaseMessageReceiver receiver = new FirebaseMessageReceiver();
+//        receiver.sendRideJoinRequestNotification("Ride Join Request", "User wants to join the ride.");
+//    }
 
     public void register(String name,String email,String phone,String password){
         Log.d(TAG, "SignUp");
