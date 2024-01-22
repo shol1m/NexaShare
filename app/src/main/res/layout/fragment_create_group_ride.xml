@@ -13,7 +13,7 @@
 
         <TextView
             style="@style/headerTextPrimary"
-            android:text="Create Ride"
+            android:text="Create Group Ride"
             android:layout_marginTop="@dimen/loginViewsMargin"/>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -22,10 +22,10 @@
             android:layout_marginTop="@dimen/loginViewsMargin">
 
             <EditText
-                android:id="@+id/source_edt"
+                android:id="@+id/event_name_edt"
                 style="@style/modifiedEditText"
-                android:hint="Source"
-                android:inputType="textEmailAddress"
+                android:hint="Event Name"
+                android:inputType="text"
                 android:maxLines="1" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -33,9 +33,9 @@
             style="@style/parent"
             android:layout_marginTop="@dimen/loginViewsMargin">
             <EditText
-                android:id="@+id/destination_edt"
+                android:id="@+id/event_location_edt"
                 style="@style/modifiedEditText"
-                android:hint="Destination"
+                android:hint="Event Location"
                 android:maxLines="1"
                 android:inputType="text"/>
         </com.google.android.material.textfield.TextInputLayout>
@@ -44,31 +44,9 @@
             style="@style/parent"
             android:layout_marginTop="@dimen/loginViewsMargin">
             <EditText
-                android:id="@+id/car_type_edt"
+                android:id="@+id/organizer_phone_number_edt"
                 style="@style/modifiedEditText"
-                android:hint="Car type"
-                android:maxLines="1"
-                android:inputType="text"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/parent"
-            android:layout_marginTop="@dimen/loginViewsMargin">
-            <EditText
-                android:id="@+id/seats_edt"
-                style="@style/modifiedEditText"
-                android:hint="Available Seats"
-                android:maxLines="1"
-                android:inputType="number"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/parent"
-            android:layout_marginTop="@dimen/loginViewsMargin">
-            <EditText
-                android:id="@+id/phone_create_edt"
-                style="@style/modifiedEditText"
-                android:hint="Phone number"
+                android:hint="Organizer Phone number"
                 android:maxLines="1"
                 android:inputType="phone"/>
         </com.google.android.material.textfield.TextInputLayout>
@@ -77,11 +55,34 @@
             style="@style/parent"
             android:layout_marginTop="@dimen/loginViewsMargin">
             <EditText
-                android:id="@+id/dateTime_Edt"
+                android:id="@+id/pick_up_location_edt"
+                style="@style/modifiedEditText"
+                android:hint="Pick up locations"
+                android:maxLines="1"
+                android:inputType="text"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/parent"
+            android:layout_marginTop="@dimen/loginViewsMargin">
+            <EditText
+                android:id="@+id/available_seats_edt"
+                style="@style/modifiedEditText"
+                android:hint="Available Seats"
+                android:maxLines="1"
+                android:inputType="number"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/parent"
+            android:layout_marginTop="@dimen/loginViewsMargin">
+            <EditText
+                android:id="@+id/pickup_time_Edt"
                 style="@style/modifiedEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Select Date and Time"
+                android:hint="Date and PickUp Time"
                 android:focusable="false"
                 android:clickable="true"
                 android:inputType="none"
@@ -90,12 +91,29 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
-            android:id="@+id/create_ride_btn"
-            style="@style/loginButton"
-            android:text="Create Ride"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/loginViewsMargin"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="20dp">
+
+            <Button
+                android:id="@+id/create_ride_btn"
+                style="@style/loginButton"
+                android:text="Create Ride"
+
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/loginViewsMargin"/>
+            <Button
+                android:id="@+id/add_btn"
+                style="@style/loginButton"
+                android:text="Add PickUp"
+                android:layout_margin="40dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/loginViewsMargin"/>
+        </LinearLayout>
+
+
 
     </LinearLayout>
 

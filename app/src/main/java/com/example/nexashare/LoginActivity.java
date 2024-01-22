@@ -86,7 +86,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 login(emailString,passwordString);
-//                sendRideJoinRequestNotification();
 
             }
         });
@@ -98,19 +97,6 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-//    public void login(String email,String password){
-//
-//        mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(task -> {
-//            if (task.isSuccessful()){
-//                Toast.makeText(LoginActivity.this, "User logged in successfully", Toast.LENGTH_SHORT).show();
-//                startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-//            }else{
-//                Toast.makeText(LoginActivity.this, "Log in Error: ", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//        Intent intent = new Intent(LoginActivity.this,StartActivity.class);
-//        startActivity(intent);
-//    }
 
     public void login(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
@@ -166,12 +152,11 @@ public class LoginActivity extends AppCompatActivity {
 
                 getUserId(userid);
 
+//                Store The user's id and token to shared Preferences
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString(USER_ID_KEY,userid);
                 editor.putString(TOKEN_KEY,fcmToken);
 
-//                Log.d(TAG,"Name is" +name);
-                Log.d(TAG,"Token is " +fcmToken);
                 editor.apply();
 
                 startActivity(new Intent(LoginActivity.this, HomeActivity.class));

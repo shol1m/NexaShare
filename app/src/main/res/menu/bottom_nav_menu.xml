@@ -11,6 +11,10 @@
         android:title="Create ride"
         android:icon="@drawable/baseline_create_24"/>
     <item
+        android:id="@+id/create_group_ride"
+        android:title="Create Group ride"
+        android:icon="@drawable/baseline_create_24"/>
+    <item
         android:id="@+id/profile"
         android:title="Profile"
         android:icon="@drawable/baseline_profile_24"/>

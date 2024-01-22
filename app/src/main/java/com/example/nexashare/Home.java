@@ -1,20 +1,30 @@
 package com.example.nexashare;
 
+import android.content.Context;
 import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.example.nexashare.Adapter.Ride;
 import com.example.nexashare.Adapter.RideAdapter;
+import com.google.android.material.search.SearchBar;
+import com.google.android.material.search.SearchView;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -23,23 +33,40 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Home extends Fragment {
-    private RecyclerView recyclerViewRides;
     private ImageView notification;
-    private RideAdapter rideAdapter;
-    private List<Ride> rides;
-    private FirebaseFirestore db;
+    private CardView singles,groups;
 
     public Home() {
         // Required empty public constructor
     }
 
 
-    public static Home newInstance(String param1, String param2) {
-        Home fragment = new Home();
-        Bundle args = new Bundle();
 
-        return fragment;
+    private OnCardClickListener onCardClickListener;
+
+    public interface OnCardClickListener {
+        void onCard1Clicked();
+        void onCard2Clicked();
+        // Add more methods for other card clicks if needed
     }
+
+    public void setOnCardClickListener(OnCardClickListener listener) {
+        this.onCardClickListener = listener;
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof OnCardClickListener) {
+            onCardClickListener = (OnCardClickListener) context;
+        } else {
+            throw new ClassCastException(context.toString() + " must implement OnCardClickListener");
+        }
+    }
+
+    // In your card view click listeners, call the appropriate method of the interface
+    
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,73 +76,53 @@ public class Home extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        recyclerViewRides = view.findViewById(R.id.recyclerViewRides);
-        notification = view.findViewById(R.id.notification);
+//        notification= view.findViewById(R.id.notification);
+        singles= view.findViewById(R.id.singles);
+        groups= view.findViewById(R.id.groups);
 
-        rides = new ArrayList<>();
-        db = FirebaseFirestore.getInstance();
-
-        notification.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getContext(), Notifications.class));
-            }
-        });
-        rideAdapter = new RideAdapter(rides, new RideAdapter.OnRideClickListener() {
-            @Override
-            public void onRideClick(Ride ride) {
-                // Handle the ride selection
-
-            }
-        });
-        recyclerViewRides.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-
-        recyclerViewRides.setAdapter(rideAdapter);
-
-        // Query Firestore for available rides and update the RecyclerView
-        db.collection("rides")
-                .addSnapshotListener((queryDocumentSnapshots, e) -> {
-                    if (e != null) {
-                        // Handle the error
-                        return;
-                    }
-
-                    for (DocumentChange documentChange : queryDocumentSnapshots.getDocumentChanges()) {
-                        DocumentSnapshot document = documentChange.getDocument();
-                        Ride ride = document.toObject(Ride.class);
-                        ride.setId(document.getId());
-
-                        switch (documentChange.getType()) {
-                            case ADDED:
-                                rides.add(0, ride);
-                                break;
-                            case MODIFIED:
-                                int index = findRideIndex(ride);
-                                if (index >= 0) {
-                                    rides.set(index, ride);
-                                }
-                                break;
-                            case REMOVED:
-                                int removeIndex = findRideIndex(ride);
-                                if (removeIndex >= 0) {
-                                    rides.remove(removeIndex);
-                                }
-                                break;
-                        }
-                    }
-                    rideAdapter.notifyDataSetChanged();
-                });
+//        notification.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startActivity(new Intent(getContext(), Notifications.class));
+//            }
+//        });
 
         return view;
     }
-    private int findRideIndex(Ride ride) {
-        for (int i = 0; i < rides.size(); i++) {
-            if (rides.get(i).getId().equals(ride.getId())) {
-                return i;
+
+    private void setupCardViewClickListeners() {
+//        singles.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                onCardClickListener.onCard1Clicked();
+//            }
+//        });
+//
+//        groups.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                onCardClickListener.onCard2Clicked();
+//            }
+//        });
+        singles.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onCardClickListener.onCard1Clicked();
+                if (onCardClickListener != null) {
+                    onCardClickListener.onCard1Clicked();
+                }
             }
-        }
-        return -1;
+        });
+        groups.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onCardClickListener != null) {
+                    onCardClickListener.onCard2Clicked();
+                }
+            }
+        });
     }
 }

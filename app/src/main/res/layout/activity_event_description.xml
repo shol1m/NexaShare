@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    tools:context=".EventDescription">-->
+
+<!--</androidx.constraintlayout.widget.ConstraintLayout>-->
+<!-- detailed_event_info.xml -->
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/eventNameDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:text="Event Name"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/eventLocationDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:text="Event Location"
+        android:layout_below="@id/eventNameDetail"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/organizerPhoneDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:text="Organizer's Phone"
+        android:layout_below="@id/eventLocationDetail"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/rideTypeDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:text="Ride Type"
+        android:layout_below="@id/organizerPhoneDetail"
+        android:layout_marginBottom="16dp"/>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_below="@id/rideTypeDetail"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:id="@+id/pickupTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:text="Pickups"
+        android:layout_below="@id/divider"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- RecyclerView to display list of pickups -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewPickups"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/pickupTitle"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"/>
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_below="@id/recyclerViewPickups"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_below="@id/divider2">
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/joinEventBtn"
+            style="@style/loginButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Join Ride"/>
+    </LinearLayout>
+
+
+</RelativeLayout>

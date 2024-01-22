@@ -7,8 +7,11 @@ public class Ride {
     private String source;
     private String destination;
     private String phone_number;
+    private String date_and_time;
     private int seats;
     private String token;
+    private String userId;
+    private String id;
 
     public String getUserId() {
         return userId;
@@ -17,8 +20,6 @@ public class Ride {
     public void setUserId(String userId) {
         this.userId = userId;
     }
-
-    private String userId;
 
     public String getToken() {
         return token;
@@ -44,8 +45,6 @@ public class Ride {
         this.phone_number = phone_number;
     }
 
-    private String date_and_time;
-
     public String getDate_and_time() {
         return date_and_time;
     }
@@ -53,8 +52,6 @@ public class Ride {
     public void setDate_and_time(String date_and_time) {
         this.date_and_time = date_and_time;
     }
-
-    private String id;
 
     public String getId() {
         return id;

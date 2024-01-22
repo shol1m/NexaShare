@@ -39,12 +39,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class RideAdapter extends RecyclerView.Adapter<RideAdapter.RideViewHolder> {
-
     private List<Ride> rides;
     public String receiverToken,userId;
     private OnRideClickListener rideClickListener;
     private APIService apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
-
     public RideAdapter(List<Ride> rides, OnRideClickListener onRideClickListener) {
         this.rides = rides;
         this.rideClickListener = rideClickListener;
@@ -106,10 +104,8 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.RideViewHolder
                                 @Override
                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                                     if (documentSnapshot.exists()) {
-                                        // Get the value of the field named "fieldName"
                                         Object receiverUserToken = documentSnapshot.get("fcmToken");
                                         if (receiverUserToken != null) {
-
                                             receiverToken = receiverUserToken.toString();
                                             FCMSend.pushNotification(
                                                     view.getContext(),
@@ -142,7 +138,6 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.RideViewHolder
             });
         }
     }
-
     public void sendNotifications(String usertoken, String title, String message) {
         Data data = new Data(title, message);
         NotificationSender sender = new NotificationSender(data, usertoken);

@@ -10,11 +10,15 @@ import android.view.MenuItem;
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class HomeActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+public class HomeActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener,
+        Home.OnCardClickListener {
 
     BottomNavigationView bottomNavigationView;
     Home homeFragment = new Home();
+    RidesFragment ridesFragment = new RidesFragment();
+    GroupRideFragment groupRideFragment = new GroupRideFragment();
     CreateRideFragment createRideFragment = new CreateRideFragment();
+    CreateGroupRideFragment createGroupRideFragment = new CreateGroupRideFragment();
     ProfileFragment profileFragment = new ProfileFragment();
 
     @Override
@@ -22,6 +26,7 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        homeFragment.setOnCardClickListener(this);
         bottomNavigationView
                 = findViewById(R.id.bottomNavigationView);
 
@@ -32,9 +37,6 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//        String home = String.valueOf(R.id.home);
-//        String create = String.valueOf(R.id.create);
-//        String profile = String.valueOf(R.id.profile);
         int itemId = item.getItemId();
         if (itemId == R.id.home) {
             getSupportFragmentManager()
@@ -48,7 +50,13 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
                     .replace(R.id.flFragment, createRideFragment)
                     .commit();
             return true;
-        } else if (itemId == R.id.profile) {
+        }else if (itemId == R.id.create_group_ride) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.flFragment, createGroupRideFragment)
+                    .commit();
+            return true;
+        }else if (itemId == R.id.profile) {
 //            getSupportFragmentManager()
 //                    .beginTransaction()
 //                    .replace(R.id.flFragment, profileFragment)
@@ -66,4 +74,24 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         return false;
 
     }
+
+    @Override
+    public void onCard1Clicked() {
+        // Handle the click for card 1
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.flFragment, ridesFragment)
+                .commit();
+    }
+
+    @Override
+    public void onCard2Clicked() {
+        // Handle the click for card 2
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.flFragment, groupRideFragment)
+                .commit();
+    }
+
+
 }

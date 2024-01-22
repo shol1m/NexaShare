@@ -11,6 +11,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import android.content.Intent;
 import android.net.Uri;
@@ -24,25 +27,45 @@ import com.google.firebase.storage.UploadTask;
 
 public class Profile extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
     BottomNavigationView bottomNavigationView;
-    private ImageView img;
+    private ImageView img,signOut,back;
     CreatedFragment createdFragment = new CreatedFragment();
     JoinedFragment joinedFragment = new JoinedFragment();
 
     private static final int PICK_IMAGE_REQUEST = 1;
     private Uri imageUri;
     private StorageReference storageReference;
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        signOut= findViewById(R.id.signout);
+        back= findViewById(R.id.profile_back);
         bottomNavigationView
                 = findViewById(R.id.ridesNavigationView);
 
         bottomNavigationView
                 .setOnNavigationItemSelectedListener(this);
         bottomNavigationView.setSelectedItemId(R.id.ridesNavigationView);
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Profile.this,HomeActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        signOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(Profile.this,StartActivity.class);
+                startActivity(intent);
+            }
+        });
 
 //        edit = findViewById(R.id.edit_profile);
 //        Button edit = findViewById(R.id.edit_profile_btn);
@@ -138,7 +161,7 @@ public class Profile extends AppCompatActivity implements BottomNavigationView.O
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             imageUri = data.getData();
-            img.setImageURI(imageUri);
+//            img.setImageURI(imageUri);
             uploadImage();
         }
     }
