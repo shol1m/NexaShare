@@ -40,8 +40,6 @@ public class Notifications extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notifications);
 
-        Log.d("ProfileActivity", "Profile activity created");
-
         // Initialize Firestore
         db = FirebaseFirestore.getInstance();
         notificationsCollection = db.collection("notifications").document(MyData.userId).collection("sentNotifications");
@@ -140,46 +138,3 @@ public class Notifications extends AppCompatActivity {
         return "user_id"; // Dummy user ID, replace this with actual logic
     }
 }
-
-
-//public class Notifications extends AppCompatActivity {
-//    private RecyclerView recyclerView;
-//    private NotificationAdapter adapter;
-//    private List<Notification> notifications;
-//
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_notifications);
-//
-//        recyclerView = findViewById(R.id.recyclerView);
-//        notifications = new ArrayList<>(); // Populate this list with Firestore data or mock data
-//        adapter = new NotificationAdapter(notifications);
-//
-//        // Set up RecyclerView
-//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-//        recyclerView.setAdapter(adapter);
-//
-//        // Handle item click listener
-//        adapter.setOnItemClickListener(new NotificationAdapter.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(int position) {
-//                // Handle notification clicked
-//                Notification clickedNotification = notifications.get(position);
-//                if (!clickedNotification.isRead()) {
-//                    // Change the background color (example: to a different color) to indicate it's been read
-//                    View itemView = recyclerView.getChildAt(position);
-//                    if (itemView != null) {
-//                        itemView.setBackgroundColor(ContextCompat.getColor(Notifications.this, android.R.color.darker_gray));
-//                    }
-//                    // Update the notification's read state in the list and in Firestore if needed
-//                    clickedNotification.setRead(true);
-//                    adapter.notifyItemChanged(position);
-//                }
-//
-//                // Here you can handle further actions when a notification is clicked
-//                // For example, open a detailed view of the notification
-//            }
-//        });
-//    }
-//}

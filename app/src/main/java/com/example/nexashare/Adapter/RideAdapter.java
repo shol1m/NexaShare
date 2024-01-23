@@ -2,12 +2,17 @@ package com.example.nexashare.Adapter;
 
 import static androidx.constraintlayout.widget.ConstraintLayoutStates.TAG;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.NumberPicker;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,9 +45,13 @@ import retrofit2.Response;
 
 public class RideAdapter extends RecyclerView.Adapter<RideAdapter.RideViewHolder> {
     private List<Ride> rides;
-    public String receiverToken,userId;
+    public static String receiverToken;
+    public static String userId ,rideId,source,destination;
+    public static int seats;
+    private static int selectedSeats;
     private OnRideClickListener rideClickListener;
     private APIService apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
+
     public RideAdapter(List<Ride> rides, OnRideClickListener onRideClickListener) {
         this.rides = rides;
         this.rideClickListener = rideClickListener;
@@ -61,10 +70,14 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.RideViewHolder
         Ride ride = rides.get(position);
 
         holder.textViewDriverName.setText(ride.getName());
-        holder.textViewPickup.setText("From "+ride.getSource() + " To "+ride.getDestination());
+        holder.textViewPickup.setText("From " + ride.getSource() + " To " + ride.getDestination());
         holder.textViewSeats.setText("Seats: " + ride.getSeats());
         holder.textViewDateTime.setText(ride.getDate_and_time());
         userId = ride.getUserId();
+        rideId = ride.getRideId();
+        seats = ride.getSeats();
+        source = ride.getSource();
+        destination = ride.getDestination();
 
     }
 
@@ -78,7 +91,7 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.RideViewHolder
         public TextView textViewSeats;
         public TextView textViewPickup;
         public TextView textViewDateTime;
-        public Button buttonSelectRide,joinRide;
+        public Button buttonSelectRide, joinRide;
         public String myName;
 
         public RideViewHolder(View itemView) {
@@ -91,88 +104,13 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.RideViewHolder
             joinRide.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    String title = "Notification Title";
-                    String message = "Notification Message";
-                    String recipientDeviceToken = "fuhfTgwWQ2iC5KYli4S_h9:APA91bEVdSSb_BS8kGMX1U1xeBiOnNCPNc_hjBA50oaJmVtDrojViu5izHT77FmFoqyWakLvSR1zyiJ0TAnwHpJaIj04kk-BOjK8dmoupc1o-vm6-lyzES_Z8DKZn-LIKH5aKcz7k9Z8";
 
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    showPopup(view.getContext());
 
-                    db.collection("users")
-                            .document(userId)
-                            .get()
-                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                @Override
-                                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                    if (documentSnapshot.exists()) {
-                                        Object receiverUserToken = documentSnapshot.get("fcmToken");
-                                        if (receiverUserToken != null) {
-                                            receiverToken = receiverUserToken.toString();
-                                            FCMSend.pushNotification(
-                                                    view.getContext(),
-                                                    userId,
-                                                    receiverToken,
-                                                        "Request to join ride",
-                                                    MyData.name + " has requested to join your ride"
-                                            );
-                                            Log.d("FIRESTORE_VALUE", "Token value: " + receiverUserToken.toString());
-                                        } else {
-                                            Log.d("FIRESTORE_VALUE", "Field 'fieldName' does not exist or is null");
-                                        }
-                                    } else {
-                                        Log.d("FIRESTORE_VALUE", "Document does not exist");
-                                    }
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    // Handle failures
-                                    Log.e("FIRESTORE_VALUE", "Error getting value from Firestore", e);
-                                }
-                            });
-
-//                sendNotificationToUser(title, message, recipientDeviceToken);
-                    Toast.makeText(view.getContext(), "Button clicked",Toast.LENGTH_SHORT).show();
-                    Toast.makeText(view.getContext(), receiverToken,Toast.LENGTH_SHORT).show();
                 }
             });
         }
-    }
-    public void sendNotifications(String usertoken, String title, String message) {
-        Data data = new Data(title, message);
-        NotificationSender sender = new NotificationSender(data, usertoken);
-
-        apiService.sendNotifcation(sender).enqueue(new Callback<MyResponse>() {
-            @Override
-            public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
-                if (response.isSuccessful()) {
-                    MyResponse responseBody = response.body();
-                    if (responseBody != null && responseBody.success == 1) {
-                        // Notification sent successfully
-                        Log.d(TAG, "Notification sent successfully" + data + " to " + usertoken);
-                        // You might perform further actions here upon successful sending
-                    } else {
-                        // Error in sending notification
-                        Log.e(TAG, "Failed to send notification");
-                    }
-                } else {
-                    if (response.code() == 401) {
-                        // Unauthorized - handle authentication issues
-                        Log.e(TAG, "Failed to send notification. Unauthorized access");
-                        // You might redirect the user to log in again or refresh authentication tokens
-                    } else {
-                        // Handle non-successful responses (other server errors)
-                        Log.e(TAG, "Failed to send notification. Server error: " + response.code() + data + " to " + usertoken);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<MyResponse> call, Throwable t) {
-                // Network or unexpected errors
-                Log.e(TAG, "Failed to send notification. Error: " + t.getMessage());
-            }
-        });
     }
 
 
@@ -180,37 +118,146 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.RideViewHolder
         void onRideClick(Ride ride);
     }
 
-    public void updateToken(){
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        String refreshToken = FirebaseMessaging.getInstance().getToken().getResult();
+    private static void showPopup(Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Select number of seats to book");
 
-        if (firebaseUser != null && refreshToken != null) {
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.popup_seats_selected, null);
+        builder.setView(view);
 
-            // Create a data object with the token
-            Map<String, Object> tokenMap = new HashMap<>();
-            tokenMap.put("fcmToken", refreshToken);
+        NumberPicker numberPicker = view.findViewById(R.id.seatsNumberPicker);
+        numberPicker.setMinValue(1);
+        numberPicker.setMaxValue(seats); // Set the maximum value to the available seats
 
-            // Update the token under the user's document in the "users" collection
-            db.collection("users")
-                    .document(firebaseUser.getUid())
-                    .set(tokenMap, SetOptions.merge())
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            // Token updated successfully
-                            Log.d("TOKEN_UPDATE", "Token updated in Firestore");
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            // Handle failure
-                            Log.e("TOKEN_UPDATE", "Error updating token in Firestore", e);
-                        }
-                    });
-        }
+        builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                selectedSeats = numberPicker.getValue();
+                // Handle confirm button click
+                if (selectedSeats > seats) {
+                    // Handle the case where the user selects more seats than available
+                    Toast.makeText(context, "Selected seats exceed available seats", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Perform actions with the selected number of seats
+                    Toast.makeText(context, "Selected Seats: " + selectedSeats, Toast.LENGTH_SHORT).show();
+                    // Call a method to handle further logic with the selected number of seats
+                    handleSelectedSeats(context, selectedSeats);
+                }
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Handle cancel button click
+            }
+        });
+
+        builder.show();
     }
 
+    // Add this method to handle further logic with the selected pickup location
+    private static void handleSelectedSeats(Context context,int selectedSeats) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users")
+                .document(userId)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+                            Object receiverUserToken = documentSnapshot.get("fcmToken");
+                            if (receiverUserToken != null) {
+                                receiverToken = receiverUserToken.toString();
+                                FCMSend.pushNotification(
+                                        context,
+                                        userId,
+                                        receiverToken,
+                                        "Request to join ride",
+                                        MyData.name + " has requested to join your ride of "+ source + " To " + destination + " Seats: "+ selectedSeats
+                                );
+                                updateSeats();
+                                Log.d("FIRESTORE_VALUE", "Token value: " + receiverUserToken.toString());
+                            } else {
+                                Log.d("FIRESTORE_VALUE", "Field 'fieldName' does not exist or is null");
+                            }
+                        } else {
+                            Log.d("FIRESTORE_VALUE", "Document does not exist");
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Handle failures
+                        Log.e("FIRESTORE_VALUE", "Error getting value from Firestore", e);
+                    }
+                });
+
+    }
+    public static void updateSeats(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("rides")
+                .document(rideId) // Replace with the actual document ID
+                .update("seats", seats - selectedSeats)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // Handle success
+                        Log.d("FIRESTORE_VALUE", "Seats has been updated from " + seats+ " to "+selectedSeats);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Handle failure
+                        Log.d("FIRESTORE_VALUE", "Field to update seats");
+                    }
+                });
+    }
 }
 
+//        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+//        builder.setTitle("Select number of seats to book");
+//
+//        // Convert List<String> to String[]
+//        String[] pickupLocationsArray = pickupLocations.toArray(new String[0]);
+//
+//        // Set up the layout inflater for the custom view
+//        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//        View view = inflater.inflate(R.layout.popup_pickup_location, null);
+//        builder.setView(view);
+//
+//        // Initialize the Spinner
+//        Spinner pickupSpinner = view.findViewById(R.id.pickupSpinner);
+//
+//        // Create an ArrayAdapter using the string array and a default spinner layout
+//        ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, pickupLocationsArray);
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//
+//        // Apply the adapter to the spinner
+//        pickupSpinner.setAdapter(adapter);
+//
+//        builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                // Handle confirm button click
+//                String selectedPickupLocation = pickupSpinner.getSelectedItem().toString();
+//                // Perform actions with the selected pickup location
+//                Toast.makeText(context, "Selected Pickup Location: " + selectedPickupLocation, Toast.LENGTH_SHORT).show();
+//                // Call a method to handle further logic with the selected pickup location
+//
+//                handleSelectedPickupLocation(context, selectedPickupLocation);
+//            }
+//        });
+//
+//        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                // Handle cancel button click
+//
+//            }
+//        });
+//
+//        builder.show();

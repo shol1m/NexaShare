@@ -12,6 +12,15 @@ public class Ride {
     private String token;
     private String userId;
     private String id;
+    private String rideId;
+
+    public String getRideId() {
+        return rideId;
+    }
+
+    public void setRideId(String rideId) {
+        this.rideId = rideId;
+    }
 
     public String getUserId() {
         return userId;

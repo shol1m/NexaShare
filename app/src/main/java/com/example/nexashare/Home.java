@@ -9,9 +9,11 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,37 +37,11 @@ import java.util.List;
 public class Home extends Fragment {
     private ImageView notification;
     private CardView singles,groups;
-
+    RidesFragment ridesFragment = new RidesFragment();
+    GroupRideFragment groupRideFragment = new GroupRideFragment();
     public Home() {
         // Required empty public constructor
     }
-
-
-
-    private OnCardClickListener onCardClickListener;
-
-    public interface OnCardClickListener {
-        void onCard1Clicked();
-        void onCard2Clicked();
-        // Add more methods for other card clicks if needed
-    }
-
-    public void setOnCardClickListener(OnCardClickListener listener) {
-        this.onCardClickListener = listener;
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        if (context instanceof OnCardClickListener) {
-            onCardClickListener = (OnCardClickListener) context;
-        } else {
-            throw new ClassCastException(context.toString() + " must implement OnCardClickListener");
-        }
-    }
-
-    // In your card view click listeners, call the appropriate method of the interface
-    
 
 
     @Override
@@ -83,12 +59,48 @@ public class Home extends Fragment {
         singles= view.findViewById(R.id.singles);
         groups= view.findViewById(R.id.groups);
 
-//        notification.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                startActivity(new Intent(getContext(), Notifications.class));
-//            }
-//        });
+        singles.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                try {
+                    // Check if getParentFragmentManager() is the correct context, otherwise use getChildFragmentManager()
+                    if (getParentFragmentManager() != null) {
+                        transaction.replace(R.id.flFragment, ridesFragment);
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+                    } else {
+                        // Log an error if getParentFragmentManager() returns null
+                        Log.e("FragmentTransaction", "Parent Fragment Manager is null");
+                    }
+                } catch (Exception e) {
+                    // Log any exception that might occur during the transaction
+                    Log.e("FragmentTransaction", "Error during fragment transaction", e);
+                }
+
+            }
+        });
+        groups.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                try {
+                    // Check if getParentFragmentManager() is the correct context, otherwise use getChildFragmentManager()
+                    if (getParentFragmentManager() != null) {
+                        transaction.replace(R.id.flFragment, groupRideFragment);
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+                    } else {
+                        // Log an error if getParentFragmentManager() returns null
+                        Log.e("FragmentTransaction", "Parent Fragment Manager is null");
+                    }
+                } catch (Exception e) {
+                    // Log any exception that might occur during the transaction
+                    Log.e("FragmentTransaction", "Error during fragment transaction", e);
+                }
+            }
+        });
 
         return view;
     }
@@ -107,22 +119,6 @@ public class Home extends Fragment {
 //                onCardClickListener.onCard2Clicked();
 //            }
 //        });
-        singles.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onCardClickListener.onCard1Clicked();
-                if (onCardClickListener != null) {
-                    onCardClickListener.onCard1Clicked();
-                }
-            }
-        });
-        groups.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (onCardClickListener != null) {
-                    onCardClickListener.onCard2Clicked();
-                }
-            }
-        });
+
     }
 }

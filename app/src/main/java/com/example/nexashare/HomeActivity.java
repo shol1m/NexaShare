@@ -10,8 +10,7 @@ import android.view.MenuItem;
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class HomeActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener,
-        Home.OnCardClickListener {
+public class HomeActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
 
     BottomNavigationView bottomNavigationView;
     Home homeFragment = new Home();
@@ -26,18 +25,23 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        homeFragment.setOnCardClickListener(this);
         bottomNavigationView
                 = findViewById(R.id.bottomNavigationView);
 
         bottomNavigationView
                 .setOnNavigationItemSelectedListener(this);
         bottomNavigationView.setSelectedItemId(R.id.bottomNavigationView);
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.flFragment, homeFragment)
+                .commit();
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
+
         if (itemId == R.id.home) {
             getSupportFragmentManager()
                     .beginTransaction()
@@ -73,24 +77,6 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         }
         return false;
 
-    }
-
-    @Override
-    public void onCard1Clicked() {
-        // Handle the click for card 1
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.flFragment, ridesFragment)
-                .commit();
-    }
-
-    @Override
-    public void onCard2Clicked() {
-        // Handle the click for card 2
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.flFragment, groupRideFragment)
-                .commit();
     }
 
 
