@@ -22,7 +22,9 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Notifications extends AppCompatActivity {
@@ -55,7 +57,7 @@ public class Notifications extends AppCompatActivity {
             }
         });
         notifications = new ArrayList<>();
-        adapter = new NotificationAdapter(notifications);
+        adapter = new NotificationAdapter(Notifications.this,notifications);
 
         // Set up RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -73,22 +75,21 @@ public class Notifications extends AppCompatActivity {
 
                 View itemView = recyclerView.getChildAt(position);
                     if (itemView != null) {
-                        itemView.setBackgroundColor(ContextCompat.getColor(Notifications.this, R.color.light_grey));
+                        itemView.setBackgroundColor(ContextCompat.getColor(Notifications.this, R.color.whiteCardColor));
                     }
                     // Update the notification's read state in the list and in Firestore if needed
                     clickedNotification.setRead(true);
                     adapter.notifyItemChanged(position);
-//                if (!clickedNotification.isRead()) {
-//                    // Update the notification's read state in Firestore
-//                    markNotificationAsRead(position);
-//                }
+                if (!clickedNotification.isRead()) {
+                    // Update the notification's read state in Firestore
+                    markNotificationAsRead(position);
+                }
 
                 // Here you can handle further actions when a notification is clicked
                 // For example, open a detailed view of the notification
             }
         });
     }
-
     private void loadNotifications() {
         notificationsCollection.orderBy("timestamp", Query.Direction.DESCENDING)
                 .get()
@@ -131,6 +132,7 @@ public class Notifications extends AppCompatActivity {
                     }
                 });
     }
+
 
     // Method to get the current user's ID (you need to implement this based on your authentication logic)
     private String getCurrentUserId() {

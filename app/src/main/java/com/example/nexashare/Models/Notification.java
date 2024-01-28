@@ -1,9 +1,22 @@
 package com.example.nexashare.Models;
+import com.google.firebase.Timestamp;
+
+import java.util.Date;
 
 public class Notification {
     private String title;
     private String message;
     private String id;
+    private Timestamp timestamp;
+
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Timestamp timestamp) {
+        this.timestamp = timestamp;
+    }
+
     private boolean isRead;
 
     public String getId() {

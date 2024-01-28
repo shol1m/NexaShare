@@ -1,5 +1,6 @@
 package com.example.nexashare;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,13 +10,13 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
-public class ProfileFragment extends Fragment implements BottomNavigationView.OnNavigationItemSelectedListener{
-    BottomNavigationView bottomNavigationView;
-    CreatedFragment createdFragment = new CreatedFragment();
-    JoinedFragment joinedFragment = new JoinedFragment();
+public class ProfileFragment extends Fragment{
+    LinearLayout notifications,joinedRides,createdRides,accountDetails,deleteAccount,logout;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,35 +28,40 @@ public class ProfileFragment extends Fragment implements BottomNavigationView.On
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
-        bottomNavigationView
-                = view.findViewById(R.id.bottomNavigationView);
-
-//        bottomNavigationView.setOnNavigationItemSelectedListener();
-        bottomNavigationView.setSelectedItemId(R.id.bottomNavigationView);
+        notifications = view.findViewById(R.id.notifications);
+        joinedRides = view.findViewById(R.id.joined);
+        createdRides = view.findViewById(R.id.created);
+        logout = view.findViewById(R.id.logout);
+        notifications.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                notifications.setBackgroundColor(getContext().getColor(R.color.light_grey));
+                startActivity(new Intent(getContext(), Notifications.class));
+            }
+        });
+        joinedRides.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                joinedRides.setBackgroundColor(getContext().getColor(R.color.light_grey));
+                startActivity(new Intent(getContext(), JoinedFragment.class));
+            }
+        });
+        createdRides.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                createdRides.setBackgroundColor(getContext().getColor(R.color.light_grey));
+                startActivity(new Intent(getContext(), CreatedFragment.class));
+            }
+        });
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(getContext(),StartActivity.class);
+                startActivity(intent);
+            }
+        });
         return view;
     }
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        int itemId = item.getItemId();
-        if (itemId == R.id.joined) {
-            getActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.flFragment, joinedFragment)
-                    .commit();
-            return true;
-        } else if (itemId == R.id.created) {
-            getActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.flFragment, createdFragment)
-                    .commit();
-            return true;
-        }else {
-            getActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.flFragment, createdFragment)
-                    .commit();
-        }
-        return false;
-    }
 }

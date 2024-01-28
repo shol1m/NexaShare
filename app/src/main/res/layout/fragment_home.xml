@@ -6,6 +6,7 @@
     android:startColor="#2467CE"
     android:endColor="#516163"
     android:orientation="vertical"
+    android:background="@color/Background"
     tools:context=".Home">
 
 
@@ -13,45 +14,29 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-<!--        <LinearLayout-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content">-->
-<!--            <com.google.android.material.appbar.MaterialToolbar-->
-<!--                android:id="@+id/searchToolbar"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content">-->
-<!--                <com.google.android.material.search.SearchView-->
-<!--                    android:id="@+id/search"-->
-<!--                    android:layout_width="200dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:hint="Search"/>-->
-<!--                <com.google.android.material.imageview.ShapeableImageView-->
-<!--                    android:id="@+id/notification"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_gravity="end"-->
-<!--                    android:layout_marginEnd="10dp"-->
-<!--                    android:background="@drawable/baseline_notifications"/>-->
-<!--            </com.google.android.material.appbar.MaterialToolbar>-->
-<!--        </LinearLayout>-->
 
         <androidx.cardview.widget.CardView
             android:layout_width="300dp"
             android:layout_height="250dp"
             android:id="@+id/singles"
             android:elevation="5dp"
-            android:background="@color/primary"
+            android:orientation="vertical"
+            android:background="@color/white"
             android:layout_gravity="center"
+            android:layout_marginTop="30dp"
             android:layout_marginBottom="20dp">
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/eventNameTxt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Single Rides"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center_horizontal"
                 android:textSize="30sp"/>
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="200dp"
-                android:layout_height="200dp"></androidx.appcompat.widget.AppCompatImageView>
+                android:layout_height="200dp"
+                android:layout_gravity="center_horizontal"></androidx.appcompat.widget.AppCompatImageView>
 
         </androidx.cardview.widget.CardView>
 
@@ -61,19 +46,22 @@
             android:id="@+id/groups"
             android:elevation="5dp"
             style="@style/rideItem"
-            android:background="@color/primary"
-            android:layout_gravity="center"
-            android:layout_marginBottom="20dp">
+            android:orientation="vertical"
+            android:background="@color/white"
+            android:layout_gravity="center">
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/eventTitleTxt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Group Rides"
+                android:layout_marginTop="30dp"
+                android:layout_gravity="center_horizontal"
                 android:textSize="30sp"/>
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="200dp"
-                android:layout_height="200dp"></androidx.appcompat.widget.AppCompatImageView>
+                android:layout_height="200dp"
+                android:layout_gravity="center_horizontal"></androidx.appcompat.widget.AppCompatImageView>
         </androidx.cardview.widget.CardView>
 
 

@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/Background"
     tools:context=".CreateRideFragment">
 
     <LinearLayout
@@ -97,14 +98,13 @@
             android:orientation="horizontal"
             android:layout_margin="20dp">
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/create_ride_btn"
                 style="@style/loginButton"
                 android:text="Create Ride"
-
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/loginViewsMargin"/>
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/add_btn"
                 style="@style/loginButton"
                 android:text="Add PickUp"

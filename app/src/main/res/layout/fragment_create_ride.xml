@@ -4,8 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/Background"
     tools:context=".CreateRideFragment">
-<!--    android:background="@color/primary"-->
+
 
     <LinearLayout
         style="@style/linearParent"

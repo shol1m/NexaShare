@@ -187,13 +187,6 @@ public class CreateGroupRideFragment extends Fragment {
                     Toast.makeText(getContext(), "Please fill in all required fields", Toast.LENGTH_SHORT).show();
                 }
 
-                // Pickup details when there is only one pickup
-//                String pickupLocationText = pickupLocation.getText().toString();
-//                int availableSeatsValue = Integer.parseInt(availableSeats.getText().toString());
-
-//                OneEventPickupDetail newOneEventPickupDetail = new OneEventPickupDetail(pickupLocationText, availableSeatsValue, String.valueOf(selectedDateTime));
-//                oneEventPickupDetailList.add(newOneEventPickupDetail);
-
                 eventRef.set(eventData)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
@@ -245,88 +238,6 @@ public class CreateGroupRideFragment extends Fragment {
             }
         });
 
-//        addPickup.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                String PickUpLocation = pickupLocation.getText().toString();
-//                int AvailableSeats = Integer.parseInt(availableSeats.getText().toString());
-//
-////                Map<String, Object> PickUpData = new HashMap<>();
-////                PickUpData.put("date_and_time", String.valueOf(selectedDateTime));
-////                PickUpData.put("pickup_location", PickUpLocation);
-////                PickUpData.put("available_seats", AvailableSeats);
-//
-//                // Create a new PickupDetail object and add it to the list
-//                EventPickupDetail newEventPickupDetail = new EventPickupDetail(PickUpLocation,AvailableSeats,String.valueOf(selectedDateTime));
-//                pickupDetailsList.add(newEventPickupDetail);
-//
-//                pickupLocation.setText("");
-//                availableSeats.setText("");
-//
-//            }
-//        });
-//
-//        createRideBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                String EventName = eventName.getText().toString();
-//                String EventLocation = eventLocation.getText().toString();
-//                String OrganizerPhoneNumber = phone.getText().toString();
-//                String RideType = "Group";
-//                String userId = MyData.userId;
-//                String fcmToken = MyData.token;
-////                String PickUpLocation = pickupLocation.getText().toString();
-////                int AvailableSeats = Integer.parseInt(availableSeats.getText().toString());
-//
-//                Map<String, Object> eventData = new HashMap<>();
-//                eventData.put("eventName", EventName);
-//                eventData.put("eventLocation", EventLocation);
-//                eventData.put("organizerPhoneNumber", OrganizerPhoneNumber);
-//                eventData.put("token", fcmToken);
-//                eventData.put("userId",userId);
-//
-//                // Create a new Event object
-////                Event newEvent = new Event(EventName,OrganizerPhoneNumber,EventLocation,RideType,userId,fcmToken);
-//
-//
-//                // Upload event details to Firestore
-//                DocumentReference eventRef = db.collection("Events").document();
-//                String eventId = eventRef.getId();
-//                eventRef.set(eventData)
-//                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                            @Override
-//                            public void onSuccess(Void aVoid) {
-//                                // DocumentSnapshot added successfully
-//                                Log.d("Firestore", "Event data added successfully with ID: " + eventId);
-//
-//                                // Upload all pickup details for the event
-//                                CollectionReference pickupsRef = eventRef.collection("pickups");
-//                                for (EventPickupDetail pickup : pickupDetailsList) {
-//                                    pickupsRef.add(pickup);
-//                                }
-//                            }
-//                        })
-//                        .addOnFailureListener(new OnFailureListener() {
-//                            @Override
-//                            public void onFailure(@NonNull Exception e) {
-//                                // Handle failure
-//                                Log.e("Firestore", "Error adding event data", e);
-//                            }
-//                        });
-//
-////                DocumentReference eventRef = db.collection("Events").document();
-////                String eventId = eventRef.getId();
-////                eventRef.set(eventData);
-////
-////                // Upload all pickup details for the event
-////                CollectionReference pickupsRef = eventRef.collection("pickups");
-////                for (EventPickupDetail pickup : pickupDetailsList) {
-////                    pickupsRef.add(pickup);
-////                }
-//
-//                Log.d(TAG, "Pickup Data" + pickupDetailsList);
-//            }
-//        });
         return view;
     }
     private void showDateTimePickerDialog() {

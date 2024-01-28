@@ -61,13 +61,11 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
                     .commit();
             return true;
         }else if (itemId == R.id.profile) {
-//            getSupportFragmentManager()
-//                    .beginTransaction()
-//                    .replace(R.id.flFragment, profileFragment)
-//                    .commit();
-            startActivity(new Intent(HomeActivity.this, Profile.class));
-//            Intent profile = new Intent(HomeActivity.this,Profile.class);
-//            StartActivity(profile);
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.flFragment, profileFragment)
+                    .commit();
+;
             return true;
         } else {
             getSupportFragmentManager()
