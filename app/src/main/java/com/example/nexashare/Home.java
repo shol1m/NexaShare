@@ -105,20 +105,6 @@ public class Home extends Fragment {
         return view;
     }
 
-    private void setupCardViewClickListeners() {
-//        singles.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                onCardClickListener.onCard1Clicked();
-//            }
-//        });
-//
-//        groups.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                onCardClickListener.onCard2Clicked();
-//            }
-//        });
 
-    }
+
 }
