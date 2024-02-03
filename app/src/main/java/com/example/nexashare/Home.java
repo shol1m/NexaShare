@@ -1,44 +1,22 @@
 package com.example.nexashare;
 
-import android.content.Context;
-import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
-import android.widget.Toolbar;
-
-import com.example.nexashare.Adapter.Ride;
-import com.example.nexashare.Adapter.RideAdapter;
-import com.google.android.material.search.SearchBar;
-import com.google.android.material.search.SearchView;
-import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Home extends Fragment {
     private ImageView notification;
     private CardView singles,groups;
-    RidesFragment ridesFragment = new RidesFragment();
-    GroupRideFragment groupRideFragment = new GroupRideFragment();
+    SingleRidesDisplayFragment singleRidesDisplayFragment = new SingleRidesDisplayFragment();
+    GroupRidesDisplayFragment groupRidesDisplayFragment = new GroupRidesDisplayFragment();
     public Home() {
         // Required empty public constructor
     }
@@ -67,7 +45,7 @@ public class Home extends Fragment {
                 try {
                     // Check if getParentFragmentManager() is the correct context, otherwise use getChildFragmentManager()
                     if (getParentFragmentManager() != null) {
-                        transaction.replace(R.id.flFragment, ridesFragment);
+                        transaction.replace(R.id.flFragment, singleRidesDisplayFragment);
                         transaction.addToBackStack(null);
                         transaction.commit();
                     } else {
@@ -88,7 +66,7 @@ public class Home extends Fragment {
                 try {
                     // Check if getParentFragmentManager() is the correct context, otherwise use getChildFragmentManager()
                     if (getParentFragmentManager() != null) {
-                        transaction.replace(R.id.flFragment, groupRideFragment);
+                        transaction.replace(R.id.flFragment, groupRidesDisplayFragment);
                         transaction.addToBackStack(null);
                         transaction.commit();
                     } else {

@@ -8,11 +8,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.NumberPicker;
@@ -20,16 +20,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.nexashare.Adapter.Event;
+import com.example.nexashare.Models.Event;
 import com.example.nexashare.Adapter.EventPickupDescriptionAdapter;
-import com.example.nexashare.Adapter.EventPickupDetail;
-import com.example.nexashare.Adapter.MyData;
+import com.example.nexashare.Models.EventPickupDetail;
+import com.example.nexashare.Models.MyData;
 import com.example.nexashare.FCM.APIService;
 import com.example.nexashare.FCM.Client;
-import com.example.nexashare.FCM.Data;
 import com.example.nexashare.FCM.FCMSend;
-import com.example.nexashare.FCM.MyResponse;
-import com.example.nexashare.FCM.NotificationSender;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
@@ -39,25 +36,19 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import static androidx.constraintlayout.widget.ConstraintLayoutStates.TAG;
 
-import static java.security.AccessController.getContext;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class EventDescription extends AppCompatActivity {
-    private TextView eventNameDetail, eventLocationDetail, organizerPhoneDetail, rideTypeDetail;
-    private Button joinEvent;
-    private RecyclerView recyclerViewPickups;
     private List<EventPickupDetail> pickupDetailsList;
-    private EventPickupDetail eventPickupDetail;
+    private static EventPickupDetail eventPickupDetail;
     private static FirebaseFirestore db;
-//    private static FirebaseFirestore db;
-    public static String receiverToken,eventId;
-    public static int seats,selectedSeats;
+    public static String receiverToken,eventId,pickupId,selectedPickupLocation;
+    public static int availableSeats,selectedSeats;
+    public static NumberPicker numberPicker;
     public static String eventName,EventPickupLocation;
     public static String userId;
     private APIService apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
@@ -72,12 +63,12 @@ public class EventDescription extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
         // Initialize views
-        eventNameDetail = findViewById(R.id.eventNameDetail);
-        eventLocationDetail = findViewById(R.id.eventLocationDetail);
-        organizerPhoneDetail = findViewById(R.id.organizerPhoneDetail);
-        rideTypeDetail = findViewById(R.id.rideTypeDetail);
-        recyclerViewPickups = findViewById(R.id.recyclerViewPickups);
-        joinEvent = findViewById(R.id.joinEventBtn);
+        TextView eventNameDetail = findViewById(R.id.eventNameDetail);
+        TextView eventLocationDetail = findViewById(R.id.eventLocationDetail);
+        TextView organizerPhoneDetail = findViewById(R.id.organizerPhoneDetail);
+        TextView rideTypeDetail = findViewById(R.id.rideTypeDetail);
+        RecyclerView recyclerViewPickups = findViewById(R.id.recyclerViewPickups);
+        Button joinEvent = findViewById(R.id.joinEventBtn);
 
         eventPickupDetail = new EventPickupDetail();
 
@@ -89,7 +80,6 @@ public class EventDescription extends AppCompatActivity {
 
         // Fetch eventId from intent
         eventId = getIntent().getStringExtra("eventId");
-        Log.d(TAG,"EventId is: " + eventId);
 
             // Fetch event details from Firestore based on eventId
             FirebaseFirestore.getInstance().collection("events")
@@ -111,12 +101,7 @@ public class EventDescription extends AppCompatActivity {
             joinEvent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
                     showPickupLocationPopup(EventDescription.this,eventId );
-
-//                sendNotificationToUser(title, message, recipientDeviceToken);
-                    Toast.makeText(view.getContext(), "Button clicked",Toast.LENGTH_SHORT).show();
-                    Toast.makeText(view.getContext(), receiverToken,Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -138,10 +123,6 @@ public class EventDescription extends AppCompatActivity {
 
         eventName= event.getEventName();
 
-
-        // TODO: Fetch and display pickups data in the RecyclerView
-        Log.d(TAG,"EventId in updateUi() is: " + eventId);
-
         RecyclerView recyclerViewPickups = findViewById(R.id.recyclerViewPickups);
 
         // Fetch and display pickups data in the RecyclerView
@@ -152,6 +133,7 @@ public class EventDescription extends AppCompatActivity {
         FirebaseFirestore.getInstance().collection("events")
                 .document(eventId)
                 .collection("pickups")
+                .whereGreaterThan("availableSeats",0)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     // Convert query result to list of EventPickupDetail objects
@@ -161,10 +143,7 @@ public class EventDescription extends AppCompatActivity {
                         EventPickupDetail pickup = document.toObject(EventPickupDetail.class);
                         pickup.setPickupId(pickupId);
                         pickupsList.add(pickup);
-
                     }
-
-
 
                     // Create and set adapter for RecyclerView
                     EventPickupDescriptionAdapter eventPickupDescriptionAdapter = new EventPickupDescriptionAdapter(pickupsList);
@@ -194,7 +173,7 @@ public class EventDescription extends AppCompatActivity {
                         showPopup(context, pickupLocations);
                     } else {
                         // Handle errors
-                        Toast.makeText(context, "Error fetching Pickup Locations", Toast.LENGTH_SHORT).show();
+                        Log.e("FIRESTORE_VALUE", "Error fetching Pickup Locations");
                     }
                 });
     }
@@ -202,8 +181,7 @@ public class EventDescription extends AppCompatActivity {
     private static void showPopup(Context context, List<String> pickupLocations) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Select Pickup Location");
-        EventPickupDetail eventPickupDetail =new EventPickupDetail();
-        seats = eventPickupDetail.getAvailableSeats();
+        EventPickupDetail eventPickupDetail = new EventPickupDetail();
 
         // Convert List<String> to String[]
         String[] pickupLocationsArray = pickupLocations.toArray(new String[0]);
@@ -213,15 +191,23 @@ public class EventDescription extends AppCompatActivity {
         View view = inflater.inflate(R.layout.popup_pickup_location, null);
         builder.setView(view);
 
-        NumberPicker numberPicker = view.findViewById(R.id.seats_select_edt);
+        numberPicker = view.findViewById(R.id.seats_select_edt);
         numberPicker.setMinValue(1);
-        numberPicker.setMaxValue(seats);
 
-        Log.d("Seats_VALUE", "Seats are :" +seats);
-
-
-        // Initialize the Spinner
+        // Fetch available seats when a pickup location is selected
         Spinner pickupSpinner = view.findViewById(R.id.pickupSpinner);
+        pickupSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                selectedPickupLocation = pickupLocationsArray[position];
+                fetchAvailableSeats(eventId, selectedPickupLocation, numberPicker);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // Do nothing here
+            }
+        });
 
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, pickupLocationsArray);
@@ -236,17 +222,15 @@ public class EventDescription extends AppCompatActivity {
                 // Handle confirm button click
                 selectedSeats = numberPicker.getValue();
 
-                if (selectedSeats > seats) {
+                if (selectedSeats > availableSeats) {
                     // Handle the case where the user selects more seats than available
                     Toast.makeText(context, "Selected seats exceed available seats", Toast.LENGTH_SHORT).show();
                 }
 
                 String selectedPickupLocation = pickupSpinner.getSelectedItem().toString();
-                // Perform actions with the selected pickup location
-                Toast.makeText(context, "Selected Pickup Location: " + selectedPickupLocation, Toast.LENGTH_SHORT).show();
-                // Call a method to handle further logic with the selected pickup location
 
-                handleSelectedPickupLocation(context,selectedPickupLocation,selectedSeats);
+                // Call a method to handle further logic with the selected pickup location
+                handleSelectedPickupLocation(context, selectedPickupLocation, selectedSeats);
             }
         });
 
@@ -254,12 +238,13 @@ public class EventDescription extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // Handle cancel button click
-
             }
         });
 
         builder.show();
     }
+
+
     // Add this method to handle further logic with the selected pickup location
     private static void handleSelectedPickupLocation(Context context,String selectedPickupLocation, int selectedSeats) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -281,11 +266,14 @@ public class EventDescription extends AppCompatActivity {
                                         "Request to join ride",
                                         MyData.name + " has requested to join your "+eventName+" Event from pickup Location: "+selectedPickupLocation+ "Booked seats : " +selectedSeats
                                 );
+                                int seatsRemaining = availableSeats - selectedSeats;
+                                updateSeats(seatsRemaining,pickupId);
+                                saveBookingData(eventId,pickupId,userId,selectedSeats);
                             } else {
-                                Log.d("FIRESTORE_VALUE", "Field 'fieldName' does not exist or is null");
+                                Log.e("FIRESTORE_VALUE", "Field 'fieldName' does not exist or is null");
                             }
                         } else {
-                            Log.d("FIRESTORE_VALUE", "Document does not exist");
+                            Log.e("FIRESTORE_VALUE", "Document does not exist");
                         }
                     }
                 })
@@ -298,27 +286,86 @@ public class EventDescription extends AppCompatActivity {
                 });
     }
 
-    public static void updateSeats(){
+    private static void fetchAvailableSeats(String eventId, String pickupLocation, NumberPicker numberPicker) {
+        db.collection("events")
+                .document(eventId)
+                .collection("pickups")
+                .whereEqualTo("pickupLocation", pickupLocation)
+
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                            EventPickupDetail pickupDetail = document.toObject(EventPickupDetail.class);
+                            availableSeats = pickupDetail.getAvailableSeats();
+                            numberPicker.setMaxValue(availableSeats);
+                            numberPicker.setValue(1);  // Set default value to 1
+                        }
+                        DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
+                        pickupId = document.getId();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    // Handle failure
+                    Log.e(TAG, "Error fetching available seats ", e);
+                });
+    }
+
+    public static void updateSeats(int seatsRemaining,String pickupId){
         EventPickupDetail eventPickupDetail = new EventPickupDetail();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("rides")
+        db.collection("events")
                 .document(eventId)
                 .collection("pickups")// Replace with the actual document ID
-                .document(eventPickupDetail.getPickupId())
-                .update("availableSeats", seats - selectedSeats)
+                .document(pickupId)
+                .update("availableSeats", seatsRemaining)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         // Handle success
-                        Log.d("FIRESTORE_VALUE", "Seats has been updated from " + seats+ " to "+selectedSeats);
+                        Log.d("FIRESTORE_VALUE", "Seats has been updated from " + availableSeats+ " to "+selectedSeats);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         // Handle failure
-                        Log.d("FIRESTORE_VALUE", "Field to update seats");
+                        Log.d("FIRESTORE_VALUE", "Failed to update seats"+ e);
                     }
+                });
+    }
+
+    public static void saveBookingData(String eventId, String pickupId, String userId, int bookedSeats) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        // Create a reference to the joinedUsers subcollection
+        CollectionReference joinedUsersRef = db.collection("events")
+                .document(eventId)
+                .collection("pickups")
+//                .whereEqualTo("pickupLocation", selectedPickupLocation)
+                .document(pickupId)
+                .collection("joinedUsers");
+
+        // Create a document for the user in the joinedUsers subcollection
+        DocumentReference userDocRef = joinedUsersRef.document(userId);
+
+        // Create a data map to be saved in the document
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("bookedSeats", bookedSeats);
+        userData.put("confirmed", false); // Initial confirmation status
+
+        // Add the data to the document
+        userDocRef.set(userData)
+                .addOnSuccessListener(aVoid -> {
+                    // Handle success
+                    Log.d(TAG, "Booking data saved successfully for user: " + userId);
+
+                    // If needed, you can update the available seats in the pickup location
+                    // Example: updateAvailableSeats(eventId, pickupId, bookedSeats);
+                })
+                .addOnFailureListener(e -> {
+                    // Handle failure
+                    Log.e(TAG, "Error saving booking data for user: " + userId, e);
                 });
     }
 

@@ -20,10 +20,10 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.example.nexashare.Adapter.Event;
-import com.example.nexashare.Adapter.EventPickupDetail;
-import com.example.nexashare.Adapter.MyData;
-import com.example.nexashare.Adapter.OneEventPickupDetail;
+import com.example.nexashare.Models.Event;
+import com.example.nexashare.Models.EventPickupDetail;
+import com.example.nexashare.Models.MyData;
+import com.example.nexashare.Models.OneEventPickupDetail;
 import com.example.nexashare.Helper.FirebaseHelper;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -31,8 +31,6 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import org.checkerframework.checker.units.qual.A;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

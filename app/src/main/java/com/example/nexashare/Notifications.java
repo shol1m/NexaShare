@@ -7,11 +7,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.nexashare.Adapter.MyData;
+import com.example.nexashare.Models.MyData;
 import com.example.nexashare.Adapter.NotificationAdapter;
 import com.example.nexashare.Models.Notification;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -22,9 +21,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Notifications extends AppCompatActivity {

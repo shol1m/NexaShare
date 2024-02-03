@@ -1,4 +1,4 @@
-package com.example.nexashare.Adapter;
+package com.example.nexashare.Models;
 
 import java.security.Timestamp;
 

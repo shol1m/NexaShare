@@ -1,7 +1,5 @@
 package com.example.nexashare.Adapter;
 
-import static androidx.constraintlayout.widget.ConstraintLayoutStates.TAG;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,10 +7,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.NumberPicker;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,27 +17,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.nexashare.FCM.APIService;
 import com.example.nexashare.FCM.Client;
-import com.example.nexashare.FCM.MyResponse;
-import com.example.nexashare.FCM.Data;
-import com.example.nexashare.FCM.NotificationSender;
 import com.example.nexashare.FCM.FCMSend;
+import com.example.nexashare.Models.MyData;
+import com.example.nexashare.Models.Ride;
 import com.example.nexashare.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.SetOptions;
-import com.google.firebase.messaging.FirebaseMessaging;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class RideAdapter extends RecyclerView.Adapter<RideAdapter.RideViewHolder> {
     private List<Ride> rides;
@@ -127,7 +112,7 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.RideViewHolder
         builder.setView(view);
 
         NumberPicker numberPicker = view.findViewById(R.id.seatsNumberPicker);
-        numberPicker.setMinValue(1);
+        numberPicker.setMinValue(0);
         numberPicker.setMaxValue(seats); // Set the maximum value to the available seats
 
         builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
@@ -136,11 +121,10 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.RideViewHolder
                 selectedSeats = numberPicker.getValue();
                 // Handle confirm button click
                 if (selectedSeats > seats) {
-                    // Handle the case where the user selects more seats than available
+                    // case where the user selects more seats than available
                     Toast.makeText(context, "Selected seats exceed available seats", Toast.LENGTH_SHORT).show();
                 } else {
-                    // Perform actions with the selected number of seats
-                    Toast.makeText(context, "Selected Seats: " + selectedSeats, Toast.LENGTH_SHORT).show();
+
                     // Call a method to handle further logic with the selected number of seats
                     handleSelectedSeats(context, selectedSeats);
                 }
@@ -177,13 +161,13 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.RideViewHolder
                                         "Request to join ride",
                                         MyData.name + " has requested to join your ride of "+ source + " To " + destination + " Seats: "+ selectedSeats
                                 );
-                                updateSeats();
-                                Log.d("FIRESTORE_VALUE", "Token value: " + receiverUserToken.toString());
+                                int seatsRemaining = seats - selectedSeats;
+                                updateSeats(seatsRemaining);
                             } else {
-                                Log.d("FIRESTORE_VALUE", "Field 'fieldName' does not exist or is null");
+                                Log.e("FIRESTORE_VALUE", "Field 'fieldName' does not exist or is null");
                             }
                         } else {
-                            Log.d("FIRESTORE_VALUE", "Document does not exist");
+                            Log.e("FIRESTORE_VALUE", "Document does not exist");
                         }
                     }
                 })
@@ -196,23 +180,23 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.RideViewHolder
                 });
 
     }
-    public static void updateSeats(){
+    public static void updateSeats(int seatsRemaining){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("rides")
                 .document(rideId) // Replace with the actual document ID
-                .update("seats", seats - selectedSeats)
+                .update("seats",seatsRemaining )
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         // Handle success
-                        Log.d("FIRESTORE_VALUE", "Seats has been updated from " + seats+ " to "+selectedSeats);
+                        Log.d("FIRESTORE_VALUE", "Seats values Updated successfully ");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         // Handle failure
-                        Log.d("FIRESTORE_VALUE", "Field to update seats");
+                        Log.e("FIRESTORE_VALUE", "Field to update seats \n " + e);
                     }
                 });
     }

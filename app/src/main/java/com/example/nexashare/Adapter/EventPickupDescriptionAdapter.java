@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.nexashare.Models.EventPickupDetail;
 import com.example.nexashare.R;
 import android.view.LayoutInflater;
 import android.widget.TextView;

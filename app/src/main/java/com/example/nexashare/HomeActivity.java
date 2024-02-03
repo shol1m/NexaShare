@@ -3,19 +3,17 @@ package com.example.nexashare;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
 
     BottomNavigationView bottomNavigationView;
     Home homeFragment = new Home();
-    RidesFragment ridesFragment = new RidesFragment();
-    GroupRideFragment groupRideFragment = new GroupRideFragment();
+    SingleRidesDisplayFragment singleRidesDisplayFragment = new SingleRidesDisplayFragment();
+    GroupRidesDisplayFragment groupRidesDisplayFragment = new GroupRidesDisplayFragment();
     CreateRideFragment createRideFragment = new CreateRideFragment();
     CreateGroupRideFragment createGroupRideFragment = new CreateGroupRideFragment();
     ProfileFragment profileFragment = new ProfileFragment();
