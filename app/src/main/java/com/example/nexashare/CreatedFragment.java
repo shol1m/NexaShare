@@ -3,62 +3,100 @@ package com.example.nexashare;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link CreatedFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.example.nexashare.Adapter.CreatedAdapter;
+import com.example.nexashare.Models.CreatedData;
+import com.example.nexashare.Models.Event;
+import com.example.nexashare.Models.MyData;
+import com.example.nexashare.Models.Ride;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
+import android.util.Log;
+
 public class CreatedFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public CreatedFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment CreatedFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static CreatedFragment newInstance(String param1, String param2) {
-        CreatedFragment fragment = new CreatedFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    TextView created;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_created, container, false);
+        View view = inflater.inflate(R.layout.fragment_created, container, false);
+
+        // Assuming userId is the ID of the user whose events and rides you want to display
+        String userId = MyData.userId;
+
+        RecyclerView recyclerView = view.findViewById(R.id.createdRecyclerview);
+        List<CreatedData> createdDataList = new ArrayList<>();
+
+// Reference to the Firestore database
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+// Query for events created by the user
+        db.collection("events")
+                .whereEqualTo("userId", userId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Event event = document.toObject(Event.class);
+                            CreatedData createdData = new CreatedData();
+                            createdData.setDocumentId(document.getId());
+                            createdData.setType("event");
+                            createdData.setName(event.getEventName());
+                            createdData.setLocationOrSource(event.getEventLocation());
+                            createdData.setPhoneNumberOrDestination(event.getOrganizerPhoneNumber());
+                            createdDataList.add(createdData);
+                        }
+
+                        // After retrieving events, query for rides created by the user
+                        db.collection("rides")
+                                .whereEqualTo("userId", userId)
+                                .get()
+                                .addOnCompleteListener(task1 -> {
+                                    if (task1.isSuccessful()) {
+                                        for (QueryDocumentSnapshot document : task1.getResult()) {
+                                            Ride ride = document.toObject(Ride.class);
+                                            CreatedData createdData = new CreatedData();
+                                            createdData.setDocumentId(document.getId());
+                                            createdData.setType("ride");
+                                            createdData.setName(ride.getName());
+                                            createdData.setLocationOrSource(ride.getSource());
+                                            createdData.setPhoneNumberOrDestination(ride.getDestination());
+                                            createdDataList.add(createdData);
+                                        }
+
+                                        // Set up the RecyclerView with the combined items
+                                        CreatedAdapter adapter = new CreatedAdapter(createdDataList, getContext());
+                                        recyclerView.setAdapter(adapter);
+                                        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                                    } else {
+                                        // Handle errors for rides query
+                                        Log.e("FIRESTORE_DATA", "Error getting rides: ", task1.getException());
+                                    }
+                                });
+                    } else {
+                        // Handle errors for events query
+                        Log.e("FIRESTORE_DATA", "Error getting events: ", task.getException());
+                    }
+                });
+
+        return view;
     }
 }

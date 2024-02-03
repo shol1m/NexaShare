@@ -9,6 +9,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="light_grey">#CFCCCC</color>
     <color name="dark_grey">#494848</color>
+    <color name="green">#95E395</color>
 
     <!--colors for modern ui-->
     <color name="whiteTextColor">#fff</color>

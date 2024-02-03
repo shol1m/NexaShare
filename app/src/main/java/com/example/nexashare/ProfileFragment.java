@@ -5,7 +5,9 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,6 +34,9 @@ public class ProfileFragment extends Fragment{
         joinedRides = view.findViewById(R.id.joined);
         createdRides = view.findViewById(R.id.created);
         logout = view.findViewById(R.id.logout);
+
+        JoinedFragment joinedFragment = new JoinedFragment();
+        CreatedFragment createdFragment = new CreatedFragment();
         notifications.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -42,15 +47,41 @@ public class ProfileFragment extends Fragment{
         joinedRides.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                joinedRides.setBackgroundColor(getContext().getColor(R.color.light_grey));
-                startActivity(new Intent(getContext(), JoinedFragment.class));
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                try {
+                    // Check if getParentFragmentManager() is the correct context, otherwise use getChildFragmentManager()
+                    if (getParentFragmentManager() != null) {
+                        transaction.replace(R.id.flFragment, joinedFragment);
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+                    } else {
+                        // Log an error if getParentFragmentManager() returns null
+                        Log.e("FragmentTransaction", "Parent Fragment Manager is null");
+                    }
+                } catch (Exception e) {
+                    // Log any exception that might occur during the transaction
+                    Log.e("FragmentTransaction", "Error during fragment transaction", e);
+                }
             }
         });
         createdRides.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createdRides.setBackgroundColor(getContext().getColor(R.color.light_grey));
-                startActivity(new Intent(getContext(), CreatedFragment.class));
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                try {
+                    // Check if getParentFragmentManager() is the correct context, otherwise use getChildFragmentManager()
+                    if (getParentFragmentManager() != null) {
+                        transaction.replace(R.id.flFragment, createdFragment);
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+                    } else {
+                        // Log an error if getParentFragmentManager() returns null
+                        Log.e("FragmentTransaction", "Parent Fragment Manager is null");
+                    }
+                } catch (Exception e) {
+                    // Log any exception that might occur during the transaction
+                    Log.e("FragmentTransaction", "Error during fragment transaction", e);
+                }
             }
         });
         logout.setOnClickListener(new View.OnClickListener() {

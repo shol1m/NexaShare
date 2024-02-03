@@ -5,10 +5,30 @@
     android:layout_height="match_parent"
     tools:context=".JoinedFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <com.google.android.material.appbar.MaterialToolbar
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Joined Rides" />
+        android:layout_height="30dp"
+        android:layout_marginStart="-16dp"
+        android:background="@color/loginBkColor"
+        android:paddingBottom="5dp"
+        android:layout_marginTop="5dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:textSize="18sp"
+            android:background="@drawable/baseline_arrow_back_24" />
+
+        <TextView
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="21sp"
+            android:textStyle="bold"
+            android:text="Joined"
+            android:textColor="@android:color/black" />
+    </com.google.android.material.appbar.MaterialToolbar>
+
 
 </FrameLayout>

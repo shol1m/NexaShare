@@ -81,30 +81,30 @@ public class EventDescription extends AppCompatActivity {
         // Fetch eventId from intent
         eventId = getIntent().getStringExtra("eventId");
 
-            // Fetch event details from Firestore based on eventId
-            FirebaseFirestore.getInstance().collection("events")
-                    .document(eventId)
-                    .get()
-                    .addOnSuccessListener(documentSnapshot -> {
-                        if (documentSnapshot.exists()) {
-                            // Map Firestore data to your model class or use directly
-                            Event event = documentSnapshot.toObject(Event.class);
+        // Fetch event details from Firestore based on eventId
 
-                            // Update UI with event details
-                            updateUI(event,eventId);
-                        }
-                    })
-                    .addOnFailureListener(e -> {
-                        // Handle failure
-                    });
+        FirebaseFirestore.getInstance().collection("events")
+                .document(eventId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        // Map Firestore data to your model class or use directly
+                        Event event = documentSnapshot.toObject(Event.class);
 
-            joinEvent.setOnClickListener(new View.OnClickListener() {
+                        // Update UI with event details
+                        updateUI(event,eventId);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    // Handle failure
+                });
+        joinEvent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     showPickupLocationPopup(EventDescription.this,eventId );
                 }
             });
-        }
+    }
 
 
     // Update UI with event details
@@ -268,7 +268,7 @@ public class EventDescription extends AppCompatActivity {
                                 );
                                 int seatsRemaining = availableSeats - selectedSeats;
                                 updateSeats(seatsRemaining,pickupId);
-                                saveBookingData(eventId,pickupId,userId,selectedSeats);
+                                saveBookingData(eventId,pickupId,MyData.userId,selectedSeats);
                             } else {
                                 Log.e("FIRESTORE_VALUE", "Field 'fieldName' does not exist or is null");
                             }
@@ -351,6 +351,7 @@ public class EventDescription extends AppCompatActivity {
 
         // Create a data map to be saved in the document
         Map<String, Object> userData = new HashMap<>();
+        userData.put("name", MyData.name);
         userData.put("bookedSeats", bookedSeats);
         userData.put("confirmed", false); // Initial confirmation status
 
