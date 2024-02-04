@@ -72,14 +72,15 @@ public class SingleRidesDisplayFragment extends Fragment {
                 startActivity(new Intent(getContext(), Notifications.class));
             }
         });
-        rideAdapter = new RideAdapter(rides, new RideAdapter.OnRideClickListener() {
-            @Override
-            public void onRideClick(Ride ride) {
-                // Handle the ride selection
-                Toast.makeText(getContext(), "Ride Item clicked", Toast.LENGTH_SHORT).show();
-
-            }
-        });
+//        rideAdapter = new RideAdapter(rides, new RideAdapter.OnRideClickListener() {
+//            @Override
+//            public void onRideClick(Ride ride) {
+//                // Handle the ride selection
+//                Toast.makeText(getContext(), "Ride Item clicked", Toast.LENGTH_SHORT).show();
+//
+//            }
+//        });
+        rideAdapter = new RideAdapter(getContext(),rides);
         recyclerViewRides.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
         recyclerViewRides.setAdapter(rideAdapter);

@@ -34,7 +34,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class FCMSend {
     private static String BASE_URL = "https://fcm.googleapis.com/fcm/send";
-    private static String SERVER_KEY = "key=";
+    private static String SERVER_KEY = "key=AAAAJglKiWM:APA91bHrLxBAvmeyS2xnQCdgxLctT3HI9B9Bc7URlDyk4WOJL7kkwcHmxyZjTO0YizVlXy_DUNZcIC4skvfkWmeTZuAspjMGIvlYIJZR9XYWS-t4dM8WAO4GkXDYSMPVKlZtbt_isKmH";
 
     public static void pushNotification(Context context,String userId, String token, String title, String message) {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();

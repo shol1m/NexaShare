@@ -52,7 +52,6 @@ public class EventDescription extends AppCompatActivity {
     public static String eventName,EventPickupLocation;
     public static String userId;
     private APIService apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
-
     private static Context context;
 
     @Override

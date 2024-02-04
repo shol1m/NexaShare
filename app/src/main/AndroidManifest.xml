@@ -15,6 +15,9 @@
         android:theme="@style/Theme.NexaShare"
         tools:targetApi="31">
         <activity
+            android:name=".SingleRidesDescription"
+            android:exported="false" />
+        <activity
             android:name=".SingleRidePassengersActivity"
             android:exported="false" />
         <activity

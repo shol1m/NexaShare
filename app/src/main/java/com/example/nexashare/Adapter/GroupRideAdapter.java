@@ -40,9 +40,6 @@ public class GroupRideAdapter extends RecyclerView.Adapter<GroupRideAdapter.Grou
         this.context = context;
         this.events = groupRides;
     }
-//    public GroupRideAdapter(List<Event> groupRides) {
-//        this.events = groupRides;
-//    }
 
     @NonNull
     @Override
@@ -118,7 +115,6 @@ public class GroupRideAdapter extends RecyclerView.Adapter<GroupRideAdapter.Grou
                 public void onClick(View view) {
 
 //                    showPickupLocationPopup(context,events.get(getAdapterPosition()));
-
 
                     Intent intent = new Intent(context, EventDescription.class);
                     intent.putExtra("eventId", events.get(getAdapterPosition()).getId());
