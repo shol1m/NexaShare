@@ -36,12 +36,13 @@ public class PassengerAdapter extends RecyclerView.Adapter<PassengerAdapter.View
         Passenger passenger = passengersList.get(position);
         holder.passengerNameTextView.setText(passenger.getName());
         holder.bookedSeatsTextView.setText("Booked Seats: " + passenger.getBookedSeats());
-//        if(!passenger.isConfirmed()){
-////            holder.passengerLinearLayout.setBackgroundColor(context.getColor(R.color.light_grey));
-//            holder.passengerLinearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.light_grey));
-//        }else{
-//            holder.passengerLinearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.green));
-//        }
+
+        if(!passenger.isConfirmed()){
+            holder.confirmedTextView.setText("Not Confirmed");
+        }else{
+            holder.passengerLinearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.green));
+            holder.confirmedTextView.setText("Not Confirmed");
+        }
     }
 
     @Override
@@ -60,6 +61,7 @@ public class PassengerAdapter extends RecyclerView.Adapter<PassengerAdapter.View
             passengerNameTextView = itemView.findViewById(R.id.passengerNameDetail);
             bookedSeatsTextView = itemView.findViewById(R.id.bookedSeatsDetail);
             passengerLinearLayout = itemView.findViewById(R.id.passengerLinearaLyout);
+            confirmedTextView = itemView.findViewById(R.id.confirmedDetail);
         }
     }
 }

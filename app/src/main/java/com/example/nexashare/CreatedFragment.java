@@ -39,7 +39,6 @@ public class CreatedFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_created, container, false);
 
-        // Assuming userId is the ID of the user whose events and rides you want to display
         String userId = MyData.userId;
 
         RecyclerView recyclerView = view.findViewById(R.id.createdRecyclerview);
@@ -96,6 +95,7 @@ public class CreatedFragment extends Fragment {
                         Log.e("FIRESTORE_DATA", "Error getting events: ", task.getException());
                     }
                 });
+
 
         return view;
     }

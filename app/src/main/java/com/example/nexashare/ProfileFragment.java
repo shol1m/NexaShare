@@ -13,12 +13,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.example.nexashare.Models.MyData;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class ProfileFragment extends Fragment{
     LinearLayout notifications,joinedRides,createdRides,accountDetails,deleteAccount,logout;
+    TextView username,email;
+    String myEmail,myName;
+    private FirebaseAuth mAuth;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +39,15 @@ public class ProfileFragment extends Fragment{
         notifications = view.findViewById(R.id.notifications);
         joinedRides = view.findViewById(R.id.joined);
         createdRides = view.findViewById(R.id.created);
+        username = view.findViewById(R.id.username);
+        email = view.findViewById(R.id.email);
         logout = view.findViewById(R.id.logout);
+//
+//        FirebaseUser currentUser = mAuth.getCurrentUser();
+//        myEmail = currentUser.getEmail();
+
+        username.setText(MyData.name);
+        email.setText(MyData.email);
 
         JoinedFragment joinedFragment = new JoinedFragment();
         CreatedFragment createdFragment = new CreatedFragment();

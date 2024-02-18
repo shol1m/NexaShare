@@ -118,12 +118,12 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         });
 
-
                 MyData data = new MyData();
                 data.token=fcmToken;
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
 // Get the document reference for the user
                 DocumentReference docRef = db.collection("users").document(userid);
+                MyData.email= email;
 
 // Fetch the name of the current user
                 docRef.get().addOnCompleteListener(tank -> {

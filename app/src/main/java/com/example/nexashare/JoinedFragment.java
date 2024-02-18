@@ -1,64 +1,428 @@
 package com.example.nexashare;
 
+import static android.content.ContentValues.TAG;
+
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link JoinedFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.example.nexashare.Adapter.CreatedAdapter;
+import com.example.nexashare.Adapter.JoinedAdapter;
+import com.example.nexashare.Models.CreatedData;
+import com.example.nexashare.Models.Event;
+import com.example.nexashare.Models.JoinedData;
+import com.example.nexashare.Models.MyData;
+import com.example.nexashare.Models.Ride;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldPath;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class JoinedFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public JoinedFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment JoinedFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static JoinedFragment newInstance(String param1, String param2) {
-        JoinedFragment fragment = new JoinedFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_joined, container, false);
+        View view =  inflater.inflate(R.layout.fragment_joined, container, false);
+
+        String userId = MyData.userId;
+
+        RecyclerView recyclerView = view.findViewById(R.id.joinedRecyclerview);
+        List<JoinedData> joinedDataList = new ArrayList<>();
+        List<CreatedData> createdDataList = new ArrayList<>();
+
+        Map<String, List<DocumentSnapshot>> documentsMap = new HashMap<>();
+
+        // Query to retrieve documents
+        db.collection("events")
+//                .whereArrayContains()
+                .whereEqualTo("pickups.joinedUsers.joined_user", userId)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        // Iterate through the documents
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                            // Get the value of the eventName field
+                            String eventName = document.getString("eventName");
+
+                            // Check if documentsMap already contains a list for this eventName
+                            if (!documentsMap.containsKey(eventName)) {
+                                // If not, create a new list
+                                documentsMap.put(eventName, new ArrayList<>());
+                            }
+
+                            // Add the document to the list for this eventName
+                            documentsMap.get(eventName).add(document);
+                        }
+
+                        // Now you have all documents grouped by eventName
+                        // You can access them like this:
+                        for (Map.Entry<String, List<DocumentSnapshot>> entry : documentsMap.entrySet()) {
+                            String eventName = entry.getKey();
+                            List<DocumentSnapshot> documents = entry.getValue();
+                            // Do whatever you want with the documents
+                            // For example, print out the event name and number of documents
+                            System.out.println("Event Name: " + eventName);
+                            System.out.println("Number of Documents: " + documents.size());
+                        }
+                    }
+                });
+
+
+//        db.collection("events").document()
+//                .collection("pickups").document()
+//                .collection("joinedUsers")
+////                .whereEqualTo("userId", userId)
+//                .whereEqualTo("joined_user" , userId)
+////                .whereArrayContains("joinedUsers", userId)
+////                .whereEqualTo("joinedUsers." + userId, true) // Check if the user ID exists in the joinedUsers subcollection
+//                .get()
+//                .addOnCompleteListener(task -> {
+//                    if (task.isSuccessful()) {
+//                        for (QueryDocumentSnapshot document : task.getResult()) {
+//                            Map<String, Object> data = document.getData();
+//                            if (data != null) {
+//                                for (String fieldName : data.keySet()) {
+//                                    Object value = data.get(fieldName);
+//                                    System.out.println("Field Name: " + fieldName + ", Value: " + value);
+//                                }
+//                            }
+//                        }
+//
+//                        // After retrieving joined events, query for joined rides
+//                        db.collection("rides")
+//                                .document()
+//                                .collection("joinedUsers")
+////                .whereEqualTo("userId", userId)
+//                                .whereEqualTo("joined_user" , userId)
+//                                .get()
+//                                .addOnCompleteListener(task1 -> {
+//                                    if (task1.isSuccessful()) {
+//                                        for (QueryDocumentSnapshot document : task.getResult()) {
+//                                            Map<String, Object> data = document.getData();
+//                                            if (data != null) {
+//                                                for (String fieldName : data.keySet()) {
+//                                                    Object value = data.get(fieldName);
+//                                                    System.out.println("Field Name: " + fieldName + ", Value: " + value);
+//                                                }
+//                                            }
+//                                        for (QueryDocumentSnapshot document : task1.getResult()) {
+//                                            Ride ride = document.toObject(Ride.class);
+//                                            CreatedData createdData = new CreatedData();
+//                                            createdData.setDocumentId(document.getId());
+//                                            createdData.setType("ride");
+//                                            createdData.setName(ride.getName());
+//                                            createdData.setLocationOrSource(ride.getSource());
+//                                            createdData.setPhoneNumberOrDestination(ride.getDestination());
+//                                            createdDataList.add(createdData);
+//                                        }
+//
+//                                        // Set up the RecyclerView with the combined items
+//                                        CreatedAdapter adapter = new CreatedAdapter(createdDataList, getContext());
+//                                        recyclerView.setAdapter(adapter);
+//                                        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+//                                    } else {
+//                                        // Handle errors for rides query
+//                                        Log.e("FIRESTORE_DATA", "Error getting rides: ", task1.getException());
+//                                    }
+//                                });
+//                    } else {
+//                        // Handle errors for events query
+//                        Log.e("FIRESTORE_DATA", "Error getting events: ", task.getException());
+//                    }
+//                });
+//
+//        db.collection("events")
+//                .whereEqualTo("joined_user", userId)
+////                .document()
+////                .collection("pickup")
+//////                .whereEqualTo("pickups.joinedUsers." + userId, true) // Check if user ID exists in joinedUsers subcollection
+//                .get()
+//                .addOnCompleteListener(task -> {
+//                    if (task.isSuccessful()) {
+//                        for (QueryDocumentSnapshot document : task.getResult()) {
+//                            Event event = document.toObject(Event.class);
+//                            JoinedData joinedData = new JoinedData();
+//                            joinedData.setDocumentId(document.getId());
+//                            joinedData.setType("event");
+//                            joinedData.setName(event.getEventName());
+//                            joinedData.setLocationOrSource(event.getEventLocation());
+//                            joinedData.setPhoneNumberOrDestination(event.getOrganizerPhoneNumber());
+//                            joinedDataList.add(joinedData);
+//                        }
+//
+//                        // After retrieving joined events, query for joined rides
+//                        db.collection("rides")
+//                                .whereEqualTo("joined_user", userId)
+////                                .whereEqualTo("joinedUsers." + userId, true) // Check if user ID exists in joinedUsers subcollection
+//                                .get()
+//                                .addOnCompleteListener(task1 -> {
+//                                    if (task1.isSuccessful()) {
+//                                        for (QueryDocumentSnapshot document : task1.getResult()) {
+//                                            Ride ride = document.toObject(Ride.class);
+//                                            JoinedData joinedData = new JoinedData();
+//                                            joinedData.setDocumentId(document.getId());
+//                                            joinedData.setType("ride");
+//                                            joinedData.setName(document.getString("name"));
+//                                            joinedData.setLocationOrSource(ride.getSource());
+//                                            joinedData.setPhoneNumberOrDestination(ride.getDestination());
+//                                            joinedDataList.add(joinedData);
+//                                        }
+//
+//                                        // Set up the RecyclerView with the combined items
+//                                        JoinedAdapter adapter = new JoinedAdapter(joinedDataList, getContext());
+//                                        recyclerView.setAdapter(adapter);
+//                                        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+//                                    } else {
+//                                        // Handle errors for rides query
+//                                        Log.e("FIRESTORE_DATA", "Error getting joined rides: ", task1.getException());
+//                                    }
+//                                });
+//                    } else {
+//                        // Handle errors for events query
+//                        Log.e("FIRESTORE_DATA", "Error getting joined events: ", task.getException());
+//                    }
+//                });
+
+//        db.collection("events")
+//                .document()
+//                .collection("pickups")
+//                .document()
+//                .collection("joinedUsers")
+//                .whereEqualTo(FieldPath.documentId(), userId)
+//                .get()
+//                .addOnCompleteListener(task -> {
+//                    if (task.isSuccessful()) {
+//                        for (QueryDocumentSnapshot document : task.getResult()) {
+//                            Event event = document.toObject(Event.class);
+//                            JoinedData joinedData = new JoinedData();
+//                            joinedData.setDocumentId(document.getId());
+//                            joinedData.setType("event");
+//                            joinedData.setName((String) document.get("name"));
+////                            joinedData.setLocationOrSource(event.getEventLocation());
+////                            joinedData.setPhoneNumberOrDestination(event.getOrganizerPhoneNumber());
+//                            joinedDataList.add(joinedData);
+//                        }
+//                        JoinedAdapter adapter = new JoinedAdapter(joinedDataList, getContext());
+//                        recyclerView.setAdapter(adapter);
+//                        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+                        // After retrieving events, query for rides created by the user
+//                        db.collection("rides")
+//                                .whereEqualTo(FieldPath.documentId(), userId)
+//                                .get()
+//                                .addOnCompleteListener(task1 -> {
+//                                    if (task1.isSuccessful()) {
+//                                        for (QueryDocumentSnapshot document : task1.getResult()) {
+//                                            Ride ride = document.toObject(Ride.class);
+//                                            JoinedData joinedData = new JoinedData();
+//                                            joinedData.setDocumentId(document.getId());
+//                                            joinedData.setType("ride");
+//                                            joinedData.setName(ride.getName());
+//                                            joinedData.setLocationOrSource(ride.getSource());
+//                                            joinedData.setPhoneNumberOrDestination(ride.getDestination());
+//                                            joinedDataList.add(joinedData);
+//                                        }
+//
+//                                        // Set up the RecyclerView with the combined items
+//                                        JoinedAdapter adapter = new JoinedAdapter(joinedDataList, getContext());
+//                                        recyclerView.setAdapter(adapter);
+//                                        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+//                                    } else {
+//                                        // Handle errors for rides query
+//                                        Log.e("FIRESTORE_DATA", "Error getting rides: ", task1.getException());
+//                                    }
+//                                });
+//                    } else {
+//                        // Handle errors for events query
+//                        Log.e("FIRESTORE_DATA", "Error getting events: ", task.getException());
+//                    }
+//                });
+
+//        db.collection("events")
+//                .whereEqualTo("pickups.joinedUsers." + userId, true)
+//                .get()
+//                .addOnSuccessListener(queryDocumentSnapshots -> {
+//                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+//                        // Retrieve event details
+//                        String eventName = document.getString("eventName");
+//                        String eventLocation = document.getString("eventLocation");
+//
+//                        // Retrieve pickup details
+//                        List<Map<String, Object>> pickups = (List<Map<String, Object>>) document.get("pickups");
+//                        for (Map<String, Object> pickup : pickups) {
+//                            String pickupId = (String) pickup.get("pickupId");
+//                            String pickupLocation = (String) pickup.get("pickupLocation");
+//                            Timestamp pickupTime = (Timestamp) pickup.get("pickupTime");
+//
+//                            // Print or use the retrieved data as needed
+//                            System.out.println("Event Name: " + eventName);
+//                            System.out.println("Event Location: " + eventLocation);
+//                            System.out.println("Pickup ID: " + pickupId);
+//                            System.out.println("Pickup Location: " + pickupLocation);
+//                            System.out.println("Pickup Time: " + pickupTime);
+//                        }
+//                    }
+//                })
+//                .addOnFailureListener(e -> {
+//                    // Handle failure
+//                    System.err.println("Error getting events: " + e.getMessage());
+//                });
+
+//        db.collection("events")
+//                .whereArrayContains("pickups.joinedUsers", userId)
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            joinedDataList.clear();
+//                            for (QueryDocumentSnapshot document : task.getResult()) {
+//                                Event event = document.toObject(Event.class);
+//                                JoinedData joinedData = new JoinedData();
+//                                joinedData.setDocumentId(document.getId());
+//                                joinedData.setType("event");
+//                                joinedData.setName(event.getEventName());
+//                                joinedData.setLocationOrSource(event.getEventLocation());
+//                                joinedData.setPhoneNumberOrDestination(event.getOrganizerPhoneNumber());
+//                                joinedDataList.add(joinedData);
+//                            }
+//                            JoinedAdapter adapter = new JoinedAdapter(joinedDataList, getContext());
+//                            recyclerView.setAdapter(adapter);
+//                            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+////                            adapter.notifyDataSetChanged();
+//                        } else {
+//                            Log.d(TAG, "Error getting joined rides: ", task.getException());
+//                        }
+//                    }
+//                });
+
+//        db.collection("events")
+//                .whereEqualTo("pickups.joinedUsers." + userId + ".confirmed", true)
+//                .get()
+//                .addOnCompleteListener(task -> {
+//                    if (task.isSuccessful()) {
+//                        Log.e("FIRESTORE_DATA", "no error getting rides: ");
+//
+//                        for (QueryDocumentSnapshot document : task.getResult()) {
+//                            Event event = document.toObject(Event.class);
+//                            JoinedData joinedData = new JoinedData();
+//                            joinedData.setDocumentId(document.getId());
+//                            Log.e("FIRESTORE_DATA", (String) document.get("name"));
+//                            Log.e("FIRESTORE_DATA", document.getId());
+//                            joinedData.setType("event");
+//                            joinedData.setName(event.getEventName());
+//                            joinedData.setLocationOrSource(event.getEventLocation());
+//                            joinedData.setPhoneNumberOrDestination(event.getOrganizerPhoneNumber());
+//                            joinedDataList.add(joinedData);
+//                            Log.e("FIRESTORE_DATA", joinedData.getName());
+//                        }
+//
+//                        // After retrieving events, query for rides joined by the user
+//                        db.collection("rides")
+//                                .whereEqualTo("joinedUsers." + userId + ".confirmed", true)
+//                                .get()
+//                                .addOnCompleteListener(task1 -> {
+//                                    if (task1.isSuccessful()) {
+//                                        for (QueryDocumentSnapshot document : task1.getResult()) {
+//                                            Ride ride = document.toObject(Ride.class);
+//                                            JoinedData joinedData = new JoinedData();
+//                                            joinedData.setDocumentId(document.getId());
+//                                            joinedData.setType("ride");
+////                                            joinedData.setName(ride.getDrivername());
+////                                            joinedData.setLocationOrSource(ride.getSource());
+////                                            joinedData.setPhoneNumberOrDestination(ride.getPhoneNumber());
+//                                            joinedDataList.add(joinedData);
+//                                        }
+//
+//                                        // Set up the RecyclerView with the combined items
+//                                        JoinedAdapter adapter = new JoinedAdapter(joinedDataList, getContext());
+//                                        recyclerView.setAdapter(adapter);
+//                                        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+//                                    } else {
+//                                        // Handle errors for rides query
+//                                        Log.e("FIRESTORE_DATA", "Error getting rides: ", task1.getException());
+//                                    }
+//                                });
+//                    } else {
+//                        // Handle errors for events query
+//                        Log.e("FIRESTORE_DATA", "Error getting events: ", task.getException());
+//                    }
+//                });
+
+//        db.collection("events").document().collection("joinedUsers")
+//                .whereEqualTo(FieldPath.documentId(), userId)
+//                .get()
+//                .addOnCompleteListener(task -> {
+//                    if (task.isSuccessful()) {
+//                        for (QueryDocumentSnapshot document : task.getResult()) {
+//                            Event event = document.toObject(Event.class);
+//                            JoinedData joinedData = new JoinedData();
+//                            joinedData.setDocumentId(document.getId());
+//                            joinedData.setType("event");
+//                            joinedData.setName(event.getEventName());
+//                            joinedData.setLocationOrSource(event.getEventLocation());
+//                            joinedData.setPhoneNumberOrDestination(event.getOrganizerPhoneNumber());
+//                            joinedDataList.add(joinedData);
+//                        }
+//
+//                        // After retrieving events, query for rides created by the user
+//                        db.collection("rides").document().collection("joinedUsers")
+//                                .whereEqualTo("userId", userId)
+//                                .get()
+//                                .addOnCompleteListener(task1 -> {
+//                                    if (task1.isSuccessful()) {
+//                                        for (QueryDocumentSnapshot document : task1.getResult()) {
+//                                            Ride ride = document.toObject(Ride.class);
+//                                            JoinedData joinedData = new JoinedData();
+//                                            joinedData.setDocumentId(document.getId());
+//                                            joinedData.setType("ride");
+//                                            joinedData.setName(ride.getName());
+//                                            joinedData.setLocationOrSource(ride.getSource());
+//                                            joinedData.setPhoneNumberOrDestination(ride.getDestination());
+//                                            joinedDataList.add(joinedData);
+//                                        }
+//
+//                                        // Set up the RecyclerView with the combined items
+//                                        JoinedAdapter adapter = new JoinedAdapter(joinedDataList, getContext());
+//                                        recyclerView.setAdapter(adapter);
+//                                        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+//                                    } else {
+//                                        // Handle errors for rides query
+//                                        Log.e("FIRESTORE_DATA", "Error getting rides: ", task1.getException());
+//                                    }
+//                                });
+//                    } else {
+//                        // Handle errors for events query
+//                        Log.e("FIRESTORE_DATA", "Error getting events: ", task.getException());
+//                    }
+//                });
+        return view;
     }
+
 }

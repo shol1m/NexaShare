@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".JoinedFragment">
 
     <com.google.android.material.appbar.MaterialToolbar
@@ -30,5 +31,12 @@
             android:textColor="@android:color/black" />
     </com.google.android.material.appbar.MaterialToolbar>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/joinedRecyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        />
 
-</FrameLayout>
+
+</LinearLayout>

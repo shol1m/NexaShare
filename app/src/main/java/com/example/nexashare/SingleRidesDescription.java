@@ -139,7 +139,7 @@ public class SingleRidesDescription extends AppCompatActivity {
                                 receiverToken = receiverUserToken.toString();
                                 FCMSend.pushNotification(
                                         context,
-                                        RideAdapter.userId,
+                                        userId,
                                         receiverToken,
                                         "Request to join ride",
                                         MyData.name + " has requested to join your ride of "+ source + " To " + destination + " Seats: "+ selectedSeats
