@@ -7,11 +7,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.nexashare.CreatedFragment;
+import com.example.nexashare.Helper.Whatsapp;
+import com.example.nexashare.JoinedRideActivity;
 import com.example.nexashare.Models.MyData;
 import com.example.nexashare.R;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -28,10 +31,11 @@ public class JoinedEventActivity extends AppCompatActivity {
     public TextView bookedSeats;
     public TextView pickupTime;
     public TextView pickupLocation;
-    public ImageView back;
+    public ImageView back,whatsapp;
     static RecyclerView recyclerViewPassengers;
     String formattedTime;
     String selectedPickupLocation,eventId,pickupId;
+    public String organizerPhoneNumberString;
     private static FirebaseFirestore db = FirebaseFirestore.getInstance();
     CreatedFragment createdFragment = new CreatedFragment();
 
@@ -47,9 +51,16 @@ public class JoinedEventActivity extends AppCompatActivity {
         bookedSeats = findViewById(R.id.bookedSeatsDetail);
         pickupTime = findViewById(R.id.joinedPickupTimeDetail);
         pickupLocation = findViewById(R.id.joinedPickupLocationDetail);
+        whatsapp = findViewById(R.id.whatsappicon);
 
         eventId = getIntent().getStringExtra("documentId");
         pickupId = getIntent().getStringExtra("pickupDocumentId");
+        whatsapp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Whatsapp.sendMessageToWhatsApp(organizerPhoneNumberString,"", JoinedEventActivity.this);
+            }
+        });
 
         db.collection("events")
                 .document(eventId)
@@ -59,14 +70,12 @@ public class JoinedEventActivity extends AppCompatActivity {
                         // Document exists, you can retrieve data
                         String eventNameString = documentSnapshot.getString("eventName");
                         String eventLocationString = documentSnapshot.getString("eventLocation");
-                        String organizerPhoneNumberString = documentSnapshot.getString("organizerPhoneNumber");
+                        organizerPhoneNumberString = documentSnapshot.getString("organizerPhoneNumber");
 
-//                        updateEventDetails();
                         eventName.setText("Event Name: " + eventNameString);
                         eventLocation.setText("Event Location: "+eventLocationString);
                         organizerPhoneNumber.setText("Organizer PhoneNumber: "+organizerPhoneNumberString);
 
-                        // Update your UI or perform other actions with the data
                     } else {
                         // Document does not exist
                         Log.d(TAG, "No such document");

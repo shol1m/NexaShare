@@ -5,15 +5,21 @@ import static androidx.constraintlayout.widget.ConstraintLayoutStates.TAG;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.nexashare.Helper.Whatsapp;
 import com.example.nexashare.Models.MyData;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -30,6 +36,7 @@ public class JoinedRideActivity extends AppCompatActivity {
     static RecyclerView recyclerViewPassengers;
     String formattedTime;
     String selectedPickupLocation,rideId;
+    public  String driverPhoneNumberString;
     private static FirebaseFirestore db = FirebaseFirestore.getInstance();
     CreatedFragment createdFragment = new CreatedFragment();
 
@@ -55,7 +62,13 @@ public class JoinedRideActivity extends AppCompatActivity {
                         .beginTransaction()
                         .replace(R.id.flFragment, createdFragment)
                         .commit();
+            }
+        });
 
+        whatsapp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Whatsapp.sendMessageToWhatsApp(driverPhoneNumberString,"",JoinedRideActivity.this);
             }
         });
 
@@ -68,7 +81,7 @@ public class JoinedRideActivity extends AppCompatActivity {
                         String driverNameString = documentSnapshot.getString("name");
                         String pickupLocationString = documentSnapshot.getString("source");
                         String dropoffLocationString = documentSnapshot.getString("destination");
-                        String driverPhoneNumberString = documentSnapshot.getString("phone_number");
+                        driverPhoneNumberString = documentSnapshot.getString("phone_number");
                         int availableSeatsInt = Math.toIntExact(documentSnapshot.getLong("seats"));
                         String pickupTimeString = documentSnapshot.getString("date_and_time");
 
@@ -129,4 +142,5 @@ public class JoinedRideActivity extends AppCompatActivity {
                     Log.e(TAG, "Error fetching event details ", e);
                 });
     }
+
 }
