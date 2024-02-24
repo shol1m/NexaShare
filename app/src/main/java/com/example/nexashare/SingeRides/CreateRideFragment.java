@@ -1,4 +1,4 @@
-package com.example.nexashare;
+package com.example.nexashare.SingeRides;
 
 import static androidx.constraintlayout.widget.ConstraintLayoutStates.TAG;
 
@@ -21,8 +21,10 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.nexashare.FCMDataNotificationSender;
 import com.example.nexashare.Models.MyData;
 import com.example.nexashare.Helper.FirebaseHelper;
+import com.example.nexashare.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;

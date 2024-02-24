@@ -11,10 +11,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.nexashare.EventPassengersActivity;
+import com.example.nexashare.GroupRides.EventPassengersActivity;
 import com.example.nexashare.Models.CreatedData;
 import com.example.nexashare.R;
-import com.example.nexashare.SingleRidePassengersActivity;
+import com.example.nexashare.SingeRides.SingleRidePassengersActivity;
 
 import java.util.List;
 

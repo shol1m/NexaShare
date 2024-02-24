@@ -10,10 +10,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.nexashare.EventPassengersActivity;
+import com.example.nexashare.GroupRides.EventPassengersActivity;
+import com.example.nexashare.GroupRides.JoinedEventActivity;
+import com.example.nexashare.JoinedRideActivity;
 import com.example.nexashare.Models.JoinedData;
 import com.example.nexashare.R;
-import com.example.nexashare.SingleRidePassengersActivity;
+import com.example.nexashare.SingeRides.SingleRidePassengersActivity;
 
 import java.util.List;
 
@@ -45,16 +47,17 @@ public class JoinedAdapter extends RecyclerView.Adapter<JoinedAdapter.ViewHolder
         if (item.getType() == "event"){
             holder.itemView.setOnClickListener(view -> {
                 // Pass the document ID to the next activity using Intent
-                Intent intent = new Intent(context, EventPassengersActivity.class);
+                Intent intent = new Intent(context, JoinedEventActivity.class);
                 intent.putExtra("documentId", item.getDocumentId());
                 intent.putExtra("type", item.getType());
+                intent.putExtra("pickupDocumentId", item.getPickupDocumentId());
                 context.startActivity(intent);
             });
         }
         else{
             holder.itemView.setOnClickListener(view -> {
                 // Pass the document ID to the next activity using Intent
-                Intent intent = new Intent(context, SingleRidePassengersActivity.class);
+                Intent intent = new Intent(context, JoinedRideActivity.class);
                 intent.putExtra("documentId", item.getDocumentId());
                 intent.putExtra("type", item.getType());
                 context.startActivity(intent);
@@ -90,6 +93,7 @@ public class JoinedAdapter extends RecyclerView.Adapter<JoinedAdapter.ViewHolder
                 phoneNumberOrDestinationTextView.setText(item.getPhoneNumberOrDestination());
             }else{
                 typeTextView.setText(item.getType());
+                nameTextView.setText(item.getName());
                 locationOrSourceTextView.setText("From: "+item.getLocationOrSource());
                 phoneNumberOrDestinationTextView.setText("To: "+item.getPhoneNumberOrDestination());
             }

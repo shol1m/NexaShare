@@ -33,7 +33,6 @@ public class Notifications extends AppCompatActivity {
 
     private FirebaseFirestore db;
     private CollectionReference notificationsCollection;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

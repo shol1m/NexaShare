@@ -1,4 +1,4 @@
-package com.example.nexashare;
+package com.example.nexashare.GroupRides;
 
 import static androidx.constraintlayout.widget.ConstraintLayoutStates.TAG;
 
@@ -25,6 +25,7 @@ import com.example.nexashare.Models.EventPickupDetail;
 import com.example.nexashare.Models.MyData;
 import com.example.nexashare.Models.OneEventPickupDetail;
 import com.example.nexashare.Helper.FirebaseHelper;
+import com.example.nexashare.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;

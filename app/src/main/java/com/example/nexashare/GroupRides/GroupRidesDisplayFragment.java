@@ -1,4 +1,4 @@
-package com.example.nexashare;
+package com.example.nexashare.GroupRides;
 
 import android.os.Bundle;
 
@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import com.example.nexashare.Models.Event;
 import com.example.nexashare.Models.GroupRide;
 import com.example.nexashare.Adapter.GroupRideAdapter;
+import com.example.nexashare.Notifications;
+import com.example.nexashare.R;
 import com.google.firebase.firestore.FirebaseFirestore;
 import android.content.Intent;
 

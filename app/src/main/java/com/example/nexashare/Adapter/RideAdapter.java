@@ -1,44 +1,28 @@
 package com.example.nexashare.Adapter;
 
-import static androidx.constraintlayout.widget.ConstraintLayoutStates.TAG;
-
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.NumberPicker;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.nexashare.FCM.APIService;
 import com.example.nexashare.FCM.Client;
-import com.example.nexashare.FCM.FCMSend;
-import com.example.nexashare.Models.MyData;
 import com.example.nexashare.Models.Ride;
 import com.example.nexashare.R;
-import com.example.nexashare.SingleRidesDescription;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
+import com.example.nexashare.SingeRides.SingleRidesDescription;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 public class RideAdapter extends RecyclerView.Adapter<RideAdapter.RideViewHolder> {
     private List<Ride> rides;

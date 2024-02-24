@@ -1,18 +1,15 @@
 package com.example.nexashare;
 
-import static android.content.ContentValues.TAG;
-
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.example.nexashare.Adapter.CreatedAdapter;
 import com.example.nexashare.Adapter.JoinedAdapter;
@@ -22,13 +19,10 @@ import com.example.nexashare.Models.JoinedData;
 import com.example.nexashare.Models.MyData;
 import com.example.nexashare.Models.Ride;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -38,6 +32,9 @@ import java.util.Map;
 
 public class JoinedFragment extends Fragment {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    RecyclerView recyclerView;
+    int tasksCompleted = 0;
+    List<JoinedData> joinedDataList = new ArrayList<>();
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,47 +48,154 @@ public class JoinedFragment extends Fragment {
 
         String userId = MyData.userId;
 
-        RecyclerView recyclerView = view.findViewById(R.id.joinedRecyclerview);
-        List<JoinedData> joinedDataList = new ArrayList<>();
+        recyclerView = view.findViewById(R.id.joinedRecyclerview);
+
         List<CreatedData> createdDataList = new ArrayList<>();
 
         Map<String, List<DocumentSnapshot>> documentsMap = new HashMap<>();
 
-        // Query to retrieve documents
-        db.collection("events")
-//                .whereArrayContains()
-                .whereEqualTo("pickups.joinedUsers.joined_user", userId)
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        // Iterate through the documents
-                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                            // Get the value of the eventName field
-                            String eventName = document.getString("eventName");
+        // Retrieve documents from the "events" collection
+        CollectionReference eventsCollectionRef = db.collection("events");
+        CollectionReference ridesCollectionRef = db.collection("rides");
 
-                            // Check if documentsMap already contains a list for this eventName
-                            if (!documentsMap.containsKey(eventName)) {
-                                // If not, create a new list
-                                documentsMap.put(eventName, new ArrayList<>());
+        eventsCollectionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (DocumentSnapshot eventDoc : task.getResult()) {
+                        // Get a reference to the "pickups" subcollection for each "event" document
+                        CollectionReference pickupsCollectionRef = eventDoc.getReference().collection("pickups");
+
+                        // Retrieve documents from the "pickups" subcollection
+                        pickupsCollectionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> subCollectionTask) {
+                                if (subCollectionTask.isSuccessful()) {
+                                    for (DocumentSnapshot pickupDoc : subCollectionTask.getResult()) {
+                                        // Get a reference to the "joined users" subcollection for each "pickup" document
+                                        CollectionReference joinedUsersCollectionRef = pickupDoc.getReference().collection("joinedUsers");
+
+                                        // Query the "joined users" subcollection to check if the "joinedUser" exists
+                                        joinedUsersCollectionRef.whereEqualTo("joined_user", userId).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> joinedUsersTask) {
+                                                if (joinedUsersTask.isSuccessful() && !joinedUsersTask.getResult().isEmpty()) {
+                                                    for (DocumentSnapshot eventDoc : task.getResult()) {
+
+                                                        Log.d("JoinedUsers", "User exists for pickup: " + pickupDoc.getId());
+                                                        Log.d("JoinedUsers", "User exists for event: " + eventDoc.getId());
+                                                        Log.d("JoinedUsers", "Event name: " + eventDoc.getString("eventName"));
+                                                        //                            Event event = document.toObject(Event.class);
+//                                                    Event event = joinedUsersTask.toObject(Event.class);
+
+                                                        JoinedData joinedEventData = new JoinedData();
+                                                        joinedEventData.setDocumentId(eventDoc.getId());
+                                                        joinedEventData.setPickupDocumentId(pickupDoc.getId());
+                                                        joinedEventData.setType("event");
+                                                        joinedEventData.setName(eventDoc.getString("eventName"));
+                                                        joinedEventData.setLocationOrSource(eventDoc.getString("eventLocation"));
+                                                        joinedEventData.setPhoneNumberOrDestination(eventDoc.getString("organizerPhoneNumber"));
+                                                        joinedDataList.add(joinedEventData);
+                                                    }
+
+                                                    ridesCollectionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                            if (task.isSuccessful()) {
+                                                                for (DocumentSnapshot rideDoc : task.getResult()) {
+                                                                    // Get a reference to the "pickups" subcollection for each "event" document
+                                                                    CollectionReference joinedUsersCollectionRef = rideDoc.getReference().collection("joinedUsers");
+
+                                                                    joinedUsersCollectionRef.whereEqualTo("joined_user", userId).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                                        @Override
+                                                                        public void onComplete(@NonNull Task<QuerySnapshot> joinedUsersTask2) {
+                                                                            if (joinedUsersTask2.isSuccessful() && !joinedUsersTask2.getResult().isEmpty()) {
+
+                                                                                for (DocumentSnapshot rideDoc : task.getResult()) {
+                                                                                    JoinedData joinedData = new JoinedData();
+                                                                                    joinedData.setDocumentId(rideDoc.getId());
+                                                                                    joinedData.setType("ride");
+                                                                                    joinedData.setName(rideDoc.getString("name"));
+                                                                                    joinedData.setLocationOrSource(rideDoc.getString("source"));
+                                                                                    joinedData.setPhoneNumberOrDestination(rideDoc.getString("destination"));
+                                                                                    joinedDataList.add(joinedData);
+                                                                                }
+
+
+                                                                            } else {
+                                                                                Log.d("JoinedUsers", "User doesn't exist for pickup: " + rideDoc.getId());
+                                                                            }
+                                                                            JoinedAdapter adapter = new JoinedAdapter(joinedDataList, getContext());
+                                                                            recyclerView.setAdapter(adapter);
+                                                                            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+                                                                        }
+                                                                    });
+                                                                }
+                                                            } else {
+                                                                Log.d("Firestore", "Error getting events documents: ", task.getException());
+                                                            }
+                                                        }
+                                                    });
+
+                                                } else {
+                                                    // "joinedUser" doesn't exist in the subcollection for this pickup
+                                                    // You can handle it here
+                                                    Log.d("JoinedUsers", "User doesn't exist for pickup: " + pickupDoc.getId());
+                                                }
+
+
+                                            }
+                                        });
+                                    }
+                                } else {
+                                    Log.d("Firestore", "Error getting pickups documents: ", subCollectionTask.getException());
+                                }
                             }
-
-                            // Add the document to the list for this eventName
-                            documentsMap.get(eventName).add(document);
-                        }
-
-                        // Now you have all documents grouped by eventName
-                        // You can access them like this:
-                        for (Map.Entry<String, List<DocumentSnapshot>> entry : documentsMap.entrySet()) {
-                            String eventName = entry.getKey();
-                            List<DocumentSnapshot> documents = entry.getValue();
-                            // Do whatever you want with the documents
-                            // For example, print out the event name and number of documents
-                            System.out.println("Event Name: " + eventName);
-                            System.out.println("Number of Documents: " + documents.size());
-                        }
+                        });
                     }
-                });
+                } else {
+                    Log.d("Firestore", "Error getting events documents: ", task.getException());
+                }
+            }
+        });
+
+
+        // Query to retrieve documents
+//        db.collection("events")
+////                .whereArrayContains()
+//                .whereEqualTo("pickups.joinedUsers.joined_user", userId)
+//                .get()
+//                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+//                        // Iterate through the documents
+//                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+//                            // Get the value of the eventName field
+//                            String eventName = document.getString("eventName");
+//
+//                            // Check if documentsMap already contains a list for this eventName
+//                            if (!documentsMap.containsKey(eventName)) {
+//                                // If not, create a new list
+//                                documentsMap.put(eventName, new ArrayList<>());
+//                            }
+//
+//                            // Add the document to the list for this eventName
+//                            documentsMap.get(eventName).add(document);
+//                        }
+//
+//                        // Now you have all documents grouped by eventName
+//                        // You can access them like this:
+//                        for (Map.Entry<String, List<DocumentSnapshot>> entry : documentsMap.entrySet()) {
+//                            String eventName = entry.getKey();
+//                            List<DocumentSnapshot> documents = entry.getValue();
+//                            // Do whatever you want with the documents
+//                            // For example, print out the event name and number of documents
+//                            System.out.println("Event Name: " + eventName);
+//                            System.out.println("Number of Documents: " + documents.size());
+//                        }
+//                    }
+//                });
 
 
 //        db.collection("events").document()
@@ -424,5 +528,7 @@ public class JoinedFragment extends Fragment {
 //                });
         return view;
     }
+
+
 
 }

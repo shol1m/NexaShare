@@ -44,7 +44,6 @@ public class PassengerAdapter extends RecyclerView.Adapter<PassengerAdapter.View
             holder.confirmedTextView.setText("Not Confirmed");
         }
     }
-
     @Override
     public int getItemCount() {
         return passengersList.size();

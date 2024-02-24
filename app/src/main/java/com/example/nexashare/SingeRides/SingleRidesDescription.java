@@ -1,4 +1,4 @@
-package com.example.nexashare;
+package com.example.nexashare.SingeRides;
 
 import static androidx.constraintlayout.widget.ConstraintLayoutStates.TAG;
 
@@ -17,10 +17,10 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.nexashare.Adapter.RideAdapter;
 import com.example.nexashare.FCM.FCMSend;
 import com.example.nexashare.Models.MyData;
 import com.example.nexashare.Models.Ride;
+import com.example.nexashare.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;

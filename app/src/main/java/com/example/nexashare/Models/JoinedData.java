@@ -2,10 +2,29 @@ package com.example.nexashare.Models;
 
 public class JoinedData {
     private String documentId;
+    private String pickupDocumentId;
+
+    public String getPickupDocumentId() {
+        return pickupDocumentId;
+    }
+
+    public void setPickupDocumentId(String pickupDocumentId) {
+        this.pickupDocumentId = pickupDocumentId;
+    }
+
     private String type; // "event" or "ride"
     private String name;
     private String locationOrSource;
     private String phoneNumberOrDestination;
+    private String bookedSeats;
+
+    public String getBookedSeats() {
+        return bookedSeats;
+    }
+
+    public void setBookedSeats(String bookedSeats) {
+        this.bookedSeats = bookedSeats;
+    }
 
     public String getDocumentId() {
         return documentId;

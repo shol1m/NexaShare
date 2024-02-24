@@ -96,7 +96,6 @@ public class CreatedFragment extends Fragment {
                     }
                 });
 
-
         return view;
     }
 }

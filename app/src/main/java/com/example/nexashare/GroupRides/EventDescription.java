@@ -1,4 +1,4 @@
-package com.example.nexashare;
+package com.example.nexashare.GroupRides;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +27,7 @@ import com.example.nexashare.Models.MyData;
 import com.example.nexashare.FCM.APIService;
 import com.example.nexashare.FCM.Client;
 import com.example.nexashare.FCM.FCMSend;
+import com.example.nexashare.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;

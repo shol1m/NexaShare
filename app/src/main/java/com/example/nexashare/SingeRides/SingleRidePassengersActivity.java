@@ -1,4 +1,4 @@
-package com.example.nexashare;
+package com.example.nexashare.SingeRides;
 
 import static androidx.constraintlayout.widget.ConstraintLayoutStates.TAG;
 
@@ -14,7 +14,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.nexashare.Adapter.PassengerAdapter;
+import com.example.nexashare.CreatedFragment;
 import com.example.nexashare.Models.Passenger;
+import com.example.nexashare.R;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;

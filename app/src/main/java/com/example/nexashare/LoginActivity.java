@@ -43,7 +43,6 @@ public class LoginActivity extends AppCompatActivity {
     public Button login;
     public EditText email,password;
     public TextView forgotPassword;
-
     private FirebaseAuth mAuth;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -93,7 +92,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
-
 
     public void login(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {

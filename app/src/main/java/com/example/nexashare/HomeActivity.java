@@ -6,6 +6,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import com.example.nexashare.GroupRides.CreateGroupRideFragment;
+import com.example.nexashare.GroupRides.GroupRidesDisplayFragment;
+import com.example.nexashare.SingeRides.CreateRideFragment;
+import com.example.nexashare.SingeRides.SingleRidesDisplayFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{

@@ -12,6 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.example.nexashare.GroupRides.GroupRidesDisplayFragment;
+import com.example.nexashare.SingeRides.SingleRidesDisplayFragment;
+
 public class Home extends Fragment {
     private ImageView notification;
     private CardView singles,groups;
