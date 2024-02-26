@@ -3,56 +3,71 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:layout_marginTop="10dp"
     android:id="@+id/passengerLinearaLyout"
     android:paddingRight="16dp">
 
-    <TextView
-        android:id="@+id/passengerNameDetail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Passenger Name"
-        android:layout_marginStart="10dp"
-        android:textSize="18sp"
-        android:textColor="@android:color/black"/>
-
-    <TextView
-        android:id="@+id/bookedSeatsDetail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Booked Seats"
-        android:layout_marginStart="10dp"
-        android:textSize="18sp"
-        android:textColor="@android:color/black"/>
-
-    <TextView
-        android:id="@+id/confirmedDetail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:text="Confirmed"
-        android:textColor="@android:color/black"
-        android:textSize="18sp" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
         android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/passengerNameDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Passenger Name"
+                android:layout_marginStart="10dp"
+                android:textSize="18sp"
+                android:textColor="@android:color/black"/>
 
-<!--        <TextView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="Phone Number: "-->
-<!--            android:textSize="16sp"-->
-<!--            android:textColor="@android:color/black"-->
-<!--            android:id="@+id/passengerPhoneNumberDetail"-->
-<!--            android:layout_marginTop="8dp"/>-->
-<!--        <ImageView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:background=""/>-->
+            <TextView
+                android:id="@+id/bookedSeatsDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Booked Seats"
+                android:layout_marginStart="10dp"
+                android:textSize="18sp"
+                android:textColor="@android:color/black"/>
+
+            <TextView
+                android:id="@+id/confirmedDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="Confirmed"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:orientation="horizontal">
+            </LinearLayout>
+
     </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/confirm"
+                android:text="Confirm"/>
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/baseline_whatsapp_24"
+                android:id="@+id/whatsappicon"/>
+        </LinearLayout>
 
+    </LinearLayout>
 </LinearLayout>

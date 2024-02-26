@@ -1,9 +1,12 @@
 package com.example.nexashare.Adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -11,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.nexashare.Helper.Whatsapp;
 import com.example.nexashare.Models.Passenger;
 import com.example.nexashare.R;
 
@@ -39,10 +43,26 @@ public class PassengerAdapter extends RecyclerView.Adapter<PassengerAdapter.View
 
         if(!passenger.isConfirmed()){
             holder.confirmedTextView.setText("Not Confirmed");
+            holder.confirm.setText("Deny");
         }else{
             holder.passengerLinearLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.green));
-            holder.confirmedTextView.setText("Not Confirmed");
+            holder.confirmedTextView.setText("Confirmed");
+            holder.confirm.setBackgroundResource(R.drawable.baseline_whatsapp_24);
         }
+
+        holder.whatsapp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                Whatsapp.sendMessageToWhatsApp();
+
+            }
+        });
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.e("Test","Item has been clicked");
+            }
+        });
     }
     @Override
     public int getItemCount() {
@@ -53,6 +73,8 @@ public class PassengerAdapter extends RecyclerView.Adapter<PassengerAdapter.View
         private TextView passengerNameTextView;
         private TextView bookedSeatsTextView;
         private TextView confirmedTextView;
+        private Button confirm;
+        private ImageView whatsapp;
         LinearLayout passengerLinearLayout;
 
         public ViewHolder(@NonNull View itemView) {
@@ -61,6 +83,8 @@ public class PassengerAdapter extends RecyclerView.Adapter<PassengerAdapter.View
             bookedSeatsTextView = itemView.findViewById(R.id.bookedSeatsDetail);
             passengerLinearLayout = itemView.findViewById(R.id.passengerLinearaLyout);
             confirmedTextView = itemView.findViewById(R.id.confirmedDetail);
+            confirm = itemView.findViewById(R.id.confirm);
+            whatsapp = itemView.findViewById(R.id.whatsappicon);
         }
     }
 }

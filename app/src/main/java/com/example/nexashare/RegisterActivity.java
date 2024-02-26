@@ -148,18 +148,11 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     }
-//    private void sendRideJoinRequestNotification() {
-//        // Simulate sending a notification by using the FirebaseMessageReceiver logic
-//        FirebaseMessageReceiver receiver = new FirebaseMessageReceiver();
-//        receiver.sendRideJoinRequestNotification("Ride Join Request", "User wants to join the ride.");
-//    }
 
     public void register(String name,String email,String phone,String password){
         Log.d(TAG, "SignUp");
         mAuth.createUserWithEmailAndPassword(email,password)
                 .addOnCompleteListener(this,new OnCompleteListener<AuthResult>() {
-
-
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){

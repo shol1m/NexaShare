@@ -65,6 +65,7 @@ public class CreateRideFragment extends Fragment{
 //        userid = sharedPreferences.getString(USER_ID_KEY,null);
 //        name = sharedPreferences.getString(NAME_KEY,null);
 
+//        Retrieve current user name
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("users")
                 .document(MyData.userId)
@@ -155,7 +156,7 @@ public class CreateRideFragment extends Fragment{
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Log.w(TAG, "Error writing document for create rides", e);
+                                Log.e(TAG, "Error writing document for create rides", e);
                                 Toast.makeText(getContext(),"Error Creating Rides,check your Internet",Toast.LENGTH_SHORT).show();
                             }
                         });

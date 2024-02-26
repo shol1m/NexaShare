@@ -165,8 +165,6 @@ public class EventPassengersActivity extends AppCompatActivity {
                             // Assuming you have a subcollection named "joinedUsers" under each pickup
                             CollectionReference joinedUsersRef = document.getReference().collection("joinedUsers");
 
-                            // Fetch additional event information
-
                             String pickupTime = document.getString("pickupTime");
                             int availableSeats = document.getLong("availableSeats").intValue();
 
@@ -229,44 +227,7 @@ public class EventPassengersActivity extends AppCompatActivity {
         this.eventName.setText("Event Name: " + eventName);
         this.eventLocation.setText(""+eventLocation);
     }
-//    private static void fetchPassengers(String eventId, String pickupLocation) {
-//        List<Passenger> passengersList = new ArrayList<>();
-//
-//        db.collection("events")
-//                .document(eventId)
-//                .collection("pickups")
-//                .whereEqualTo("pickupLocation", pickupLocation)
-//                .get()
-//                .addOnSuccessListener(queryDocumentSnapshots -> {
-//                    if (!queryDocumentSnapshots.isEmpty()) {
-//                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-//                            // Assuming you have a subcollection named "joinedUsers" under each pickup
-//                            CollectionReference joinedUsersRef = document.getReference().collection("joinedUsers");
-//
-//                            joinedUsersRef.get().addOnCompleteListener(task -> {
-//                                if (task.isSuccessful()) {
-//                                    for (QueryDocumentSnapshot userDocument : task.getResult()) {
-//                                        Passenger passenger = userDocument.toObject(Passenger.class);
-//                                        passengersList.add(passenger);
-//                                    }
-//                                    // Display the list of passengers in a RecyclerView
-//                                    displayPassengers(passengersList);
-//                                } else {
-//                                    // Handle errors for joinedUsers query
-//                                    Log.e(TAG, "Error getting joinedUsers: ", task.getException());
-//                                }
-//                            });
-//                        }
-//                    } else {
-//                        // Handle case where no pickup documents match the query
-//                        Log.d(TAG, "No pickups found for location: " + pickupLocation);
-//                    }
-//                })
-//                .addOnFailureListener(e -> {
-//                    // Handle failure
-//                    Log.e(TAG, "Error fetching passengers ", e);
-//                });
-//    }
+
 
     private static void displayPassengers(List<Passenger> passengersList) {
 

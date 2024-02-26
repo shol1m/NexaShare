@@ -2,6 +2,7 @@ package com.example.nexashare.Models;
 
 public class Passenger {
     private String name;
+    private String phoneNumber;
     private int bookedSeats;
     private boolean confirmed;
 

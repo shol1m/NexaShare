@@ -43,9 +43,9 @@ public class ProfileFragment extends Fragment{
         email = view.findViewById(R.id.email);
         logout = view.findViewById(R.id.logout);
 //
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        assert currentUser != null;
-        myEmail = currentUser.getEmail();
+//        FirebaseUser currentUser = mAuth.getCurrentUser();
+//        assert currentUser != null;
+//        myEmail = currentUser.getEmail();
 
         username.setText(MyData.name);
         email.setText(MyData.email);
