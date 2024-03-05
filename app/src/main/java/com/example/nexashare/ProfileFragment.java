@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -42,6 +43,7 @@ public class ProfileFragment extends Fragment{
         username = view.findViewById(R.id.username);
         email = view.findViewById(R.id.email);
         logout = view.findViewById(R.id.logout);
+        accountDetails = view.findViewById(R.id.account_details);
 //
 //        FirebaseUser currentUser = mAuth.getCurrentUser();
 //        assert currentUser != null;
@@ -52,6 +54,7 @@ public class ProfileFragment extends Fragment{
 
         JoinedFragment joinedFragment = new JoinedFragment();
         CreatedFragment createdFragment = new CreatedFragment();
+        PhoneVerification phoneVerification = new PhoneVerification();
         notifications.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -97,6 +100,27 @@ public class ProfileFragment extends Fragment{
                     // Log any exception that might occur during the transaction
                     Log.e("FragmentTransaction", "Error during fragment transaction", e);
                 }
+            }
+        });
+        accountDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                startActivity(new Intent(getContext(), AccountDetailsActivity.class));
+//                try {
+//                    // Check if getParentFragmentManager() is the correct context, otherwise use getChildFragmentManager()
+//                    if (getParentFragmentManager() != null) {
+//                        transaction.replace(R.id.flFragment, phoneVerification);
+//                        transaction.addToBackStack(null);
+//                        transaction.commit();
+//                    } else {
+//                        // Log an error if getParentFragmentManager() returns null
+//                        Log.e("FragmentTransaction", "Parent Fragment Manager is null");
+//                    }
+//                } catch (Exception e) {
+//                    // Log any exception that might occur during the transaction
+//                    Log.e("FragmentTransaction", "Error during fragment transaction", e);
+//                }
             }
         });
         logout.setOnClickListener(new View.OnClickListener() {

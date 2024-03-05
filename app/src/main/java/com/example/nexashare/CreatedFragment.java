@@ -47,6 +47,7 @@ public class CreatedFragment extends Fragment {
 // Reference to the Firestore database
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+
 // Query for events created by the user
         db.collection("events")
                 .whereEqualTo("userId", userId)

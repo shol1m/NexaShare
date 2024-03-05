@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="20dp">
+
+    <EditText
+        android:id="@+id/otp_code1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:maxLength="1"
+        android:textAlignment="center"
+        android:layout_margin="5dp"
+        android:hint=""/>
+
+    <EditText
+        android:id="@+id/otp_code2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:maxLength="1"
+        android:textAlignment="center"
+        android:layout_margin="5dp"
+        android:hint=""/>
+
+    <EditText
+        android:id="@+id/otp_code3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:maxLength="1"
+        android:textAlignment="center"
+        android:layout_margin="5dp"
+        android:hint=""/>
+
+    <EditText
+        android:id="@+id/otp_code4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:maxLength="1"
+        android:textAlignment="center"
+        android:layout_margin="5dp"
+        android:hint=""/>
+
+    <EditText
+        android:id="@+id/otp_code5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:maxLength="1"
+        android:textAlignment="center"
+        android:layout_margin="5dp"
+        android:hint=""/>
+
+    <EditText
+        android:id="@+id/otp_code6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:maxLength="1"
+        android:textAlignment="center"
+        android:layout_margin="5dp"
+        android:hint=""/>
+
+</LinearLayout>
