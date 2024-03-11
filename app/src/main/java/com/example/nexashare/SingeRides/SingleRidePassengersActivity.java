@@ -134,6 +134,8 @@ public class SingleRidePassengersActivity extends AppCompatActivity {
                     if (!queryDocumentSnapshots.isEmpty()) {
                         for (QueryDocumentSnapshot userDocument : queryDocumentSnapshots) {
                             Passenger passenger = userDocument.toObject(Passenger.class);
+                            passenger.setDocumentId(rideId);
+                            passenger.setUserId(userDocument.getId());
                             passengersList.add(passenger);
                         }
                         // Display the list of passengers in a RecyclerView
@@ -149,10 +151,10 @@ public class SingleRidePassengersActivity extends AppCompatActivity {
                 });
     }
 
-    private static void displayPassengers(List<Passenger> passengersList) {
+    private void displayPassengers(List<Passenger> passengersList) {
 
         // For example, assuming you have a PassengerAdapter
-        PassengerAdapter adapter = new PassengerAdapter(passengersList);
+        PassengerAdapter adapter = new PassengerAdapter(passengersList,SingleRidePassengersActivity.this);
         recyclerViewPassengers.setLayoutManager(new LinearLayoutManager(recyclerViewPassengers.getContext()));
         recyclerViewPassengers.setAdapter(adapter);
     }

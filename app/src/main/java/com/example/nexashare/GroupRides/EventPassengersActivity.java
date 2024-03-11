@@ -45,7 +45,7 @@ public class EventPassengersActivity extends AppCompatActivity {
     Spinner pickupLocation;
     static RecyclerView recyclerViewPassengers;
     String formattedTime;
-    String selectedPickupLocation,eventId;
+    String selectedPickupLocation,eventId,pickupId;
     private static FirebaseFirestore db = FirebaseFirestore.getInstance();
     CreatedFragment createdFragment = new CreatedFragment();
 
@@ -167,6 +167,7 @@ public class EventPassengersActivity extends AppCompatActivity {
 
                             String pickupTime = document.getString("pickupTime");
                             int availableSeats = document.getLong("availableSeats").intValue();
+                            pickupId = document.getId();
 
 
                             SimpleDateFormat firestoreDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss 'GMT'Z yyyy", Locale.US);
@@ -196,7 +197,14 @@ public class EventPassengersActivity extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     for (QueryDocumentSnapshot userDocument : task.getResult()) {
                                         Passenger passenger = userDocument.toObject(Passenger.class);
+                                        String passengerId = userDocument.getId();
+                                        // Set the document ID to the Passenger object
+                                        passenger.setDocumentId(eventId);
+                                        passenger.setUserId(passengerId);
+                                        passenger.setPickupId(pickupId);
+                                        passenger.setType("event");
                                         passengersList.add(passenger);
+
                                     }
                                     // Display the list of passengers in a RecyclerView
                                     displayPassengers(passengersList);
@@ -223,16 +231,12 @@ public class EventPassengersActivity extends AppCompatActivity {
         this.availableSeats.setText(" "+availableSeats);
         // You might also want to update other UI elements based on your needs
     }
-    public void UpdateEventDetails(String eventName,String eventLocation){
-        this.eventName.setText("Event Name: " + eventName);
-        this.eventLocation.setText(""+eventLocation);
-    }
 
 
-    private static void displayPassengers(List<Passenger> passengersList) {
+    private void displayPassengers(List<Passenger> passengersList) {
 
         // For example, assuming you have a PassengerAdapter
-        PassengerAdapter adapter = new PassengerAdapter(passengersList);
+        PassengerAdapter adapter = new PassengerAdapter(passengersList,EventPassengersActivity.this);
         recyclerViewPassengers.setLayoutManager(new LinearLayoutManager(recyclerViewPassengers.getContext()));
         recyclerViewPassengers.setAdapter(adapter);
     }
