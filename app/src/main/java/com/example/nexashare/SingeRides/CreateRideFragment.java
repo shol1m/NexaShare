@@ -7,10 +7,6 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,12 +17,17 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
 import com.example.nexashare.FCMDataNotificationSender;
-import com.example.nexashare.Models.MyData;
 import com.example.nexashare.Helper.FirebaseHelper;
+import com.example.nexashare.Models.MyData;
 import com.example.nexashare.R;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -40,8 +41,6 @@ import java.util.Map;
 
 public class CreateRideFragment extends Fragment{
     public static String SHARED_PREFS = "shared-prefs";
-    public static String USER_ID_KEY = "user_id_key";
-    public static String NAME_KEY = "name_key";
     String userid,name;
     private EditText destination, source, phone, carType,seats,dateTime;
     private Button createRideBtn;
@@ -139,27 +138,58 @@ public class CreateRideFragment extends Fragment{
                 rideData.put("seats", Seats);
                 rideData.put("token", fcmToken);
 
-                db.collection("rides").document()
-                        .set(rideData)
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Log.d(TAG, "DocumentSnapshot for create rides successfully written!");
-                                Toast.makeText(getContext(),"Ride Created successfully",Toast.LENGTH_SHORT).show();
-                                source.setText("");
-                                destination.setText("");
-                                carType.setText("");
-                                dateTime.setText("");
-                                seats.setText("");
+
+                db.collection("users").document(userId).collection("cars").document(userId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                // Document exists, now check if fields have values
+                                String model = document.getString("model");
+                                String make = document.getString("make");
+                                String plate = document.getString("plate");
+
+                                if (model != null && !model.isEmpty() && make != null && !make.isEmpty() && plate != null && !plate.isEmpty()) {
+                                    // All fields have values
+                                    db.collection("rides").document()
+                                            .set(rideData)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Log.d(TAG, "DocumentSnapshot for create rides successfully written!");
+                                                    Toast.makeText(getContext(),"Ride Created successfully",Toast.LENGTH_LONG).show();
+                                                    source.setText("");
+                                                    destination.setText("");
+                                                    carType.setText("");
+                                                    dateTime.setText("");
+                                                    seats.setText("");
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.e(TAG, "Error writing document for create rides", e);
+                                                    Toast.makeText(getContext(),"Error Creating Rides,check your Internet",Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+
+                                } else {
+                                    // Some fields are missing or empty
+                                    Toast.makeText(getContext(),"Make sure all card details are updated in profile before creating a ride ",Toast.LENGTH_LONG).show();
+                                    Log.d("RIDE_CREATION", "Make sure all card details are updated in profile before creating a ride");
+
+                                }
+                            } else {
+                                // Document does not exist
+
+                                Toast.makeText(getContext(),"Add card details in profile before creating a ride",Toast.LENGTH_LONG).show();
+                                Log.d("RIDE_CREATION", "Add card details in profile before creating a ride");
                             }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.e(TAG, "Error writing document for create rides", e);
-                                Toast.makeText(getContext(),"Error Creating Rides,check your Internet",Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                        } else {
+                            Log.d("RIDE_CREATION", "Error getting document: ", task.getException());
+                        }
+                    }
+                });
                 FCMDataNotificationSender fcmDataNotificationSender = new FCMDataNotificationSender();
 
                 String title = "Create";

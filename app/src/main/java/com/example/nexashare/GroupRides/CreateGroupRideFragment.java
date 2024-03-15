@@ -26,12 +26,16 @@ import com.example.nexashare.Models.MyData;
 import com.example.nexashare.Models.OneEventPickupDetail;
 import com.example.nexashare.Helper.FirebaseHelper;
 import com.example.nexashare.R;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -179,37 +183,25 @@ public class CreateGroupRideFragment extends Fragment {
                     pickupLocation.setText("");
                     availableSeats.setText("");
                     dateTime.setText("");
-                } else {
-                    // Handle the case where any of the required fields is blank
 
+                    eventRef.set(eventData)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    // DocumentSnapshot added successfully
+                                    Log.d("Firestore", "Event data added successfully with ID: " + eventId);
 
-                    Toast.makeText(getContext(), "Please fill in all required fields", Toast.LENGTH_SHORT).show();
-                }
+                                    // Upload all pickup details for the event
+                                    CollectionReference pickupsRef = eventRef.collection("pickups");
 
-                eventRef.set(eventData)
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                // DocumentSnapshot added successfully
-                                Log.d("Firestore", "Event data added successfully with ID: " + eventId);
-
-                                // Upload all pickup details for the event
-                                CollectionReference pickupsRef = eventRef.collection("pickups");
-
-//                                for (EventPickupDetail pickup : pickupDetailsList) {
-//                                    pickupsRef.add(pickup);
-//                                }
-//                                // Clear pickupDetailsList after successful upload
-//                                pickupDetailsList.clear();
-
-                                if (pickupAdded) {
-                                    for (EventPickupDetail pickup : pickupDetailsList) {
-                                        pickupsRef.add(pickup);
+                                    if (pickupAdded) {
+                                        for (EventPickupDetail pickup : pickupDetailsList) {
+                                            pickupsRef.add(pickup);
+                                        }
+                                        Log.d(TAG, "Pickup Data" + pickupDetailsList);
+                                        // Clear pickupDetailsList after successful upload
+                                        pickupDetailsList.clear();
                                     }
-                                    Log.d(TAG, "Pickup Data" + pickupDetailsList);
-                                    // Clear pickupDetailsList after successful upload
-                                    pickupDetailsList.clear();
-                                }
 //                                else{
 //                                    for (OneEventPickupDetail pickup : oneEventPickupDetailList ) {
 //                                        pickupsRef.add(pickup);
@@ -218,26 +210,38 @@ public class CreateGroupRideFragment extends Fragment {
 //                                    oneEventPickupDetailList.clear();
 //                                }
 
-                                eventLocation.setText("");
-                                eventName.setText("");
-                                phone.setText("");
-                                pickupLocation.setText("");
-                                availableSeats.setText("");
-                                dateTime.setText("");
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                // Handle failure
-                                Log.e("Firestore", "Error adding event data", e);
-                            }
-                        });
+                                    eventLocation.setText("");
+                                    eventName.setText("");
+                                    phone.setText("");
+                                    pickupLocation.setText("");
+                                    availableSeats.setText("");
+                                    dateTime.setText("");
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    // Handle failure
+                                    Log.e("Firestore", "Error adding event data", e);
+                                }
+                            });
+
+
+                } else {
+                    // Handle the case where any of the required fields is blank
+
+                    Toast.makeText(getContext(), "Please fill in all required fields", Toast.LENGTH_SHORT).show();
+                }
 
             }
         });
 
         return view;
+    }
+
+    public void createEvent(){
+        DocumentReference eventRef = db.collection("events").document();
+
     }
     private void showDateTimePickerDialog() {
         final Calendar c = Calendar.getInstance();
