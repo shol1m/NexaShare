@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipeContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<!--    <ScrollView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        tools:context=".RegisterActivity">-->
+
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="vertical">-->
+
+<!--            <RelativeLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="180dp"-->
+<!--                android:background="@color/lavender">-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/textView_register_head"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="30dp"-->
+<!--                    android:textColor="@color/white"-->
+<!--                    android:textSize="30sp"-->
+<!--                    android:text="@string/sign_up"-->
+<!--                    android:textAlignment="center"-->
+<!--                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />-->
+
+<!--            </RelativeLayout>-->
+
+<!--            <RelativeLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="15dp"-->
+<!--                android:layout_marginRight="15dp"-->
+<!--                android:layout_marginLeft="15dp"-->
+<!--                android:layout_marginTop="-50dp"-->
+<!--                android:background="@drawable/border"-->
+<!--                android:padding="15dp">-->
+
+<!--                <RelativeLayout-->
+<!--                    android:id="@+id/RL_name"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="20dp"-->
+<!--                    android:background="@drawable/border">-->
+
+<!--                    <ImageView-->
+<!--                        android:id="@+id/imageViewModel"-->
+<!--                        android:layout_width="35dp"-->
+<!--                        android:layout_height="35dp"-->
+<!--                        android:layout_centerVertical="true"-->
+<!--                        android:layout_marginLeft="10dp"-->
+<!--                        android:layout_marginRight="10dp"-->
+<!--                        android:src="@drawable/baseline_directions_car_24"-->
+<!--                        android:contentDescription="@string/to_do" />-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/textView_car_mode"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_toEndOf="@id/imageViewModel"-->
+<!--                        android:padding="6dp"-->
+<!--                        android:textColor="@color/black"-->
+<!--                        android:text="@string/car_model" />-->
+
+
+
+<!--                    <EditText-->
+<!--                        android:id="@+id/name_car_model_edt"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_below="@id/textView_car_mode"-->
+<!--                        android:layout_marginTop="10dp"-->
+<!--                        android:layout_marginBottom="10dp"-->
+<!--                        android:layout_toEndOf="@id/imageViewModel"-->
+<!--                        android:background="@android:color/transparent"-->
+<!--                        android:hint="@string/car_model_text"-->
+<!--                        android:textColor="@color/black"-->
+<!--                        android:inputType="textPersonName"-->
+<!--                        android:padding="6dp"-->
+<!--                        android:textSize="16sp"-->
+<!--                        android:autofillHints="" />-->
+<!--                </RelativeLayout>-->
+
+<!--                <RelativeLayout-->
+<!--                    android:id="@+id/RL_make"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_below="@id/RL_name"-->
+<!--                    android:layout_marginTop="10dp"-->
+<!--                    android:background="@drawable/border">-->
+
+<!--                    <ImageView-->
+<!--                        android:id="@+id/imageViewMake"-->
+<!--                        android:layout_width="35dp"-->
+<!--                        android:layout_height="35dp"-->
+<!--                        android:layout_centerVertical="true"-->
+<!--                        android:layout_marginLeft="10dp"-->
+<!--                        android:layout_marginRight="10dp"-->
+<!--                        android:src="@drawable/baseline_directions_car_24"-->
+<!--                        android:contentDescription="@string/to_do" />-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/textView_car_make"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_toEndOf="@id/imageViewMake"-->
+<!--                        android:padding="6dp"-->
+<!--                        android:text="@string/car_make" />-->
+
+
+<!--                    <EditText-->
+<!--                        android:id="@+id/car_make_edt"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_below="@id/textView_car_make"-->
+<!--                        android:layout_marginTop="10dp"-->
+<!--                        android:layout_marginBottom="10dp"-->
+<!--                        android:layout_toEndOf="@id/imageViewMake"-->
+<!--                        android:background="@android:color/transparent"-->
+<!--                        android:hint="@string/car_make_text"-->
+<!--                        android:inputType="textEmailAddress"-->
+<!--                        android:padding="6dp"-->
+<!--                        android:textSize="16sp"-->
+<!--                        android:autofillHints="" />-->
+<!--                </RelativeLayout>-->
+
+<!--                <RelativeLayout-->
+<!--                    android:id="@+id/RL_Plate"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_below="@id/RL_make"-->
+<!--                    android:layout_marginTop="10dp"-->
+<!--                    android:background="@drawable/border">-->
+
+<!--                    <ImageView-->
+<!--                        android:id="@+id/imageViewPlate"-->
+<!--                        android:layout_width="35dp"-->
+<!--                        android:layout_height="35dp"-->
+<!--                        android:layout_centerVertical="true"-->
+<!--                        android:layout_marginLeft="10dp"-->
+<!--                        android:layout_marginRight="10dp"-->
+<!--                        android:src="@drawable/baseline_directions_car_24"-->
+<!--                        android:contentDescription="@string/to_do" />-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/textView_car_plate"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_toEndOf="@id/imageViewPlate"-->
+<!--                        android:padding="6dp"-->
+<!--                        android:text="@string/car_plate" />-->
+
+
+
+<!--                    <EditText-->
+<!--                        android:id="@+id/car_plate_edt"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_below="@id/textView_car_plate"-->
+<!--                        android:layout_marginTop="10dp"-->
+<!--                        android:layout_marginBottom="10dp"-->
+<!--                        android:layout_toEndOf="@id/imageViewPlate"-->
+<!--                        android:background="@android:color/transparent"-->
+<!--                        android:hint="@string/car_plate_text"-->
+<!--                        android:inputType="textEmailAddress"-->
+<!--                        android:padding="6dp"-->
+<!--                        android:textSize="16sp"-->
+<!--                        android:autofillHints="" />-->
+<!--                </RelativeLayout>-->
+
+
+<!--                <CheckBox-->
+<!--                    android:id="@+id/checkBox_car_terms"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_below="@id/RL_Plate"-->
+<!--                    android:layout_marginTop="10dp"-->
+<!--                    android:buttonTint="@color/purple_500"-->
+<!--                    android:focusable="true"-->
+<!--                    android:focusableInTouchMode="true"-->
+<!--                    android:text="@string/car_terms"-->
+<!--                    android:textColor="#444" />-->
+
+<!--                <Button-->
+<!--                    android:id="@+id/submit_btn"-->
+<!--                    android:layout_width="180dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_below="@id/checkBox_car_terms"-->
+<!--                    android:layout_centerHorizontal="true"-->
+<!--                    android:layout_marginTop="50dp"-->
+<!--                    android:layout_marginBottom="50dp"-->
+<!--                    android:text="@string/save_car_info" />-->
+
+
+<!--                <ProgressBar-->
+<!--                    android:id="@+id/progressBar"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_centerHorizontal="true"-->
+<!--                    android:layout_centerVertical="true"-->
+<!--                    android:elevation="10dp"-->
+<!--                    android:visibility="gone" />-->
+<!--            </RelativeLayout>-->
+
+<!--        </LinearLayout>-->
+
+<!--    </ScrollView>-->
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

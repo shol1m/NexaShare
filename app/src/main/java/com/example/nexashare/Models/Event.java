@@ -5,7 +5,7 @@ import java.util.List;
 // Event class
 public class Event {
     private String eventName;
-    private String eventLocation;
+    private String eventLocation;   
     private String organizerPhoneNumber;
     private String rideType;
     private String userId;

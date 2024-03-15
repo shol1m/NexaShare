@@ -181,7 +181,6 @@ public class EventPassengersActivity extends AppCompatActivity {
 
                                 // Format the Date object into the desired format
                                 formattedTime = desiredDateFormat.format(date);
-
                                 // Now 'formattedTime' contains the time in the desired format
 
                             } catch (ParseException e) {

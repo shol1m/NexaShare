@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,32 +19,28 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.PhoneAuthCredential;
-import com.google.firebase.auth.PhoneAuthProvider;
-
-import java.util.concurrent.TimeUnit;
+import com.google.firebase.firestore.SetOptions;
 
 public class AccountDetailsActivity extends AppCompatActivity {
-    TextView nameTxt,emailTxt,phoneTxt;
-    TextView editName,editEmail,editPhone;
-    String email,name,phone;
+    TextView nameTxt,emailTxt,phoneTxt,modelTxt,makeTxt,plateTxt;
+    TextView editName,editEmail,editPhone,editModel,editMake,editPlate;
+    String email,name,phone,make,model,plate;
+    boolean modelExist,makeExist,plateExist;
     private ProgressDialog progressDialog;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -55,9 +52,15 @@ public class AccountDetailsActivity extends AppCompatActivity {
         nameTxt = findViewById(R.id.name);
         emailTxt = findViewById(R.id.email);
         phoneTxt = findViewById(R.id.phone);
+        modelTxt = findViewById(R.id.model);
+        makeTxt = findViewById(R.id.make);
+        plateTxt = findViewById(R.id.plate);
         editName = findViewById(R.id.name_edit);
         editEmail = findViewById(R.id.email_edit);
         editPhone = findViewById(R.id.phone_edit);
+        editModel = findViewById(R.id.model_edit);
+        editMake = findViewById(R.id.make_edit);
+        editPlate = findViewById(R.id.plate_edit);
 
         db.collection("users")
                 .document(MyData.userId)
@@ -74,7 +77,7 @@ public class AccountDetailsActivity extends AppCompatActivity {
                             nameTxt.setText(name);
                             emailTxt.setText(email);
                             phoneTxt.setText(phone);
-                            Log.d("FirestoreData", "Received name is " + MyData.name);
+
                         } else {
                             // Document does not exist
                             Log.e("FirestoreData", "No such document");
@@ -84,8 +87,38 @@ public class AccountDetailsActivity extends AppCompatActivity {
                         Log.d("FirestoreData", "Task failed: " + task.getException());
                     }
                 });
+        db.collection("users")
+                .document(MyData.userId)
+                .collection("cars")
+                .document(MyData.userId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
 
+                            // DocumentSnapshot exists, retrieve data
+                            model = document.getString("model");
+                            make = document.getString("make");
+                            plate = document.getString("plate");
 
+                            modelTxt.setText(model);
+                            makeTxt.setText(make);
+                            plateTxt.setText(plate);
+
+                            modelExist = !TextUtils.isEmpty(model);
+                            makeExist = !TextUtils.isEmpty(make);
+                            plateExist = !TextUtils.isEmpty(plate);
+
+                        } else {
+                            // Document does not exist
+                            Log.e("FirestoreData", "No such document");
+                        }
+                    } else {
+                        // Task failed with an exception
+                        Log.d("FirestoreData", "Task failed: " + task.getException());
+                    }
+                });
         editName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -104,8 +137,25 @@ public class AccountDetailsActivity extends AppCompatActivity {
                 showEditPhonePopupDialog(AccountDetailsActivity.this,phone);
             }
         });
+        editModel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showEditModelPopupDialog(AccountDetailsActivity.this,modelExist);
+            }
+        });
+        editMake.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showEditMakePopupDialog(AccountDetailsActivity.this,makeExist);
+            }
+        });
+        editPlate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showEditPlatePopupDialog(AccountDetailsActivity.this,plateExist);
+            }
+        });
     }
-
     private void showEditNamePopupDialog(Context context){
         // Create a new AlertDialog Builder
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -227,7 +277,135 @@ public class AccountDetailsActivity extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+    private void showEditModelPopupDialog(Context context,boolean exist){
+        // Create a new AlertDialog Builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        if (exist) {
+            builder.setTitle("Update Model");
+        }else{
+            builder.setTitle("Add Model");
+        }
+        // Create a LinearLayout to hold EditText
+        LinearLayout layout = new LinearLayout(context);
+        layout.setOrientation(LinearLayout.VERTICAL);
 
+        // Create EditText
+        final EditText editText = new EditText(context);
+        layout.addView(editText);
+
+        // Set the LinearLayout as the AlertDialog's view
+        builder.setView(layout);
+        editText.setText(model);
+
+        // Add buttons to the AlertDialog
+        builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Handle Submit button click
+                String inputText = editText.getText().toString();
+                updateModel(inputText,exist);
+                dialog.dismiss(); // Dismiss the dialog
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Handle Cancel button click
+                dialog.dismiss(); // Dismiss the dialog
+            }
+        });
+
+        // Create and show the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+    private void showEditMakePopupDialog(Context context,boolean exist){
+        // Create a new AlertDialog Builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        if (exist) {
+            builder.setTitle("Update Make");
+        }else{
+            builder.setTitle("Add Make");
+        }
+        // Create a LinearLayout to hold EditText
+        LinearLayout layout = new LinearLayout(context);
+        layout.setOrientation(LinearLayout.VERTICAL);
+
+        // Create EditText
+        final EditText editText = new EditText(context);
+        layout.addView(editText);
+
+        // Set the LinearLayout as the AlertDialog's view
+        builder.setView(layout);
+        editText.setText(make);
+
+        // Add buttons to the AlertDialog
+        builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Handle Submit button click
+                String inputText = editText.getText().toString();
+                updateMake(inputText,exist);
+                dialog.dismiss(); // Dismiss the dialog
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Handle Cancel button click
+                dialog.dismiss(); // Dismiss the dialog
+            }
+        });
+
+        // Create and show the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+    private void showEditPlatePopupDialog(Context context,boolean exist){
+        // Create a new AlertDialog Builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        if (exist) {
+            builder.setTitle("Update Plate");
+        }else{
+            builder.setTitle("Add Plate");
+        }
+        // Create a LinearLayout to hold EditText
+        LinearLayout layout = new LinearLayout(context);
+        layout.setOrientation(LinearLayout.VERTICAL);
+
+        // Create EditText
+        final EditText editText = new EditText(context);
+        layout.addView(editText);
+
+        // Set the LinearLayout as the AlertDialog's view
+        builder.setView(layout);
+        editText.setText(plate);
+
+        // Add buttons to the AlertDialog
+        builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Handle Submit button click
+                String inputText = editText.getText().toString();
+                updatePlate(inputText,exist);
+                dialog.dismiss(); // Dismiss the dialog
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Handle Cancel button click
+                dialog.dismiss(); // Dismiss the dialog
+            }
+        });
+
+        // Create and show the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
     private void updateName(String name){
         db.collection("users")
                 .document(MyData.userId)
@@ -246,9 +424,137 @@ public class AccountDetailsActivity extends AppCompatActivity {
                     }
                 });
     }
-
     private void updateEmail(String email){}
-
+    private void updateModel(String model, boolean exist){
+        if (exist){
+            db.collection("users")
+                    .document(MyData.userId)
+                    .collection("cars")
+                    .document(MyData.userId)
+                    .update("model",model)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            Log.d("FIRESTORE_VALUE","Model updated successfully");
+                            Toast.makeText(AccountDetailsActivity.this, "Model updated Successfully", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.e("FIRESTORE_VALUE","Could not update name : "+e);
+                        }
+                    });
+        }else{
+            Log.e("FIRESTORE_VALUE","Model does not exist: ");
+            Map<String, Object> modelData = new HashMap<>();
+            modelData.put("model",model);
+            db.collection("users")
+                    .document(MyData.userId)
+                    .collection("cars")
+                    .document(MyData.userId)
+                    .set(modelData, SetOptions.merge())
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            Log.d("FIRESTORE_VALUE","Model updated successfully");
+                            Toast.makeText(AccountDetailsActivity.this, "Model updated Successfully", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.e("FIRESTORE_VALUE","Could not update name : "+e);
+                        }
+                    });
+        }
+    }
+    private void updateMake(String make, boolean exist){
+        if (exist){
+            db.collection("users")
+                    .document(MyData.userId)
+                    .collection("cars")
+                    .document(MyData.userId)
+                    .update("make",make)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            Log.d("FIRESTORE_VALUE","Make updated successfully");
+                            Toast.makeText(AccountDetailsActivity.this, "Make updated Successfully", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.e("FIRESTORE_VALUE","Could not update Make : "+e);
+                        }
+                    });
+        }else{
+            Map<String, Object> makeData = new HashMap<>();
+            makeData.put("make",make);
+            db.collection("users")
+                    .document(MyData.userId)
+                    .collection("cars")
+                    .document(MyData.userId)
+                    .set(makeData, SetOptions.merge())
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            Log.d("FIRESTORE_VALUE","Make updated successfully");
+                            Toast.makeText(AccountDetailsActivity.this, "Make added Successfully", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.e("FIRESTORE_VALUE","Could not update make : "+e);
+                        }
+                    });
+        }
+    }
+    private void updatePlate(String plate, boolean exist){
+        if (exist){
+            db.collection("users")
+                    .document(MyData.userId)
+                    .collection("cars")
+                    .document(MyData.userId)
+                    .update("plate",plate)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            Log.d("FIRESTORE_VALUE","Plate updated successfully");
+                            Toast.makeText(AccountDetailsActivity.this, "Plate updated Successfully", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.e("FIRESTORE_VALUE","Could not update plate : "+e);
+                        }
+                    });
+        }else{
+            Map<String, Object> plateData = new HashMap<>();
+            plateData.put("plate",plate);
+            db.collection("users")
+                    .document(MyData.userId)
+                    .collection("cars")
+                    .document(MyData.userId)
+                    .set(plateData, SetOptions.merge())
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            Log.d("FIRESTORE_VALUE","Plate updated successfully");
+                            Toast.makeText(AccountDetailsActivity.this, "Plate added Successfully", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.e("FIRESTORE_VALUE","Could not update plate : "+e);
+                        }
+                    });
+        }
+    }
     private void SendOTP(String phone) {
     // Show progress dialog
     showProgressDialog("Sending OTP...");
@@ -282,7 +588,6 @@ public class AccountDetailsActivity extends AppCompatActivity {
             }
     );
 }
-
     private void showProgressDialog(String message) {
         progressDialog = new ProgressDialog(AccountDetailsActivity.this);
         progressDialog.setMessage(message);

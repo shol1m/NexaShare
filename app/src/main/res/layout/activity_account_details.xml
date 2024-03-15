@@ -103,5 +103,268 @@
                 android:background="@drawable/baseline_edit"/>
         </LinearLayout>
 
+
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:layout_margin="10dp"
+        android:background="@color/whiteCardColor"
+        android:layout_marginHorizontal="10dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/whiteCardColor"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/model"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/black"
+                android:layout_margin="10dp"
+                android:text="Model"/>
+
+            <TextView
+                android:id="@+id/model_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="end"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/baseline_edit"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/whiteCardColor"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/make"
+                android:layout_weight="1"
+                android:textColor="@color/black"
+                android:layout_margin="10dp"
+                android:text="make"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/make_edit"
+                android:layout_gravity="center"
+                android:gravity="end"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/baseline_edit"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/whiteCardColor"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/plate"
+                android:textColor="@color/black"
+                android:layout_weight="1"
+                android:layout_margin="10dp"
+                android:text="Plate"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/plate_edit"
+                android:layout_gravity="center"
+                android:gravity="end"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/baseline_edit"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:background="@color/whiteCardColor"-->
+<!--        android:layout_margin="10dp"-->
+<!--        android:padding="10dp"-->
+<!--        android:orientation="vertical">-->
+<!--        <RelativeLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginBottom="15dp"-->
+<!--            android:layout_marginRight="15dp"-->
+<!--            android:layout_marginLeft="15dp"-->
+<!--            android:layout_marginTop="-50dp"-->
+<!--            android:padding="15dp">-->
+
+<!--            <RelativeLayout-->
+<!--                android:id="@+id/RL_name"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="20dp"-->
+<!--                android:background="@drawable/border">-->
+
+<!--                <ImageView-->
+<!--                    android:id="@+id/imageViewModel"-->
+<!--                    android:layout_width="35dp"-->
+<!--                    android:layout_height="35dp"-->
+<!--                    android:layout_centerVertical="true"-->
+<!--                    android:layout_marginLeft="10dp"-->
+<!--                    android:layout_marginRight="10dp"-->
+<!--                    android:src="@drawable/baseline_directions_car_24"-->
+<!--                    android:contentDescription="to_do" />-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/textView_car_mode"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_toEndOf="@id/imageViewModel"-->
+<!--                    android:padding="6dp"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    android:text="car_model" />-->
+
+
+
+<!--                <EditText-->
+<!--                    android:id="@+id/name_car_model_edt"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_below="@id/textView_car_mode"-->
+<!--                    android:layout_marginTop="10dp"-->
+<!--                    android:layout_marginBottom="10dp"-->
+<!--                    android:layout_toEndOf="@id/imageViewModel"-->
+<!--                    android:background="@android:color/transparent"-->
+<!--                    android:hint="car_model_text"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    android:inputType="textPersonName"-->
+<!--                    android:padding="6dp"-->
+<!--                    android:textSize="16sp"-->
+<!--                    android:autofillHints="" />-->
+<!--            </RelativeLayout>-->
+
+<!--            <RelativeLayout-->
+<!--                android:id="@+id/RL_make"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_below="@id/RL_name"-->
+<!--                android:layout_marginTop="10dp">-->
+
+<!--                <ImageView-->
+<!--                    android:id="@+id/imageViewMake"-->
+<!--                    android:layout_width="35dp"-->
+<!--                    android:layout_height="35dp"-->
+<!--                    android:layout_centerVertical="true"-->
+<!--                    android:layout_marginLeft="10dp"-->
+<!--                    android:layout_marginRight="10dp"-->
+<!--                    android:src="@drawable/baseline_directions_car_24"-->
+<!--                    android:contentDescription="to_do" />-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/textView_car_make"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_toEndOf="@id/imageViewMake"-->
+<!--                    android:padding="6dp"-->
+<!--                    android:text="car_make" />-->
+
+
+<!--                <EditText-->
+<!--                    android:id="@+id/car_make_edt"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_below="@id/textView_car_make"-->
+<!--                    android:layout_marginTop="10dp"-->
+<!--                    android:layout_marginBottom="10dp"-->
+<!--                    android:layout_toEndOf="@id/imageViewMake"-->
+<!--                    android:background="@android:color/transparent"-->
+<!--                    android:hint="car_make_text"-->
+<!--                    android:inputType="textEmailAddress"-->
+<!--                    android:padding="6dp"-->
+<!--                    android:textSize="16sp"-->
+<!--                    android:autofillHints="" />-->
+<!--            </RelativeLayout>-->
+
+<!--            <RelativeLayout-->
+<!--                android:id="@+id/RL_Plate"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_below="@id/RL_make"-->
+<!--                android:layout_marginTop="10dp">-->
+
+<!--                <ImageView-->
+<!--                    android:id="@+id/imageViewPlate"-->
+<!--                    android:layout_width="35dp"-->
+<!--                    android:layout_height="35dp"-->
+<!--                    android:layout_centerVertical="true"-->
+<!--                    android:layout_marginLeft="10dp"-->
+<!--                    android:layout_marginRight="10dp"-->
+<!--                    android:contentDescription="to_do" />-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/textView_car_plate"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_toEndOf="@id/imageViewPlate"-->
+<!--                    android:padding="6dp"-->
+<!--                    android:text="car_plate" />-->
+
+
+
+<!--                <EditText-->
+<!--                    android:id="@+id/car_plate_edt"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_below="@id/textView_car_plate"-->
+<!--                    android:layout_marginTop="10dp"-->
+<!--                    android:layout_marginBottom="10dp"-->
+<!--                    android:layout_toEndOf="@id/imageViewPlate"-->
+<!--                    android:background="@android:color/transparent"-->
+<!--                    android:hint="car_plate_text"-->
+<!--                    android:inputType="textEmailAddress"-->
+<!--                    android:padding="6dp"-->
+<!--                    android:textSize="16sp"-->
+<!--                    android:autofillHints="" />-->
+<!--            </RelativeLayout>-->
+
+
+<!--            <CheckBox-->
+<!--                android:id="@+id/checkBox_car_terms"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_below="@id/RL_Plate"-->
+<!--                android:layout_marginTop="10dp"-->
+<!--                android:buttonTint="@color/purple_500"-->
+<!--                android:focusable="true"-->
+<!--                android:focusableInTouchMode="true"-->
+<!--                android:text="car_terms"-->
+<!--                android:textColor="#444" />-->
+
+<!--            <Button-->
+<!--                android:id="@+id/submit_btn"-->
+<!--                android:layout_width="180dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_below="@id/checkBox_car_terms"-->
+<!--                android:layout_centerHorizontal="true"-->
+<!--                android:layout_marginTop="50dp"-->
+<!--                android:layout_marginBottom="50dp"-->
+<!--                android:text="save_car_info" />-->
+
+<!--            <ProgressBar-->
+<!--                android:id="@+id/progressBar"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_centerHorizontal="true"-->
+<!--                android:layout_centerVertical="true"-->
+<!--                android:elevation="10dp"-->
+<!--                android:visibility="gone" />-->
+<!--        </RelativeLayout>-->
+
+<!--    </LinearLayout>-->
+
 </androidx.appcompat.widget.LinearLayoutCompat>
