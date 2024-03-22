@@ -7,7 +7,6 @@
     android:background="@color/Background"
     tools:context=".SingeRides.CreateRideFragment">
 
-
     <LinearLayout
         style="@style/linearParent"
         android:layout_gravity="center"
@@ -15,19 +14,22 @@
 
         <TextView
             style="@style/headerTextPrimary"
+            android:textColor="#113469"
             android:text="Create Ride"
             android:layout_marginTop="@dimen/loginViewsMargin"/>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputEmail"
             style="@style/parent"
+            android:elevation="10dp"
             android:layout_marginTop="@dimen/loginViewsMargin">
 
             <EditText
                 android:id="@+id/source_edt"
                 style="@style/modifiedEditText"
+                android:background="@color/white"
                 android:hint="Source"
-                android:inputType="textEmailAddress"
+                android:inputType="text"
+
                 android:maxLines="1" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -37,6 +39,7 @@
             <EditText
                 android:id="@+id/destination_edt"
                 style="@style/modifiedEditText"
+                android:background="@color/white"
                 android:hint="Destination"
                 android:maxLines="1"
                 android:inputType="text"/>
@@ -48,6 +51,7 @@
             <EditText
                 android:id="@+id/car_type_edt"
                 style="@style/modifiedEditText"
+                android:background="@color/white"
                 android:hint="Car type"
                 android:maxLines="1"
                 android:inputType="text"/>
@@ -59,6 +63,7 @@
             <EditText
                 android:id="@+id/seats_edt"
                 style="@style/modifiedEditText"
+                android:background="@color/white"
                 android:hint="Available Seats"
                 android:maxLines="1"
                 android:inputType="number"/>
@@ -70,6 +75,7 @@
             <EditText
                 android:id="@+id/phone_create_edt"
                 style="@style/modifiedEditText"
+                android:background="@color/white"
                 android:hint="Phone number"
                 android:maxLines="1"
                 android:inputType="phone"/>
@@ -84,6 +90,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Select Date and Time"
+                android:background="@color/white"
                 android:focusable="false"
                 android:clickable="true"
                 android:inputType="none"

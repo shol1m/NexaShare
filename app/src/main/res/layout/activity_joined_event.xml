@@ -102,7 +102,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
-            android:text="Available  Seats:"
+            android:text="Booked seats:"
             android:layout_marginBottom="8dp"/>
         <TextView
             android:id="@+id/bookedSeatsDetail"
@@ -148,6 +148,11 @@
         android:layout_height="50dp"
         android:background="@drawable/baseline_whatsapp_24"
         android:id="@+id/whatsappicon"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cancel_button"
+        android:text="Cancel Ride"/>
 
 </LinearLayout>
 

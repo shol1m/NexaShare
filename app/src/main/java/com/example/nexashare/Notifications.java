@@ -3,10 +3,13 @@ package com.example.nexashare;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -45,11 +48,10 @@ public class Notifications extends AppCompatActivity {
         // Initialize RecyclerView and Adapter
         recyclerView = findViewById(R.id.recyclerView);
         back = findViewById(R.id.notificationsBack);
-
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                onBackPressed();
             }
         });
         notifications = new ArrayList<>();

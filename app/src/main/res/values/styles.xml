@@ -32,7 +32,7 @@
 
     <style name="modifiedEditText" parent="parent">
         <item name="android:textSize">@dimen/newsMoreTextSize</item>
-        <item name="android:backgroundTint">@color/primaryTextColor</item>
+        <item name="android:backgroundTint">@color/whiteCardColor</item>
     </style>
 
     <style name="viewParent">
@@ -46,7 +46,7 @@
         <item name="android:textStyle">bold</item>
     </style>
     <style name="rideItem" parent="viewParent">
-        <item name="android:background">@drawable/ride_item_bk</item>
+        <item name="android:background">@drawable/login_button_bk</item>
         <item name="android:textColor">@color/whiteTextColor</item>
         <item name="android:textStyle">bold</item>
     </style>

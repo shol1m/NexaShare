@@ -17,6 +17,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/joinedBack"
             android:layout_gravity="start"
             android:textSize="18sp"
             android:background="@drawable/baseline_arrow_back_24" />
@@ -28,7 +29,7 @@
             android:textSize="21sp"
             android:textStyle="bold"
             android:text="Joined"
-            android:textColor="@android:color/black" />
+            android:textColor="#113469"/>
     </com.google.android.material.appbar.MaterialToolbar>
 
     <androidx.recyclerview.widget.RecyclerView

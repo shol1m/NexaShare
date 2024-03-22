@@ -20,6 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textAllCaps="true"
+            android:textColor="#113469"
             android:text="Notifications"/>
     </com.google.android.material.appbar.MaterialToolbar>
 
@@ -30,11 +31,5 @@
         android:padding="8dp"
         android:clipToPadding="false"
         android:background="@android:color/white" />
-<!--    <com.google.android.material.divider.MaterialDivider-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        app:dividerInsetStart="16dp"-->
-<!--        app:dividerInsetEnd="16dp"-->
-<!--        app:dividerColor="@color/teal_200"/>-->
 
 </LinearLayout>

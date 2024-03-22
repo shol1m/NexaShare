@@ -64,7 +64,7 @@ public class CreateRideFragment extends Fragment{
 //        userid = sharedPreferences.getString(USER_ID_KEY,null);
 //        name = sharedPreferences.getString(NAME_KEY,null);
 
-//        Retrieve current user name
+//        Retrieve current user's name
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("users")
                 .document(MyData.userId)
@@ -95,8 +95,6 @@ public class CreateRideFragment extends Fragment{
                     }
                 });
 
-        Toast.makeText(getContext(),"Token is "+ MyData.token,Toast.LENGTH_SHORT);
-        Toast.makeText(getContext(),"User Id is "+ MyData.userId,Toast.LENGTH_SHORT);
         phone = view.findViewById(R.id.phone_create_edt);
         source = view.findViewById(R.id.source_edt);
         destination = view.findViewById(R.id.destination_edt);
@@ -125,7 +123,6 @@ public class CreateRideFragment extends Fragment{
                 String userId = MyData.userId;
                 String fcmToken = MyData.token;
 
-
                 Map<String, Object> rideData = new HashMap<>();
                 rideData.put("userId",userId);
                 rideData.put("name",name);
@@ -138,19 +135,19 @@ public class CreateRideFragment extends Fragment{
                 rideData.put("seats", Seats);
                 rideData.put("token", fcmToken);
 
-
+//                Check if the user has added a car.
                 db.collection("users").document(userId).collection("cars").document(userId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {                    @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
                             if (document.exists()) {
-                                // Document exists, now check if fields have values
                                 String model = document.getString("model");
                                 String make = document.getString("make");
                                 String plate = document.getString("plate");
 
                                 if (model != null && !model.isEmpty() && make != null && !make.isEmpty() && plate != null && !plate.isEmpty()) {
                                     // All fields have values
+//                                    Add the values to firebase after that the user has a car added
                                     db.collection("rides").document()
                                             .set(rideData)
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -158,6 +155,7 @@ public class CreateRideFragment extends Fragment{
                                                 public void onSuccess(Void aVoid) {
                                                     Log.d(TAG, "DocumentSnapshot for create rides successfully written!");
                                                     Toast.makeText(getContext(),"Ride Created successfully",Toast.LENGTH_LONG).show();
+//                                                      Set fields to empty
                                                     source.setText("");
                                                     destination.setText("");
                                                     carType.setText("");
@@ -180,8 +178,7 @@ public class CreateRideFragment extends Fragment{
 
                                 }
                             } else {
-                                // Document does not exist
-
+                                // User has no added a car
                                 Toast.makeText(getContext(),"Add card details in profile before creating a ride",Toast.LENGTH_LONG).show();
                                 Log.d("RIDE_CREATION", "Add card details in profile before creating a ride");
                             }
@@ -190,12 +187,7 @@ public class CreateRideFragment extends Fragment{
                         }
                     }
                 });
-                FCMDataNotificationSender fcmDataNotificationSender = new FCMDataNotificationSender();
 
-                String title = "Create";
-                String message = "Ride has been created";
-
-                FCMDataNotificationSender.sendNotification(data.token,title, message);
             }
         });
         // Inflate the layout for this fragment
@@ -244,7 +236,7 @@ public class CreateRideFragment extends Fragment{
                         formattedDateTime = dateFormat.format(selectedDateTime);
 
                         // Set the formatted date and time to the EditText
-//                        dateTimeEdt.setText(formattedDateTime);
+                        dateTime.setText(formattedDateTime);
                     }
                 },
                 hour, minute, false);

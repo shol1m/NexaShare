@@ -79,7 +79,6 @@ public class RegisterActivity extends AppCompatActivity {
 
                 if (validationHelper.isNullOrEmpty(nameString)){
                     name.setError("Name cannot be empty");
-
                     allowSave = false;
                     return;
                 }

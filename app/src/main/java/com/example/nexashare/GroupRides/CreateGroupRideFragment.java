@@ -202,14 +202,8 @@ public class CreateGroupRideFragment extends Fragment {
                                         // Clear pickupDetailsList after successful upload
                                         pickupDetailsList.clear();
                                     }
-//                                else{
-//                                    for (OneEventPickupDetail pickup : oneEventPickupDetailList ) {
-//                                        pickupsRef.add(pickup);
-//                                    }
-//                                    // Clear pickupDetailsList after successful upload
-//                                    oneEventPickupDetailList.clear();
-//                                }
 
+//                                    Make fields empty
                                     eventLocation.setText("");
                                     eventName.setText("");
                                     phone.setText("");
@@ -239,10 +233,6 @@ public class CreateGroupRideFragment extends Fragment {
         return view;
     }
 
-    public void createEvent(){
-        DocumentReference eventRef = db.collection("events").document();
-
-    }
     private void showDateTimePickerDialog() {
         final Calendar c = Calendar.getInstance();
         int year = c.get(Calendar.YEAR);

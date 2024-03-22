@@ -2,21 +2,29 @@ package com.example.nexashare.GroupRides;
 
 import static androidx.constraintlayout.widget.ConstraintLayoutStates.TAG;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.nexashare.CreatedFragment;
+import com.example.nexashare.FCM.FCMSend;
 import com.example.nexashare.Helper.Whatsapp;
 import com.example.nexashare.JoinedRideActivity;
 import com.example.nexashare.Models.MyData;
 import com.example.nexashare.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.ParseException;
@@ -31,11 +39,16 @@ public class JoinedEventActivity extends AppCompatActivity {
     public TextView bookedSeats;
     public TextView pickupTime;
     public TextView pickupLocation;
+    public Button cancel;
     public ImageView back,whatsapp;
     static RecyclerView recyclerViewPassengers;
     String formattedTime;
-    String selectedPickupLocation,eventId,pickupId;
-    public String organizerPhoneNumberString;
+    String selectedPickupLocation;
+    static String eventId;
+    static String pickupId;
+    long bookedSeatsString,availableSeatsString;
+    String userId;
+    public String organizerPhoneNumberString,receiverToken,pickupLocationString;
     private static FirebaseFirestore db = FirebaseFirestore.getInstance();
     CreatedFragment createdFragment = new CreatedFragment();
 
@@ -52,6 +65,7 @@ public class JoinedEventActivity extends AppCompatActivity {
         pickupTime = findViewById(R.id.joinedPickupTimeDetail);
         pickupLocation = findViewById(R.id.joinedPickupLocationDetail);
         whatsapp = findViewById(R.id.whatsappicon);
+        cancel = findViewById(R.id.cancel_button);
 
         eventId = getIntent().getStringExtra("documentId");
         pickupId = getIntent().getStringExtra("pickupDocumentId");
@@ -59,6 +73,46 @@ public class JoinedEventActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Whatsapp.sendMessageToWhatsApp(organizerPhoneNumberString,"", JoinedEventActivity.this);
+            }
+        });
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                db.collection("users")
+                        .document(userId)
+                        .get()
+                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                if (documentSnapshot.exists()) {
+                                    Object receiverUserToken = documentSnapshot.get("fcmToken");
+                                    if (receiverUserToken != null) {
+                                        receiverToken = receiverUserToken.toString();
+                                        FCMSend.pushNotification(
+                                                JoinedEventActivity.this,
+                                                userId,
+                                                receiverToken,
+                                                "Request to join ride",
+                                                MyData.name + " has your event from pickup location "+ pickupLocationString
+                                        );
+
+                                        long seatsRemaining = availableSeatsString + bookedSeatsString;
+                                        updateSeats(seatsRemaining);
+                                    } else {
+                                        Log.e("FIRESTORE_VALUE", "Field 'fieldName' does not exist or is null");
+                                    }
+                                } else {
+                                    Log.e("FIRESTORE_VALUE", "Document does not exist");
+                                }
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                // Handle failures
+                                Log.e("FIRESTORE_VALUE", "Error getting value from Firestore", e);
+                            }
+                        });
             }
         });
 
@@ -70,6 +124,8 @@ public class JoinedEventActivity extends AppCompatActivity {
                         // Document exists, you can retrieve data
                         String eventNameString = documentSnapshot.getString("eventName");
                         String eventLocationString = documentSnapshot.getString("eventLocation");
+                        userId = documentSnapshot.getString("userId");
+
                         organizerPhoneNumberString = documentSnapshot.getString("organizerPhoneNumber");
 
                         eventName.setText("Event Name: " + eventNameString);
@@ -92,7 +148,8 @@ public class JoinedEventActivity extends AppCompatActivity {
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        String pickupLocationString = documentSnapshot.getString("pickupLocation");
+                        pickupLocationString = documentSnapshot.getString("pickupLocation");
+                        availableSeatsString = documentSnapshot.getLong("availableSeats");
                         String pickupTimeString = documentSnapshot.getString("pickupTime");
 //                        int BookedInt = documentSnapshot.getLong("availableSeats").intValue();
 
@@ -127,7 +184,7 @@ public class JoinedEventActivity extends AppCompatActivity {
                     Log.e(TAG, "Error fetching event details ", e);
                 });
 
-        db.collection("rides")
+        db.collection("events")
                 .document(eventId)
                 .collection("pickups")
                 .document(pickupId)
@@ -137,8 +194,8 @@ public class JoinedEventActivity extends AppCompatActivity {
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         // Document exists, you can retrieve data
-                        long bookedSeatsString = documentSnapshot.getLong("bookedSeats");
-                        bookedSeats.setText("Booked seats: "+bookedSeatsString);
+                        bookedSeatsString = documentSnapshot.getLong("bookedSeats");
+                        bookedSeats.setText(""+bookedSeatsString);
                         // Update your UI or perform other actions with the data
                     } else {
                         Log.d(TAG, "No such document");
@@ -148,6 +205,52 @@ public class JoinedEventActivity extends AppCompatActivity {
                     // Handle failure
                     Log.e(TAG, "Error fetching event details ", e);
                 });
-
     }
+    public void updateSeats(long seatsRemaining){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("events")
+                .document(eventId)
+                .collection("pickups")
+                .document(pickupId)
+                .update("availableSeats",seatsRemaining )
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // Handle success
+                        Log.d("FIRESTORE_VALUE", "Seats values Updated successfully ");
+                        deleteUser(JoinedEventActivity.this);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Handle failure
+                        Log.e("FIRESTORE_VALUE", "Field to update seats \n " + e);
+                    }
+                });
+    }
+
+    private static void deleteUser(Context context) {
+        db.collection("events")
+                .document(eventId)
+                .collection("pickups")
+                .document(pickupId)
+                .collection("joinedUsers")
+                .document(MyData.userId)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d("FIRESTORE_VALUE", "Ride canceled Successfully");
+                        Toast.makeText(context, "Ride canceled Successfully", Toast.LENGTH_LONG).show();
+                    }
+
+                })
+                .addOnFailureListener(e -> {
+                    // Handle failure
+                    Log.e(TAG, "Error deleting user", e);
+                });
+    }
+
+
 }

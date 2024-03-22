@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.nexashare.Models.MyData;
@@ -39,6 +40,7 @@ import com.google.firebase.firestore.SetOptions;
 public class AccountDetailsActivity extends AppCompatActivity {
     TextView nameTxt,emailTxt,phoneTxt,modelTxt,makeTxt,plateTxt;
     TextView editName,editEmail,editPhone,editModel,editMake,editPlate;
+    ImageView back;
     String email,name,phone,make,model,plate;
     boolean modelExist,makeExist,plateExist;
     private ProgressDialog progressDialog;
@@ -49,6 +51,7 @@ public class AccountDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_details);
 
+        back = findViewById(R.id.back);
         nameTxt = findViewById(R.id.name);
         emailTxt = findViewById(R.id.email);
         phoneTxt = findViewById(R.id.phone);
@@ -119,6 +122,13 @@ public class AccountDetailsActivity extends AppCompatActivity {
                         Log.d("FirestoreData", "Task failed: " + task.getException());
                     }
                 });
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
         editName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
