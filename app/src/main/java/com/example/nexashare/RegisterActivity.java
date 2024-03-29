@@ -77,29 +77,29 @@ public class RegisterActivity extends AppCompatActivity {
                 String passwordString = password.getText().toString();
                 String confirmPasswordString = confirmPassword.getText().toString();
 
-                if (validationHelper.isNullOrEmpty(nameString)){
+                if (ValidationHelper.isNullOrEmpty(nameString)){
                     name.setError("Name cannot be empty");
                     allowSave = false;
                     return;
                 }
 
-                if (validationHelper.isNullOrEmpty(emailString)){
+                if (ValidationHelper.isNullOrEmpty(emailString)){
                     email.setError("Email cannot be empty");
                     allowSave = false;
                     return;
                 }
-                if (validationHelper.isNullOrEmpty(phoneString)){
+                if (ValidationHelper.isNullOrEmpty(phoneString)){
                     phone.setError("Phone number cannot be empty");
                     allowSave = false;
                     return;
                 }
-                if (validationHelper.isNullOrEmpty(passwordString)){
+                if (ValidationHelper.isNullOrEmpty(passwordString)){
                     password.setError("Password cannot be empty");
                     allowSave = false;
                     return;
                 }
 
-                if (validationHelper.isValidPhoneNumber(phoneString)){
+                if (ValidationHelper.isValidPhoneNumber(phoneString)){
                     phone.setError("Enter a valid phone number");
                     allowSave = false;
                     return;
@@ -129,7 +129,6 @@ public class RegisterActivity extends AppCompatActivity {
                             }
                         });
 
-//                sendRideJoinRequestNotification();
             }
         });
 

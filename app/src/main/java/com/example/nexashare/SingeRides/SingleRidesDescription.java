@@ -42,6 +42,7 @@ public class SingleRidesDescription extends AppCompatActivity {
     public TextView dropoffLocation;
     public TextView driverPhoneNumber;
     public TextView pickupTime;
+    public TextView back;
     public Button joinRide;
     public static String userId,source,destination,formattedTime,receiverToken;
     public String rideId;
@@ -53,16 +54,17 @@ public class SingleRidesDescription extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_rides_description);
 
-//        driverName = findViewById(R.id.driverNameDetail);
-//        pickupLocation = findViewById(R.id.pickupLocationDetail);
-//        dropoffLocation = findViewById(R.id.dropoffLocationDetail);
-//        driverPhoneNumber = findViewById(R.id.driverPhoneDetail);
-//        availableSeats = findViewById(R.id.availableSeatsDetail);
-//        pickupTIme = findViewById(R.id.pickupTimeDetail);
-//        joinRide = findViewById(R.id.joinRideBtn);
+        back = findViewById(R.id.back);
         joinRide = findViewById(R.id.joinRideBtn);
 
         rideId = getIntent().getStringExtra("rideId");
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
 
         // Fetch event details from Firestore based on eventId
 

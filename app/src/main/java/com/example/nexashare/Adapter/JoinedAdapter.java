@@ -36,7 +36,6 @@ public class JoinedAdapter extends RecyclerView.Adapter<JoinedAdapter.ViewHolder
         return new JoinedAdapter.ViewHolder(view);
     }
 
-
     @Override
     public void onBindViewHolder(@NonNull JoinedAdapter.ViewHolder holder, int position) {
         JoinedData item = itemList.get(position);

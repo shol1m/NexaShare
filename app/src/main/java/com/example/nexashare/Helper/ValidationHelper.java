@@ -20,15 +20,19 @@ public class ValidationHelper {
         return match;
 
     }
-    public boolean isNullOrEmpty(String string){
+    public static boolean isNullOrEmpty(String string){
         return TextUtils.isEmpty(string);
     }
 
-    public boolean isValidPhoneNumber(String phoneNumber) {
-        // Remove any non-digit characters
-        phoneNumber = phoneNumber.replaceAll("\\D", "");
-
-        // Check if the phone number is exactly 10 digits and starts with "07" or "01"
-        return phoneNumber.length() == 10 && (phoneNumber.startsWith("07") || phoneNumber.startsWith("01"));
+//    public boolean isValidPhoneNumber(String phoneNumber) {
+//        // Remove any non-digit characters
+//        phoneNumber = phoneNumber.replaceAll("\\D", "");
+//
+//        // Check if the phone number is exactly 10 digits and starts with "07" or "01"
+//        return phoneNumber.length() == 10 && (phoneNumber.startsWith("07") || phoneNumber.startsWith("01"));
+//    }
+    public static boolean isValidPhoneNumber(String phoneNumber) {
+        // Check if phone number starts with '0' and has exactly 10 digits
+        return phoneNumber != null && phoneNumber.startsWith("0") && phoneNumber.length() == 10 && phoneNumber.matches("\\d+");
     }
 }

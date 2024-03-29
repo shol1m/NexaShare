@@ -25,7 +25,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
-
 public class GroupRideAdapter extends RecyclerView.Adapter<GroupRideAdapter.GroupRideViewHolder> {
     private static List<Event> events;
     private List<EventPickupDetail> eventPickupDetails;
@@ -40,27 +39,41 @@ public class GroupRideAdapter extends RecyclerView.Adapter<GroupRideAdapter.Grou
         this.context = context;
         this.events = groupRides;
     }
-
     @NonNull
     @Override
     public GroupRideViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.group_ride_item, parent, false);
         return new GroupRideViewHolder(view);
     }
-
-
     @Override
     public void onBindViewHolder(@NonNull GroupRideViewHolder holder, int position) {
         Event event = events.get(position);
-
-        holder.eventNameTextView.setText("Event Name: " + event.getEventName());
+        holder.eventNameTextView.setText("" + event.getEventName());
         holder.pickupLocationTextView.setText("Event Location: " + event.getEventLocation());
+        holder.seatsTextView.setVisibility(View.INVISIBLE);
 
         // Fetch pickup details for the current event
         fetchPickupDetails(event, holder);
 
         userId = event.getUserId();
+
+        // Capture position for later use
+        int itemPosition = holder.getAdapterPosition();
+
+        // Set click listener on the item view
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Start EventDescription activity when the item is clicked
+                Intent intent = new Intent(context, EventDescription.class);
+                intent.putExtra("eventId", events.get(itemPosition).getId());
+                view.getContext().startActivity(intent);
+                Log.d(TAG, "EventId before intent is: " + events.get(itemPosition).getId());
+            }
+        });
     }
+
+
 
     // Fetch pickup details for the given event
     private void fetchPickupDetails(Event event, GroupRideViewHolder holder) {
@@ -81,7 +94,7 @@ public class GroupRideAdapter extends RecyclerView.Adapter<GroupRideAdapter.Grou
                         // Display pickup details if available
                         if (!pickupDetails.isEmpty()) {
                             EventPickupDetail firstPickup = pickupDetails.get(0); // Assuming you're displaying the first pickup for simplicity
-                            holder.pickupLocationTextView.setText("Pickup Location: " + firstPickup.getPickupLocation());
+//                            holder.pickupLocationTextView.setText("Location: " + firstPickup.getPickupLocation());
                             // Add more details as needed
                         } else {
                             holder.pickupLocationTextView.setText("No Pickup Details Available");
@@ -97,36 +110,19 @@ public class GroupRideAdapter extends RecyclerView.Adapter<GroupRideAdapter.Grou
     public int getItemCount() {
         return events.size();
     }
-
     static class GroupRideViewHolder extends RecyclerView.ViewHolder {
         TextView eventNameTextView;
         TextView pickupLocationTextView;
+        TextView seatsTextView;
         Button joinEvent;
+
         GroupRideViewHolder(@NonNull View itemView) {
             super(itemView);
             eventNameTextView = itemView.findViewById(R.id.eventNameTxt);
             pickupLocationTextView = itemView.findViewById(R.id.eventLocationTxt);
-            joinEvent=itemView.findViewById(R.id.joinEventBtn);
-
-            Event event= new Event();
-
-            joinEvent.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-//                    showPickupLocationPopup(context,events.get(getAdapterPosition()));
-
-                    Intent intent = new Intent(context, EventDescription.class);
-                    intent.putExtra("eventId", events.get(getAdapterPosition()).getId());
-                    view.getContext().startActivity(intent);
-
-                    Log.d(TAG,"EventId before intent is: " + events.get(getAdapterPosition()).getId());
-
-
-                }
-            });
+            seatsTextView = itemView.findViewById(R.id.seatsTxt);
+            joinEvent = itemView.findViewById(R.id.joinEventBtn);
         }
     }
-
 
 }

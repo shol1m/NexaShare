@@ -4,7 +4,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingStart="16dp"
     android:background="@color/Background2"
     android:orientation="vertical">
 
@@ -15,7 +14,8 @@
         android:background="@color/loginBkColor"
         android:paddingTop="3dp">
 
-        <ImageView
+        <TextView
+            android:id="@+id/back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
@@ -33,55 +33,70 @@
     </com.google.android.material.appbar.MaterialToolbar>
 
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp">
 
-    <TextView
-        android:id="@+id/pickupLocationDetail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:text="Pickup Location"
-        android:layout_below="@id/eventNameDetail"
-        android:layout_marginBottom="8dp" />
-    <TextView
-        android:id="@+id/dropoffLocationDetail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:text="DripOff Location"
-        android:layout_below="@id/eventNameDetail"
-        android:layout_marginBottom="8dp" />
-    <TextView
-        android:id="@+id/driverNameDetail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:text="Driver Name"
-        android:layout_marginBottom="8dp" />
+        <TextView
+            android:id="@+id/pickupLocationDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="Pickup Location"
+            android:textColor="@color/black"
+            android:layout_below="@id/eventNameDetail"
+            android:layout_marginBottom="8dp" />
+        <TextView
+            android:id="@+id/dropoffLocationDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:text="DripOff Location"
+            android:layout_below="@id/eventNameDetail"
+            android:layout_marginBottom="8dp" />
+        <TextView
+            android:id="@+id/driverNameDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:text="Driver Name"
+            android:layout_marginBottom="8dp" />
 
-    <TextView
-        android:id="@+id/driverPhoneDetail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:text="Driver's PhoneNumber"
-        android:layout_below="@id/eventLocationDetail"
-        android:layout_marginBottom="8dp" />
-    <TextView
-        android:id="@+id/pickupTimeDetail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:text="Pickup Time"
-        android:layout_below="@id/eventLocationDetail"
-        android:layout_marginBottom="8dp" />
-    <TextView
-        android:id="@+id/availableSeatsDetail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:text="Available Seats"
-        android:layout_below="@id/eventLocationDetail"
-        android:layout_marginBottom="8dp" />
+        <TextView
+            android:id="@+id/driverPhoneDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:text="Driver's PhoneNumber"
+            android:layout_below="@id/eventLocationDetail"
+            android:layout_marginBottom="8dp" />
+        <TextView
+            android:id="@+id/pickupTimeDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:text="Pickup Time"
+            android:layout_below="@id/eventLocationDetail"
+            android:layout_marginBottom="8dp" />
+        <TextView
+            android:id="@+id/availableSeatsDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:text="Available Seats"
+            android:layout_below="@id/eventLocationDetail"
+            android:layout_marginBottom="8dp" />
+
+    </LinearLayout>
+
+
 
 
     <View

@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:startColor="#2467CE"
-    android:endColor="#516163"
+    android:background="@color/Background"
     android:orientation="vertical">
 
     <LinearLayout

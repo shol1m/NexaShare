@@ -75,10 +75,6 @@ public class ProfileFragment extends Fragment{
 
         storage = FirebaseStorage.getInstance();
 
-//        FirebaseUser currentUser = mAuth.getCurrentUser();
-//        assert currentUser != null;
-//        myEmail = currentUser.getEmail();
-
         Calendar calendar = Calendar.getInstance();
         int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
 
@@ -100,7 +96,6 @@ public class ProfileFragment extends Fragment{
         PhoneVerification phoneVerification = new PhoneVerification();
 
         StorageReference storageRef = storage.getReference().child("profile_pictures").child(userId);
-
         storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
@@ -113,7 +108,6 @@ public class ProfileFragment extends Fragment{
                                 .diskCacheStrategy(DiskCacheStrategy.NONE) // Disable caching to always load the latest image
                         )
                         .into(profile);// Disable caching to always load the latest image
-
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -123,7 +117,6 @@ public class ProfileFragment extends Fragment{
             }
         });
 
-        // Download the image and load it into the ImageView using Glide
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

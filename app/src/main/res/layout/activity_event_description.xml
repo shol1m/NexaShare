@@ -15,7 +15,8 @@
         android:background="@color/loginBkColor"
         android:paddingTop="3dp">
 
-        <ImageView
+        <TextView
+            android:id="@+id/back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
@@ -39,6 +40,7 @@
         android:layout_height="wrap_content"
         android:textSize="24sp"
         android:textStyle="bold"
+        android:textColor="@color/black"
         android:text="Event Name"
         android:layout_marginBottom="8dp" />
 
@@ -46,6 +48,7 @@
         android:id="@+id/eventLocationDetail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
         android:textSize="20sp"
         android:text="Event Location"
         android:layout_below="@id/eventNameDetail"
@@ -55,6 +58,7 @@
         android:id="@+id/organizerPhoneDetail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
         android:textSize="20sp"
         android:text="Organizer's Phone"
         android:layout_below="@id/eventLocationDetail"
@@ -64,6 +68,7 @@
         android:id="@+id/rideTypeDetail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
         android:textSize="20sp"
         android:text="Ride Type"
         android:layout_below="@id/organizerPhoneDetail"
@@ -84,6 +89,7 @@
         android:layout_height="wrap_content"
         android:textSize="22sp"
         android:textStyle="bold"
+        android:textColor="@color/black"
         android:text="Pickups"
         android:layout_below="@id/divider"
         android:layout_marginTop="16dp"

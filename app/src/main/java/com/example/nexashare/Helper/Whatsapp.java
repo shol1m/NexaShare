@@ -22,6 +22,10 @@ public class Whatsapp {
         PackageManager packageManager = context.getPackageManager();
         Intent intent = new Intent(Intent.ACTION_VIEW);
 
+        if (phoneNumber != null && phoneNumber.startsWith("0")) {
+            phoneNumber = "254" + phoneNumber.substring(1);
+        }
+
         try {
             String url = "https://api.whatsapp.com/send?phone=" + phoneNumber + "&text=" + URLEncoder.encode(message, "UTF-8");
             intent.setPackage("com.whatsapp");

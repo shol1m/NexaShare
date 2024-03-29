@@ -5,18 +5,14 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.nexashare.FCM.APIService;
-import com.example.nexashare.FCM.Client;
 import com.example.nexashare.Models.Ride;
 import com.example.nexashare.R;
 import com.example.nexashare.SingeRides.SingleRidesDescription;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -26,13 +22,9 @@ import java.util.Locale;
 
 public class RideAdapter extends RecyclerView.Adapter<RideAdapter.RideViewHolder> {
     private List<Ride> rides;
-    public static String formattedTime;
-    public static String userId;
-    public static int seats;
-    private static Context context;
-    private APIService apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
+    private Context context;
 
-    public RideAdapter(Context context,List<Ride> rides) {
+    public RideAdapter(Context context, List<Ride> rides) {
         this.context = context;
         this.rides = rides;
     }
@@ -40,7 +32,6 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.RideViewHolder
     @NonNull
     @Override
     public RideViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
         View view = LayoutInflater.from(context).inflate(R.layout.ride_item, parent, false);
         return new RideViewHolder(view);
     }
@@ -49,36 +40,29 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.RideViewHolder
     public void onBindViewHolder(@NonNull RideViewHolder holder, int position) {
         Ride ride = rides.get(position);
 
-        holder.userId = ride.getUserId();
-
-
-        String pickupTimeString = ride.getDate_and_time();
-
-        SimpleDateFormat firestoreDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss 'GMT'Z yyyy", Locale.US);
-
-        try {
-            // Parse the Firestore date string into a Date object
-            Date date = firestoreDateFormat.parse(pickupTimeString);
-
-            // Define the desired format for the output
-            SimpleDateFormat desiredDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US);
-
-            // Format the Date object into the desired format
-            formattedTime = desiredDateFormat.format(date);
-
-            // Now 'formattedTime' contains the time in the desired format
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-            // Handle the parsing exception
-        }
-
         holder.textViewDriverName.setText(ride.getName());
         holder.textViewPickup.setText(ride.getSource() + " To " + ride.getDestination());
-        holder.textViewDateTime.setText(formattedTime);
+        holder.textSeats.setText(ride.getSeats()+" Seats");
 
-        holder.rideId = ride.getRideId();
+        SimpleDateFormat firestoreDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss 'GMT'Z yyyy", Locale.US);
+        try {
+            Date date = firestoreDateFormat.parse(ride.getDate_and_time());
+            SimpleDateFormat desiredDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US);
+            String formattedTime = desiredDateFormat.format(date);
+            holder.textViewDateTime.setText(formattedTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Handle item click
+                Intent intent = new Intent(context, SingleRidesDescription.class);
+                intent.putExtra("rideId", ride.getId());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -86,40 +70,18 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.RideViewHolder
         return rides.size();
     }
 
-    public class RideViewHolder extends RecyclerView.ViewHolder {
+    public static class RideViewHolder extends RecyclerView.ViewHolder {
         public TextView textViewDriverName;
-        public TextView textViewSeats;
         public TextView textViewPickup;
         public TextView textViewDateTime;
-        public Button buttonSelectRide, joinRide;
-        public String myName;
-        public String userId;
-        public String rideId;
-
+        public TextView textSeats;
 
         public RideViewHolder(View itemView) {
             super(itemView);
             textViewDriverName = itemView.findViewById(R.id.driverNameTxt);
             textViewPickup = itemView.findViewById(R.id.sourceTxt);
             textViewDateTime = itemView.findViewById(R.id.timeTxt);
-            textViewSeats = itemView.findViewById(R.id.seatsTxt);
-            joinRide = itemView.findViewById(R.id.joinRideBtn);
-            joinRide.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    FirebaseFirestore db = FirebaseFirestore.getInstance();
-                    Intent intent = new Intent(context, SingleRidesDescription.class);
-                    intent.putExtra("rideId", rides.get(getAdapterPosition()).getId());
-                    view.getContext().startActivity(intent);
-                }
-            });
+            textSeats = itemView.findViewById(R.id.seatsTxt);
         }
     }
-
-
-    public interface OnRideClickListener {
-        void onRideClick(Ride ride);
-    }
-
 }

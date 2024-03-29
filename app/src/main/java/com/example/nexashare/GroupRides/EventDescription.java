@@ -54,7 +54,6 @@ public class EventDescription extends AppCompatActivity {
     public static String userId;
     private APIService apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
     private static Context context;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,10 +66,18 @@ public class EventDescription extends AppCompatActivity {
         TextView eventLocationDetail = findViewById(R.id.eventLocationDetail);
         TextView organizerPhoneDetail = findViewById(R.id.organizerPhoneDetail);
         TextView rideTypeDetail = findViewById(R.id.rideTypeDetail);
+        TextView back = findViewById(R.id.back);
         RecyclerView recyclerViewPickups = findViewById(R.id.recyclerViewPickups);
         Button joinEvent = findViewById(R.id.joinEventBtn);
 
         eventPickupDetail = new EventPickupDetail();
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
 
         // Initialize RecyclerView
         pickupDetailsList = new ArrayList<>();

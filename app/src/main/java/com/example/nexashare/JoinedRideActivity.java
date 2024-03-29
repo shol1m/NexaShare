@@ -58,10 +58,7 @@ public class JoinedRideActivity extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.flFragment, createdFragment)
-                        .commit();
+                onBackPressed();
             }
         });
 

@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.nexashare.FCMDataNotificationSender;
 import com.example.nexashare.Helper.FirebaseHelper;
+import com.example.nexashare.Helper.ValidationHelper;
 import com.example.nexashare.Models.MyData;
 import com.example.nexashare.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -49,6 +50,8 @@ public class CreateRideFragment extends Fragment{
     private FirebaseHelper firebaseHelper;
     MyData data=new MyData();
     private FirebaseFirestore db= FirebaseFirestore.getInstance();
+    private ValidationHelper validationHelper = new ValidationHelper();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +64,7 @@ public class CreateRideFragment extends Fragment{
         View view=  inflater.inflate(R.layout.fragment_create_ride, container, false);
 
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE);
+
 //        userid = sharedPreferences.getString(USER_ID_KEY,null);
 //        name = sharedPreferences.getString(NAME_KEY,null);
 
@@ -123,6 +127,30 @@ public class CreateRideFragment extends Fragment{
                 String userId = MyData.userId;
                 String fcmToken = MyData.token;
 
+                if (!validationHelper.isValidPhoneNumber(Phone)) {
+                    phone.setError("Invalid phone number.");
+                    return;
+                }
+
+                if (validationHelper.isNullOrEmpty(Source)) {
+                    source.setError("Source cannot be empty");
+                    return;
+                }
+                if (validationHelper.isNullOrEmpty(Destination)) {
+                    destination.setError("Destination cannot be empty");
+                    return;
+                }
+                if (validationHelper.isNullOrEmpty(CarType)) {
+                    carType.setError("Car type cannot be empty");
+                    return;
+                }
+
+
+                if (selectedDateTime == null) {
+                    Toast.makeText(getContext(), "Please select date and time.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 Map<String, Object> rideData = new HashMap<>();
                 rideData.put("userId",userId);
                 rideData.put("name",name);
@@ -134,6 +162,7 @@ public class CreateRideFragment extends Fragment{
                 rideData.put("cartType", CarType);
                 rideData.put("seats", Seats);
                 rideData.put("token", fcmToken);
+
 
 //                Check if the user has added a car.
                 db.collection("users").document(userId).collection("cars").document(userId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {                    @Override

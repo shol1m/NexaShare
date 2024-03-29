@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.nexashare.Helper.ValidationHelper;
 import com.example.nexashare.Models.Event;
 import com.example.nexashare.Models.EventPickupDetail;
 import com.example.nexashare.Models.MyData;
@@ -56,6 +57,7 @@ public class CreateGroupRideFragment extends Fragment {
     private Date selectedDateTime;
     private FirebaseHelper firebaseHelper;
     private FirebaseFirestore db= FirebaseFirestore.getInstance();
+    private ValidationHelper validationHelper = new ValidationHelper();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -150,6 +152,20 @@ public class CreateGroupRideFragment extends Fragment {
                 String rideType = "Group";
                 String userId = MyData.userId;
                 String fcmToken = MyData.token;
+
+                if (!validationHelper.isValidPhoneNumber(organizerPhoneNumberText)) {
+                    phone.setError("Invalid phone number.");
+                    return;
+                }
+                if (validationHelper.isNullOrEmpty(eventNameText)) {
+                    eventName.setError("Event Name cannot be empty");
+                    return;
+                }
+                if (validationHelper.isNullOrEmpty(eventLocationText)) {
+                    eventLocation.setError("Destination cannot be empty");
+                    return;
+                }
+
 
                 // Create a new Event object
                 Event newEvent = new Event(eventNameText, eventLocationText, organizerPhoneNumberText, rideType, userId, fcmToken);

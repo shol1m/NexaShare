@@ -26,7 +26,6 @@
             <EditText
                 android:id="@+id/source_edt"
                 style="@style/modifiedEditText"
-                android:background="@color/white"
                 android:hint="Source"
                 android:inputType="text"
 
@@ -39,7 +38,6 @@
             <EditText
                 android:id="@+id/destination_edt"
                 style="@style/modifiedEditText"
-                android:background="@color/white"
                 android:hint="Destination"
                 android:maxLines="1"
                 android:inputType="text"/>
@@ -51,7 +49,6 @@
             <EditText
                 android:id="@+id/car_type_edt"
                 style="@style/modifiedEditText"
-                android:background="@color/white"
                 android:hint="Car type"
                 android:maxLines="1"
                 android:inputType="text"/>
@@ -63,7 +60,6 @@
             <EditText
                 android:id="@+id/seats_edt"
                 style="@style/modifiedEditText"
-                android:background="@color/white"
                 android:hint="Available Seats"
                 android:maxLines="1"
                 android:inputType="number"/>
@@ -75,8 +71,7 @@
             <EditText
                 android:id="@+id/phone_create_edt"
                 style="@style/modifiedEditText"
-                android:background="@color/white"
-                android:hint="Phone number"
+                android:hint="Phone number (07/01xxx)"
                 android:maxLines="1"
                 android:inputType="phone"/>
         </com.google.android.material.textfield.TextInputLayout>
@@ -90,7 +85,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Select Date and Time"
-                android:background="@color/white"
                 android:focusable="false"
                 android:clickable="true"
                 android:inputType="none"

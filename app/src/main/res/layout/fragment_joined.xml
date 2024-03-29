@@ -31,13 +31,21 @@
             android:text="Joined"
             android:textColor="#113469"/>
     </com.google.android.material.appbar.MaterialToolbar>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/joinedRecyclerview"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        />
+        android:layout_height="match_parent"
+        android:background="@color/Background"
+        android:orientation="vertical">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/joinedRecyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/Background"
+            android:layout_marginLeft="5dp"
+            />
+    </LinearLayout>
+
+
 
 
 </LinearLayout>

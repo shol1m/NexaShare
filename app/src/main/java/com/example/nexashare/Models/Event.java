@@ -11,7 +11,6 @@ public class Event {
     private String userId;
     private String id;
     private String fcmToken;
-
     private List<EventPickupDetail> pickups;
 
     // Other existing fields and methods...

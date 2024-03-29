@@ -75,6 +75,12 @@ public class JoinedEventActivity extends AppCompatActivity {
                 Whatsapp.sendMessageToWhatsApp(organizerPhoneNumberString,"", JoinedEventActivity.this);
             }
         });
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

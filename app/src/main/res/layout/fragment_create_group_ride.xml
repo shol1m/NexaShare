@@ -15,6 +15,7 @@
         <TextView
             style="@style/headerTextPrimary"
             android:text="Create Group Ride"
+            android:textColor="#113469"
             android:layout_marginTop="@dimen/loginViewsMargin"/>
 
         <com.google.android.material.textfield.TextInputLayout

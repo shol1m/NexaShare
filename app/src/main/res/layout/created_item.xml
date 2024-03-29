@@ -2,7 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/Background"
     android:orientation="vertical"
+    android:elevation="8dp"
     android:padding="16dp">
 
     <TextView
@@ -10,6 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="18sp"
+        android:textColor="@color/black"
         android:text="Name"
         android:textStyle="bold" />
 
@@ -17,6 +20,7 @@
         android:id="@+id/locationOrSourceTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
         android:text="source"
         android:textSize="16sp" />
 
@@ -24,12 +28,14 @@
         android:id="@+id/phoneNumberOrDestinationTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
         android:text="destination"
         android:textSize="16sp" />
     <TextView
         android:id="@+id/typeTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/black"
         android:text="Type"
         android:textSize="16sp" />
 
