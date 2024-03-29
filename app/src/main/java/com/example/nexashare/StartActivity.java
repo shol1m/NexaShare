@@ -59,8 +59,6 @@ public class StartActivity extends AppCompatActivity {
                     if (document.exists()) {
                         // DocumentSnapshot exists, retrieve data
                         name = document.getString("name");
-                        // Use retrieved data (username, age, etc.)
-                        // Example: Log the retrieved data
                         MyData.name = name;
                         MyData.userId = userid;
                         Log.d("FirestoreData", "Received name is " + MyData.name);
@@ -109,8 +107,7 @@ public class StartActivity extends AppCompatActivity {
                     })
                     .addOnFailureListener(e -> {
                         Log.e(TAG, "Update failed: " + e.getMessage());
-                        // Failed to update FCM token
-                        // Handle the error
+
                     });
         }
     }

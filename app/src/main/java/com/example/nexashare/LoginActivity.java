@@ -167,11 +167,6 @@ public class LoginActivity extends AppCompatActivity {
 
         return name;
     }
-//    private void sendRideJoinRequestNotification() {
-//        // Simulate sending a notification by using the FirebaseMessageReceiver logic
-//        FirebaseMessageReceiver receiver = new FirebaseMessageReceiver();
-//        receiver.sendRideJoinRequestNotification("Ride Join Request", "User wants to join the ride.");
-//    }
 
     // Update FCM token in Firestore associated with the logged-in user
     private void updateFCMTokenInFirestore(String fcmToken) {
@@ -190,8 +185,7 @@ public class LoginActivity extends AppCompatActivity {
                     })
                     .addOnFailureListener(e -> {
                         Log.e(TAG, "Update failed: " + e.getMessage());
-                        // Failed to update FCM token
-                        // Handle the error
+
                     });
         }
     }
@@ -236,9 +230,6 @@ public class LoginActivity extends AppCompatActivity {
         loadingBar.setCanceledOnTouchOutside(false);
         loadingBar.show();
 
-        // calling sendPasswordResetEmail
-        // open your email and write the new
-        // password and then you can login
         mAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
