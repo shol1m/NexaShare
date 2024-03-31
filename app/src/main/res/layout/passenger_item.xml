@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:layout_marginTop="10dp"
+    android:background="@color/Background"
     android:id="@+id/passengerLinearaLyout"
     android:paddingRight="16dp">
 

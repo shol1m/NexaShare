@@ -55,6 +55,7 @@ public class PassengerAdapter extends RecyclerView.Adapter<PassengerAdapter.View
                 @Override
                 public void onClick(View view) {
                     if (passenger.getType().equals("event")){
+
                         db.collection("events")
                                 .document(passenger.getDocumentId())
                                 .collection("pickups")
@@ -148,11 +149,11 @@ public class PassengerAdapter extends RecyclerView.Adapter<PassengerAdapter.View
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void unused) {
-                                        Toast.makeText(context, "Passenger confirmed Successfully", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(context, "Passenger Denied Successfully", Toast.LENGTH_SHORT).show();
                                         Log.d("FIRESTORE_VALUE","Passenger confirmed Successfully");
                                         db.collection("rides")
                                                 .document(passenger.getDocumentId())
-                                                .update("availableSeats", FieldValue.increment(bookedSeats))
+                                                .update("seats", FieldValue.increment(bookedSeats))
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void unused) {

@@ -4,9 +4,11 @@ import static androidx.constraintlayout.widget.ConstraintLayoutStates.TAG;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +21,7 @@ import android.widget.Toast;
 import com.example.nexashare.CreatedFragment;
 import com.example.nexashare.FCM.FCMSend;
 import com.example.nexashare.Helper.Whatsapp;
+import com.example.nexashare.JoinedFragment;
 import com.example.nexashare.JoinedRideActivity;
 import com.example.nexashare.Models.MyData;
 import com.example.nexashare.R;
@@ -98,10 +101,9 @@ public class JoinedEventActivity extends AppCompatActivity {
                                                 JoinedEventActivity.this,
                                                 userId,
                                                 receiverToken,
-                                                "Request to join ride",
-                                                MyData.name + " has your event from pickup location "+ pickupLocationString
+                                                "Cancelled ride",
+                                                MyData.name + " has cancelled your event from pickup location "+ pickupLocationString
                                         );
-
                                         long seatsRemaining = availableSeatsString + bookedSeatsString;
                                         updateSeats(seatsRemaining);
                                     } else {
@@ -236,7 +238,7 @@ public class JoinedEventActivity extends AppCompatActivity {
                 });
     }
 
-    private static void deleteUser(Context context) {
+    private void deleteUser(Context context) {
         db.collection("events")
                 .document(eventId)
                 .collection("pickups")
@@ -249,6 +251,12 @@ public class JoinedEventActivity extends AppCompatActivity {
                     public void onSuccess(Void unused) {
                         Log.d("FIRESTORE_VALUE", "Ride canceled Successfully");
                         Toast.makeText(context, "Ride canceled Successfully", Toast.LENGTH_LONG).show();
+                        JoinedFragment joinedFragment = new JoinedFragment();
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.flFragment, joinedFragment)
+                                .commit();
+
                     }
 
                 })
