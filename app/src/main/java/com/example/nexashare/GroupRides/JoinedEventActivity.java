@@ -101,7 +101,7 @@ public class JoinedEventActivity extends AppCompatActivity {
                                                 JoinedEventActivity.this,
                                                 userId,
                                                 receiverToken,
-                                                "Cancelled ride",
+                                                "Cancelled Event ride",
                                                 MyData.name + " has cancelled your event from pickup location "+ pickupLocationString
                                         );
                                         long seatsRemaining = availableSeatsString + bookedSeatsString;
