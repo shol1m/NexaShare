@@ -68,9 +68,6 @@ public class JoinedFragment extends Fragment {
         CollectionReference eventsCollectionRef = db.collection("events");
         CollectionReference ridesCollectionRef = db.collection("rides");
 
-//        CollectionReference eventsCollectionRef = db.collection("events");
-//        CollectionReference ridesCollectionRef = db.collection("rides");
-
         eventsCollectionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -78,7 +75,6 @@ public class JoinedFragment extends Fragment {
                     for (DocumentSnapshot eventDoc : task.getResult()) {
                         // Get a reference to the "pickups" subcollection for each "event" document
                         CollectionReference pickupsCollectionRef = eventDoc.getReference().collection("pickups");
-
                         // Retrieve documents from the "pickups" subcollection
                         pickupsCollectionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
@@ -99,9 +95,6 @@ public class JoinedFragment extends Fragment {
                                                         Log.d("JoinedUsers", "User exists for event: " + eventDoc.getId());
                                                         Log.d("JoinedUsers", "Event name: " + eventDoc.getString("eventName"));
 
-                                                        //Event event = document.toObject(Event.class);
-//                                                    Event event = joinedUsersTask.toObject(Event.class);
-
                                                         JoinedData joinedEventData = new JoinedData();
                                                         joinedEventData.setDocumentId(eventDoc.getId());
                                                         joinedEventData.setPickupDocumentId(pickupDoc.getId());
@@ -112,50 +105,49 @@ public class JoinedFragment extends Fragment {
                                                         joinedDataList.add(joinedEventData);
                                                     }
 
+                                                    return;
                                                 } else {
-                                                    // "joinedUser" doesn't exist in the subcollection for this pickup
-                                                    // You can handle it here
                                                     Log.d("JoinedUsers", "User doesn't exist for pickup: " + pickupDoc.getId());
-                                                    ridesCollectionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                                        @Override
-                                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                            if (task.isSuccessful()) {
-                                                                for (DocumentSnapshot rideDoc : task.getResult()) {
-                                                                    // Get a reference to the "pickups" subcollection for each "event" document
-                                                                    CollectionReference joinedUsersCollectionRef = rideDoc.getReference().collection("joinedUsers");
-                                                                    joinedUsersCollectionRef.whereEqualTo("joined_user", userId).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                                                        @Override
-                                                                        public void onComplete(@NonNull Task<QuerySnapshot> joinedUsersTask2) {
-                                                                            Log.d("JoinedUsers", "UserId: " + joinedUsersTask2.getResult().isEmpty());
-                                                                            if (joinedUsersTask2.isSuccessful() && !joinedUsersTask2.getResult().isEmpty()) {
 
-                                                                                for (DocumentSnapshot joinedUserDoc : joinedUsersTask2.getResult()) {
-                                                                                    JoinedData joinedData = new JoinedData();
-                                                                                    joinedData.setDocumentId(rideDoc.getId());
-                                                                                    joinedData.setType("ride");
-                                                                                    joinedData.setName(rideDoc.getString("name"));
-                                                                                    joinedData.setLocationOrSource(rideDoc.getString("source"));
-                                                                                    joinedData.setPhoneNumberOrDestination(rideDoc.getString("destination"));
-                                                                                    joinedDataList.add(joinedData);
-                                                                                }
-
-                                                                            } else {
-                                                                                Log.d("JoinedUsers", "User doesn't exist for ride: " + rideDoc.getId());
-                                                                            }
-                                                                            JoinedAdapter adapter = new JoinedAdapter(joinedDataList, getContext());
-                                                                            recyclerView.setAdapter(adapter);
-                                                                            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-                                                                        }
-                                                                    });
-                                                                }
-                                                            } else {
-                                                                Log.d("Firestore", "Error getting events documents: ", task.getException());
-                                                            }
-                                                        }
-                                                    });
                                                 }
+                                                ridesCollectionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                        if (task.isSuccessful()) {
+                                                            for (DocumentSnapshot rideDoc : task.getResult()) {
+                                                                // Get a reference to the "pickups" subcollection for each "event" document
+                                                                CollectionReference joinedUsersCollectionRef = rideDoc.getReference().collection("joinedUsers");
+                                                                joinedUsersCollectionRef.whereEqualTo("joined_user", userId).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                                    @Override
+                                                                    public void onComplete(@NonNull Task<QuerySnapshot> joinedUsersTask2) {
+                                                                        Log.d("JoinedUsers", "UserId: " + joinedUsersTask2.getResult().isEmpty());
+                                                                        if (joinedUsersTask2.isSuccessful() && !joinedUsersTask2.getResult().isEmpty()) {
 
+                                                                            for (DocumentSnapshot joinedUserDoc : joinedUsersTask2.getResult()) {
+                                                                                JoinedData joinedData = new JoinedData();
+                                                                                joinedData.setDocumentId(rideDoc.getId());
+                                                                                joinedData.setType("ride");
+                                                                                joinedData.setName(rideDoc.getString("name"));
+                                                                                joinedData.setLocationOrSource(rideDoc.getString("source"));
+                                                                                joinedData.setPhoneNumberOrDestination(rideDoc.getString("destination"));
+                                                                                joinedDataList.add(joinedData);
+                                                                            }
+
+                                                                        } else {
+                                                                            Log.d("JoinedUsers", "User doesn't exist for ride: " + rideDoc.getId());
+                                                                        }
+                                                                        JoinedAdapter adapter = new JoinedAdapter(joinedDataList, getContext());
+                                                                        recyclerView.setAdapter(adapter);
+                                                                        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+                                                                    }
+                                                                });
+                                                            }
+                                                        } else {
+                                                            Log.d("Firestore", "Error getting events documents: ", task.getException());
+                                                        }
+                                                    }
+                                                });
 
                                             }
                                         });
@@ -171,110 +163,6 @@ public class JoinedFragment extends Fragment {
                 }
             }
         });
-
-//        eventsCollectionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    for (DocumentSnapshot eventDoc : task.getResult()) {
-//                        // Get a reference to the "pickups" subcollection for each "event" document
-//                        CollectionReference pickupsCollectionRef = eventDoc.getReference().collection("pickups");
-//
-//                        // Retrieve documents from the "pickups" subcollection
-//                        pickupsCollectionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                            @Override
-//                            public void onComplete(@NonNull Task<QuerySnapshot> subCollectionTask) {
-//                                if (subCollectionTask.isSuccessful()) {
-//                                    for (DocumentSnapshot pickupDoc : subCollectionTask.getResult()) {
-//                                        // Get a reference to the "joined users" subcollection for each "pickup" document
-//                                        CollectionReference joinedUsersCollectionRef = pickupDoc.getReference().collection("joinedUsers");
-//
-//                                        // Query the "joined users" subcollection to check if the "joinedUser" exists
-//                                        joinedUsersCollectionRef.whereEqualTo("joined_user", userId).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                                            @Override
-//                                            public void onComplete(@NonNull Task<QuerySnapshot> joinedUsersTask) {
-//                                                if (joinedUsersTask.isSuccessful() && !joinedUsersTask.getResult().isEmpty()) {
-//                                                    for (DocumentSnapshot eventDoc : joinedUsersTask.getResult()) {
-//
-//                                                        Log.d("JoinedUsers", "User exists for pickup: " + pickupDoc.getId());
-//                                                        Log.d("JoinedUsers", "User exists for event: " + eventDoc.getId());
-//                                                        Log.d("JoinedUsers", "Event name: " + eventDoc.getString("eventName"));
-//                                                        //                            Event event = document.toObject(Event.class);
-////                                                    Event event = joinedUsersTask.toObject(Event.class);
-//
-//                                                        JoinedData joinedEventData = new JoinedData();
-//                                                        joinedEventData.setDocumentId(eventDoc.getId());
-//                                                        joinedEventData.setPickupDocumentId(pickupDoc.getId());
-//                                                        joinedEventData.setType("event");
-//                                                        joinedEventData.setName(eventDoc.getString("eventName"));
-//                                                        joinedEventData.setLocationOrSource(eventDoc.getString("eventLocation"));
-//                                                        joinedEventData.setPhoneNumberOrDestination(eventDoc.getString("organizerPhoneNumber"));
-//                                                        joinedDataList.add(joinedEventData);
-//                                                    }
-//
-//
-//
-//                                                } else {
-//                                                    // "joinedUser" doesn't exist in the subcollection for this pickup
-//                                                    // You can handle it here
-//                                                    Log.d("JoinedUsers", "User doesn't exist for pickup: " + pickupDoc.getId());
-//                                                    ridesCollectionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                                                        @Override
-//                                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                                                            if (task.isSuccessful()) {
-//                                                                for (DocumentSnapshot rideDoc : task.getResult()) {
-//                                                                    // Get a reference to the "pickups" subcollection for each "event" document
-//                                                                    CollectionReference joinedUsersCollectionRef = rideDoc.getReference().collection("joinedUsers");
-//
-//                                                                    joinedUsersCollectionRef.whereEqualTo("joined_user", userId).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                                                                        @Override
-//                                                                        public void onComplete(@NonNull Task<QuerySnapshot> joinedUsersTask2) {
-//                                                                            Log.d("JoinedUsers", "UserId: " + joinedUsersTask2.getResult().isEmpty());
-//                                                                            if (joinedUsersTask2.isSuccessful() && !joinedUsersTask2.getResult().isEmpty()) {
-//
-//                                                                                for (DocumentSnapshot rideDoc : joinedUsersTask2.getResult()) {
-//                                                                                    JoinedData joinedData = new JoinedData();
-//                                                                                    joinedData.setDocumentId(rideDoc.getId());
-//                                                                                    joinedData.setType("ride");
-//                                                                                    joinedData.setName(rideDoc.getString("name"));
-//                                                                                    joinedData.setLocationOrSource(rideDoc.getString("source"));
-//                                                                                    joinedData.setPhoneNumberOrDestination(rideDoc.getString("destination"));
-//                                                                                    joinedDataList.add(joinedData);
-//                                                                                }
-//
-//                                                                            } else {
-//                                                                                Log.d("JoinedUsers", "User doesn't exist for ride: " + rideDoc.getId());
-//                                                                            }
-//                                                                            JoinedAdapter adapter = new JoinedAdapter(joinedDataList, getContext());
-//                                                                            recyclerView.setAdapter(adapter);
-//                                                                            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-//
-//                                                                        }
-//                                                                    });
-//                                                                }
-//                                                            } else {
-//                                                                Log.d("Firestore", "Error getting events documents: ", task.getException());
-//                                                            }
-//                                                        }
-//                                                    });
-//                                                }
-//
-//
-//                                            }
-//                                        });
-//                                    }
-//                                } else {
-//                                    Log.d("Firestore", "Error getting pickups documents: ", subCollectionTask.getException());
-//                                }
-//                            }
-//                        });
-//                    }
-//                } else {
-//                    Log.d("Firestore", "Error getting events documents: ", task.getException());
-//                }
-//            }
-//        });
-
 
         return view;
     }

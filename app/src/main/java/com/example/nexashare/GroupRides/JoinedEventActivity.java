@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.example.nexashare.CreatedFragment;
 import com.example.nexashare.FCM.FCMSend;
 import com.example.nexashare.Helper.Whatsapp;
+import com.example.nexashare.HomeActivity;
 import com.example.nexashare.JoinedFragment;
 import com.example.nexashare.JoinedRideActivity;
 import com.example.nexashare.Models.MyData;
@@ -251,14 +252,11 @@ public class JoinedEventActivity extends AppCompatActivity {
                     public void onSuccess(Void unused) {
                         Log.d("FIRESTORE_VALUE", "Ride canceled Successfully");
                         Toast.makeText(context, "Ride canceled Successfully", Toast.LENGTH_LONG).show();
-                        JoinedFragment joinedFragment = new JoinedFragment();
-                        getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.flFragment, joinedFragment)
-                                .commit();
 
+                        Intent intent = new Intent(JoinedEventActivity.this, HomeActivity.class);
+                        intent.putExtra("changeFragment", "changeFragment");
+                        startActivity(intent);
                     }
-
                 })
                 .addOnFailureListener(e -> {
                     // Handle failure

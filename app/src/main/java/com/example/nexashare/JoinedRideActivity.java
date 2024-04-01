@@ -2,21 +2,29 @@ package com.example.nexashare;
 
 import static androidx.constraintlayout.widget.ConstraintLayoutStates.TAG;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.nexashare.FCM.FCMSend;
+import com.example.nexashare.GroupRides.JoinedEventActivity;
 import com.example.nexashare.Helper.Whatsapp;
 import com.example.nexashare.Models.MyData;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.net.URLEncoder;
@@ -33,10 +41,13 @@ public class JoinedRideActivity extends AppCompatActivity {
     public TextView bookedSeats;
     public TextView pickupTime;
     public ImageView back,whatsapp;
+    public Button cancel;
     static RecyclerView recyclerViewPassengers;
     String formattedTime;
+    String userId;
     String selectedPickupLocation,rideId;
-    public  String driverPhoneNumberString;
+    long bookedSeatsString,availableSeatsString;
+    public  String pickupLocationString,dropoffLocationString,driverPhoneNumberString,receiverToken;
     private static FirebaseFirestore db = FirebaseFirestore.getInstance();
     CreatedFragment createdFragment = new CreatedFragment();
 
@@ -53,6 +64,7 @@ public class JoinedRideActivity extends AppCompatActivity {
         bookedSeats = findViewById(R.id.joinedRideBookedSeats);
         pickupTime = findViewById(R.id.joinedRidePickupTimeDetail);
         whatsapp = findViewById(R.id.whatsappicon);
+        cancel = findViewById(R.id.cancel);
 
         rideId = getIntent().getStringExtra("documentId");
         back.setOnClickListener(new View.OnClickListener() {
@@ -69,6 +81,46 @@ public class JoinedRideActivity extends AppCompatActivity {
             }
         });
 
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                db.collection("users")
+                        .document(userId)
+                        .get()
+                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                if (documentSnapshot.exists()) {
+                                    Object receiverUserToken = documentSnapshot.get("fcmToken");
+                                    if (receiverUserToken != null) {
+                                        receiverToken = receiverUserToken.toString();
+                                        FCMSend.pushNotification(
+                                                JoinedRideActivity.this,
+                                                userId,
+                                                receiverToken,
+                                                "Cancelled Ride",
+                                                MyData.name + " has cancelled your event from "+ pickupLocationString+" to " +dropoffLocationString
+                                        );
+                                        long seatsRemaining = availableSeatsString + bookedSeatsString;
+                                        updateSeats(seatsRemaining);
+                                    } else {
+                                        Log.e("FIRESTORE_VALUE", "Field 'fieldName' does not exist or is null");
+                                    }
+                                } else {
+                                    Log.e("FIRESTORE_VALUE", "Document does not exist");
+                                }
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                // Handle failures
+                                Log.e("FIRESTORE_VALUE", "Error getting value from Firestore", e);
+                            }
+                        });
+            }
+        });
+
         db.collection("rides")
                 .document(rideId)
                 .get()
@@ -76,12 +128,13 @@ public class JoinedRideActivity extends AppCompatActivity {
                     if (documentSnapshot.exists()) {
                         // Document exists, you can retrieve data
                         String driverNameString = documentSnapshot.getString("name");
-                        String pickupLocationString = documentSnapshot.getString("source");
-                        String dropoffLocationString = documentSnapshot.getString("destination");
+                        pickupLocationString = documentSnapshot.getString("source");
+                        dropoffLocationString = documentSnapshot.getString("destination");
                         driverPhoneNumberString = documentSnapshot.getString("phone_number");
                         int availableSeatsInt = Math.toIntExact(documentSnapshot.getLong("seats"));
                         String pickupTimeString = documentSnapshot.getString("date_and_time");
-
+                        userId = documentSnapshot.getString("userId");
+                        availableSeatsString =  documentSnapshot.getLong("seats");
 
                         SimpleDateFormat firestoreDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss 'GMT'Z yyyy", Locale.US);
 
@@ -127,7 +180,7 @@ public class JoinedRideActivity extends AppCompatActivity {
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         // Document exists, you can retrieve data
-                        Long bookedSeatsString = documentSnapshot.getLong("bookedSeats");
+                        bookedSeatsString = documentSnapshot.getLong("bookedSeats");
                         bookedSeats.setText("Booked seats: "+bookedSeatsString);
                         // Update your UI or perform other actions with the data
                     } else {
@@ -137,6 +190,50 @@ public class JoinedRideActivity extends AppCompatActivity {
                 .addOnFailureListener(e -> {
                     // Handle failure
                     Log.e(TAG, "Error fetching event details ", e);
+                });
+    }
+
+    public void updateSeats(long seatsRemaining){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("rides")
+                .document(rideId)
+                .update("seats",seatsRemaining )
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // Handle success
+                        Log.d("FIRESTORE_VALUE", "Seats values Updated successfully ");
+                        deleteUser(JoinedRideActivity.this);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Handle failure
+                        Log.e("FIRESTORE_VALUE", "Field to update seats \n " + e);
+                    }
+                });
+    }
+
+    private void deleteUser(Context context) {
+        db.collection("rides")
+                .document(rideId)
+                .collection("joinedUsers")
+                .document(MyData.userId)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d("FIRESTORE_VALUE", "Ride canceled Successfully");
+                        Toast.makeText(context, "Ride canceled Successfully", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(JoinedRideActivity.this, HomeActivity.class);
+                        intent.putExtra("changeFragment", "changeFragment");
+                        startActivity(intent);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    // Handle failure
+                    Log.e(TAG, "Error deleting user", e);
                 });
     }
 

@@ -199,7 +199,7 @@ public class LoginActivity extends AppCompatActivity {
         final EditText emailet= new EditText(this);
 
         // write the email using which you registered
-        emailet.setText("Email");
+        emailet.setHint("johndoe@email.com");
         emailet.setMinEms(16);
         emailet.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         linearLayout.addView(emailet);
@@ -214,7 +214,6 @@ public class LoginActivity extends AppCompatActivity {
                 beginRecovery(email);
             }
         });
-
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

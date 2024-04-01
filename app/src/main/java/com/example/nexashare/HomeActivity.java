@@ -27,6 +27,7 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+
         bottomNavigationView
                 = findViewById(R.id.bottomNavigationView);
 
@@ -38,6 +39,19 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
                 .beginTransaction()
                 .replace(R.id.flFragment, homeFragment)
                 .commit();
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            String methodName = extras.getString("changeFragment");
+            if (methodName != null) {
+                switch (methodName) {
+                    case "changeFragment":
+                        changeFragment();
+                        break;
+                }
+            }
+        }
+
     }
 
     @Override
@@ -67,7 +81,6 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
                     .beginTransaction()
                     .replace(R.id.flFragment, profileFragment)
                     .commit();
-;
             return true;
         } else {
             getSupportFragmentManager()
@@ -76,7 +89,13 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
                     .commit();
         }
         return false;
-
+    }
+    public void changeFragment(){
+        JoinedFragment joinedFragment = new JoinedFragment();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.flFragment, joinedFragment)
+                .commit();
     }
 
 
