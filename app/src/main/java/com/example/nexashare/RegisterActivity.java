@@ -128,7 +128,6 @@ public class RegisterActivity extends AppCompatActivity {
                                 }
                             }
                         });
-
             }
         });
 
@@ -140,11 +139,6 @@ public class RegisterActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-
-
-
-
     }
 
     public void register(String name,String email,String phone,String password){
@@ -158,7 +152,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if(task.isSuccessful()) {
-                                        Toast.makeText(RegisterActivity.this, "Registration successfull,check your email for verification", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(RegisterActivity.this, "Registration successfull,check your email for verification", Toast.LENGTH_LONG).show();
                                         mAuth.getCurrentUser().sendEmailVerification();
                                         FirebaseUser currentUser = mAuth.getCurrentUser();
                                         String userId = currentUser.getUid();

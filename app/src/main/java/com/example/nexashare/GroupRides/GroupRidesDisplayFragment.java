@@ -70,7 +70,6 @@ public class GroupRidesDisplayFragment extends Fragment {
                         // Handle the error
                         return;
                     }
-
                     for (DocumentChange documentChange : queryDocumentSnapshots.getDocumentChanges()) {
                         DocumentSnapshot document = documentChange.getDocument();
                         Event event = document.toObject(Event.class);

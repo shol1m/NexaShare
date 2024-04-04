@@ -56,7 +56,6 @@ public class ProfileFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -72,7 +71,7 @@ public class ProfileFragment extends Fragment{
         logout = view.findViewById(R.id.logout);
         accountDetails = view.findViewById(R.id.account_details);
         profile = view.findViewById(R.id.profileEdit);
-
+        
         storage = FirebaseStorage.getInstance();
 
         Calendar calendar = Calendar.getInstance();
@@ -88,34 +87,49 @@ public class ProfileFragment extends Fragment{
             greetingMessage = "Good Evening";
         }
 
-        username.setText(MyData.name);
+        try {
+            username.setText(MyData.name);
+        } catch (Exception e) {
+            Log.e("MyData", "Error accessing MyData", e);
+            username.setText("");
+        }
         greetings.setText(greetingMessage);
 
         JoinedFragment joinedFragment = new JoinedFragment();
         CreatedFragment createdFragment = new CreatedFragment();
         PhoneVerification phoneVerification = new PhoneVerification();
+        try {
+            // Retrieve the user ID from MyData
+            String userId = MyData.userId;
 
-        StorageReference storageRef = storage.getReference().child("profile_pictures").child(userId);
-        storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                // Load the image into the ImageView using Glide
-                Glide.with(getContext())
-                        .load(uri)
-                        .apply(new RequestOptions()
-                                .placeholder(R.drawable.baseline_person_24) // Placeholder image while loading
-                                .error(R.drawable.baseline_person_off_24) // Error image if download fails
-                                .diskCacheStrategy(DiskCacheStrategy.NONE) // Disable caching to always load the latest image
-                        )
-                        .into(profile);// Disable caching to always load the latest image
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                // Handle any errors
-                e.printStackTrace();
-            }
-        });
+            // Construct the StorageReference
+            StorageReference storageRef = storage.getReference().child("profile_pictures").child(userId);
+
+            // Fetch the download URL for the profile picture
+            storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    // Load the image into the ImageView using Glide
+                    Glide.with(getContext())
+                            .load(uri)
+                            .apply(new RequestOptions()
+                                    .placeholder(R.drawable.baseline_person_24) // Placeholder image while loading
+                                    .error(R.drawable.baseline_person_off_24) // Error image if download fails
+                                    .diskCacheStrategy(DiskCacheStrategy.NONE) // Disable caching to always load the latest image
+                            )
+                            .into(profile);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    // Handle any errors
+                    e.printStackTrace();
+                }
+            });
+        } catch (Exception e) {
+            // Handle any exceptions that may occur while accessing MyData or constructing StorageReference
+            Log.e("ProfilePicture", "Error loading profile picture", e);
+        }
 
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -188,7 +202,6 @@ public class ProfileFragment extends Fragment{
         });
         return view;
     }
-
     private void openFileChooser() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -235,5 +248,4 @@ public class ProfileFragment extends Fragment{
             Toast.makeText(getContext(), "No file selected", Toast.LENGTH_SHORT).show();
         }
     }
-
 }
