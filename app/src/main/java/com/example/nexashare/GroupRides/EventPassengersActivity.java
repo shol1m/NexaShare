@@ -48,7 +48,6 @@ public class EventPassengersActivity extends AppCompatActivity {
     String selectedPickupLocation,eventId,pickupId;
     private static FirebaseFirestore db = FirebaseFirestore.getInstance();
     CreatedFragment createdFragment = new CreatedFragment();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

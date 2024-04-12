@@ -1,3 +1,5 @@
+import org.codehaus.groovy.runtime.DefaultGroovyMethods.each
+
 plugins {
     id("com.android.application")
 

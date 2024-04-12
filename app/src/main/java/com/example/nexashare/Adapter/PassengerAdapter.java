@@ -186,7 +186,6 @@ public class PassengerAdapter extends RecyclerView.Adapter<PassengerAdapter.View
             holder.deny.setVisibility(View.GONE);
 //            holder.confirm.setBackgroundResource(R.drawable.baseline_whatsapp_24);
         }
-
         holder.whatsapp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -205,6 +205,7 @@ public class SingleRidesDescription extends AppCompatActivity {
         // Create a data map to be saved in the document
         Map<String, Object> userData = new HashMap<>();
         userData.put("name", MyData.name);
+        userData.put("joined_user",MyData.userId);
         userData.put("bookedSeats", bookedSeats);
         userData.put("confirmed", false); // Initial confirmation status
 

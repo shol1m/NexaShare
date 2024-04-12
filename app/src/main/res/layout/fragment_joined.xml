@@ -1,51 +1,161 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/profileImg"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".JoinedFragment">
-
     <com.google.android.material.appbar.MaterialToolbar
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_marginStart="-16dp"
-        android:background="@color/loginBkColor"
-        android:paddingBottom="5dp"
-        android:layout_marginTop="5dp">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/joinedBack"
-            android:layout_gravity="start"
-            android:textSize="18sp"
-            android:background="@drawable/baseline_arrow_back_24" />
-
+        android:layout_height="wrap_content"
+        android:background="@color/white">
         <TextView
-            android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="21sp"
-            android:textStyle="bold"
-            android:text="Joined"
-            android:textColor="#113469"/>
+            android:layout_gravity="center"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:backgroundTint="@color/white"
+            android:text="Your Joined Single Rides"/>
     </com.google.android.material.appbar.MaterialToolbar>
+
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/Background"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="10dp"
+        android:orientation="vertical"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/light_grey"
+        android:layout_margin="10dp"
+        android:text="Single &amp; Group Rides "/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:background="@color/whiteCardColor"
+        android:layout_marginHorizontal="10dp"
         android:orientation="vertical">
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/joinedRecyclerview"
+
+
+        <LinearLayout
+            android:id="@+id/created"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/Background"
-            android:layout_marginLeft="5dp"
-            />
+            android:layout_height="62dp"
+            android:background="@color/whiteCardColor"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:text="Single Rides"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/single_txt_arrow"
+                android:layout_gravity="center"
+                android:layout_marginStart="253dp"
+                android:background="@drawable/baseline_keyboard_arrow_right_24" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/joined"
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/whiteCardColor"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="Group Rides"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/group_txt_arrow"
+                android:layout_gravity="center"
+                android:layout_marginStart="260dp"
+                android:background="@drawable/baseline_keyboard_arrow_right_24"
+                android:gravity="end" />
+        </LinearLayout>
+
+
     </LinearLayout>
 
 
+    <FrameLayout
+        android:id="@+id/JoinedRidesFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>
+
+<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    android:orientation="vertical"-->
+<!--    tools:context=".JoinedFragment">-->
+<!--    <com.google.android.material.appbar.MaterialToolbar-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="30dp"-->
+<!--        android:layout_marginStart="-16dp"-->
+<!--        android:background="@color/loginBkColor"-->
+<!--        android:paddingBottom="5dp"-->
+<!--        android:layout_marginTop="5dp">-->
+
+<!--        <ImageView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:id="@+id/joinedBack"-->
+<!--            android:layout_gravity="start"-->
+<!--            android:textSize="18sp"-->
+<!--            android:background="@drawable/baseline_arrow_back_24" />-->
+
+<!--        <TextView-->
+<!--            android:layout_gravity="center"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:textSize="21sp"-->
+<!--            android:textStyle="bold"-->
+<!--            android:text="Joined"-->
+<!--            android:textColor="#113469"/>-->
+<!--    </com.google.android.material.appbar.MaterialToolbar>-->
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:background="@color/Background"-->
+<!--        android:orientation="vertical">-->
+<!--        <androidx.recyclerview.widget.RecyclerView-->
+<!--            android:id="@+id/joinedRecyclerview"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@color/Background"-->
+<!--            android:layout_marginLeft="5dp"-->
+<!--            />-->
+<!--    </LinearLayout>-->
 
 
-</LinearLayout>
+
+
+<!--</LinearLayout>-->

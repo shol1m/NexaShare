@@ -180,7 +180,6 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 });
     }
-
     private void saveToFirestore(String name, String phone, String email,String userId) {
         Map<String, Object> userdetails = new HashMap<>();
         userdetails.put("userId", userId);
