@@ -16,7 +16,7 @@ Nexashare is a user-friendly Android application designed to facilitate efficien
 
 ## Installation
 
-1. Clone the repository: `git clone https://github.com/Kevinsholim06/NexaShare.git`
+1. Clone the repository: `git clone https://github.com/shol1m/NexaShare.git`
 2. Open the project in Android Studio.
 3. Set up Firebase for the project by following the Firebase setup instructions.
 4. Run the app on an Android emulator or a physical device.
